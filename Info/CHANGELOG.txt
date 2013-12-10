@@ -1,0 +1,38 @@
+Changelog (updated 12/09/2013):
+Current stage of development: Pre-Alpha
+Current program version: NA
+
+12/05/2013 - began production
+           - molarmasscalc.py created
+          
+12/06/2013 - created element class and began adding methods
+           - began creating support for basic element data - name, symbol, number, mass
+           - created periodic class and began adding methods
+           - began creating support to identify/locate elements on the periodic table based on an input
+           - element.py created
+           - molarmasscalc.py updated
+          
+12/07/2013 - expanded scope of project
+           - decided to attempt to build a program to take reactants and predict reaction, and be able to show the steps
+           - created initial instancing of updated element class
+           - began framework for a periodic table in a numpy array
+           - element.py updated
+           - ptable.dat created
+           - elements.dat updated
+
+12/08/2013 - changed directory to Chemistry
+           - changed elements.dat to elements.txt, adjusted contents
+           - minor rework to the methods of class Element
+           - created the periodic table array, populated with Element objects via class periodic
+           - deleted class Periodic, replaced with tablecreate
+           - recreated *.dat files as *.txt files
+           - created excel file for better .txt management
+           
+12/09/2013 - Minor reworks to element.py, still doesn't work right :L
+           - began GUI work
+                - created initial windowing, button and class support
+           - Moved Changelog from README.txt to CHANGELOG.txt
+           - Rewrote README.txt in order to better explain and lay out the project
+           - Created TODO.txt in order to keep myself on track
+
+12/10/2013 - 
