@@ -1,4 +1,4 @@
-Changelog (updated 12/09/2013):
+Changelog (updated 12/26/2013):
 Current stage of development: Pre-Alpha
 Current program version: NA
 
@@ -35,4 +35,32 @@ Current program version: NA
            - Rewrote README.txt in order to better explain and lay out the project
            - Created TODO.txt in order to keep myself on track
 
-12/10/2013 - 
+12/10/2013 - Continued adding functionality to GUI
+                - Learned how to use callback, kind of
+                - began creating classes (named gX to distinguish from the non graphical varient)
+           - Updated TODO.txt
+                - Clarified necessary functionality of GUI
+           - Initialized location dictionaries
+
+12/11/2013 - Continued adding functionality to GUI
+           - Considering choosing a different language to work in
+                - Java maybe?
+
+12/26/2013 - Got back on the wagon, fixed element.py
+           - Moved periodic table creation back into a class, class Mendeleev
+           - Added basic functionality to class Mendeleev
+           - Element creation and periodic creation +/- complete, began considering compound creation and manipulation 
+                - Need to start with pure data, work on GUI implementation later (maybe?)
+           - Added a Bond Class
+           - Added a Compound Class
+                - Added functionality to these
+                    - Bond is complete (maybe)
+                    - Compound is incomplete
+           - Created superclass Chemistry
+                - made all other classes (Element, Mendeleev, Bond, Compound) subclasses of 
+                  the Chemistry superclass
+
+12/27/2013 - Added more functionality to compound class and compound creation
+           - slightly edited functionality of all other chemistry subclasses
+           
+01/02/2014 - Added functionality to Compound Class
