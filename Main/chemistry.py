@@ -41,8 +41,7 @@ class Element(Chemistry):
         self.elementName = name
         self.electroneg = electronegativity
         self.atomicFamily = family
-        self.bondList = []
-        #self.eDict = {self.atomicSymbol():self}        
+        self.bondList = []  
         
     def __str__(self):
         """The string output of an element object is returned"""
@@ -67,19 +66,21 @@ class Element(Chemistry):
     def getneg(self):
         """"float - returns the electronegativity of the element"""
         return self.electroneg
-        
-    def getelement(self,symbol):
-        """element - takes the symbol of an element and returns the element"""
-        return self.eDict[symbol]
-        
-    def makeBond(self,end,order=1):
-        """creates a bond object between the current element and another element, default order = 1"""
+                
+    def addBond(self,end,order=1):
         self.bondList.append(Bond(self,end,order))
-             
+        
+    def getBonds(self):
+        return self.bondList
+        
     def getfam(self):
         """returns a string that represents the atomic family of the element"""
         return atomicFamilies[int(self.atomicFamily)]
         
+def bothBonds(first,second,order):
+    first.addBond(second,order)
+    second.addBond(first,order)
+                
 class Mendeleev(Chemistry):  
           
     def __init__(self,
@@ -135,8 +136,7 @@ class Mendeleev(Chemistry):
 
     def getElement(self,
                    symbol):
-        """Returns the appropriate element object given a string representation of the element's symbol"""
-        
+        """Returns the appropriate element object given the element's symbol"""
         for rows in self.finalTable:
             for columns in self.finalTable:
                 for atom in columns:
@@ -168,7 +168,19 @@ class Bond(Chemistry):
         elif self.order == 3:
             self.descriptor = 'triple'
         else:
-            self.descriptor = None       
+            self.descriptor = None    
+            
+    def getStart(self):
+        return self.startElement
+        
+    def getEnd(self):
+        return self.endElement
+        
+    def getOrder(self):
+        return self.order
+        
+    def getDescrip(self):
+        return self.descriptor   
 
     def __str__(self):
         if self.order == 1:
@@ -180,11 +192,96 @@ class Bond(Chemistry):
         else:
             return 'None'
 
+def branching(anObject,structure,location):
+    """function that takes a 'center' type object in (ie ['C',['H',1],['Cl',2]]), 
+    a 'structure' (N x N matrix that represents the structure of a compound),
+    and a location (2 x 1 matrix that represents the x,y coordinates of the 
+    structure matrix) for the center to start branching from.  It then
+    places the substituents in the appropriate places"""
+    #Creates the constituents
+    primary = anObject[0]
+    print primary,anObject[0]
+    print type(primary),type(anObject[0])
+    tempsec = anObject[1:]
+    secondaries = []
+
+    for subs in tempsec:
+        for length in range(subs[-1]):
+            secondaries.append(subs[0])            
+
+    locX = location[0]
+    locY = location[1]
+    structure[locY][locX] = primary
+    #Checks if the 4 cardinal points are occupied
+    cardinals = [structure[locY-2][locX], #Checks the point above
+                 structure[locY][locX-2], #Checks the point to the left
+                 structure[locY+2][locX], #Checks the point below
+                 structure[locY][locX+2]] #Checks the point to the right
+
+    status = [] #reports on the four cardinal positions (True if empty, False if not)
+
+    for direction in cardinals:
+        if direction == None:
+            status.append(True)
+        else:
+            status.append(False)
+                
+    i=1
+    j=0
+
+    for point in status:
+        if j <= len(secondaries)-1:
+            if point:
+                if i == 1:
+                    #Put something north
+                    structure[locY-2][locX] = secondaries[j]
+                    structure[locY-1][locX] = Bond(primary,secondaries[j],1)
+                    bothBonds(primary,secondaries[j],1)
+                if i == 2:
+                    #Put something west
+                    structure[locY][locX-2] = secondaries[j]
+                    structure[locY][locX-1] = Bond(primary,secondaries[j],1)
+                    bothBonds(primary,secondaries[j],1)
+                if i == 3:
+                    #Put something south
+                    structure[locY+2][locX] = secondaries[j]
+                    structure[locY+1][locX] = Bond(primary,secondaries[j],1)
+                    bothBonds(primary,secondaries[j],1)
+                if i == 4:
+                    #Put something east
+                    structure[locY][locX+2] = secondaries[j]
+                    structure[locY][locX+1] = Bond(primary,secondaries[j],1)
+                    bothBonds(primary,secondaries[j],1)
+                j +=1
+        else:
+            if i == 1:
+                structure[locY-2][locX] = None
+            if i == 2:
+                structure[locY][locX-2] = None
+            if i == 3:
+                structure[locY+2][locX] = None
+            if i == 4:
+                structure[locY][locX+2] = None
+        i+=1
+
+    return structure
+
 ###Defines the locations of the tables
 ptableLoc = 'C:\Users\Dan\Documents\GitHub\Chemistry\Main\ptable.txt'
 elementsLoc = 'C:\Users\Dan\Documents\GitHub\Chemistry\Main\elements.txt'        
 theTable = Mendeleev(ptableLoc,elementsLoc)          
+
+def stringify(anArray):
+    """takes an array and converts every object within to a string"""
+    height = len(anArray)
+    width = len(anArray[0])
+    newArray = np.empty((width,height),dtype=object)
+    for i in range(height):
+        for j in range(width):
+            newArray[i][j] = str(anArray[i][j])
                                     
+    return newArray
+                                                                              
 class Compound(Chemistry):
     
     def __init__(self,
@@ -231,22 +328,24 @@ class Compound(Chemistry):
                         else:
                             self.centers[part][i][j] = int(self.centers[part][i][j])          
                             
-        #I need to associate the components with self.structure
+        #Associates the compound with self.structure and creates bonds
         middle = int(len(self.structure)/2)
-        i=0
-        j=1
-        while i < len(self.centers):
-            x = str(self.centers[i][0])
-            self.structure[middle][j] = x
-            i+=1
-            j+=2
+        i=middle
+        j=2
+        k=0
+        #self.centers = [['C',['H',1],['Cl',2]],['C',['H',3]]]
+        while k < len(self.centers):
+            self.structure = branching(self.centers[k],self.structure,[j,i])
+            k+=1
+            j+=2            
         
-        print self.centers
-        print self.structure
-            
+        j=3
+        for i in range(len(self.centers)-1):
+           self.structure[middle][j] = Bond(self.structure[middle][j-1],self.structure[middle][j+1],1)
+           bothBonds(self.structure[middle][j-1],self.structure[middle][j+1],1)
+           j+=2
         
-        #Create bonds
-        for i in range(len(self.centers)): pass
+        print stringify(self.structure)
     
     def __str__(self):
         """the string value of a compound object"""
@@ -260,7 +359,7 @@ def BeginProgram():
     #printTable = theTable.printableTable()
     
     ###sample compound    
-    testCompound = Compound("CH1Cl2 CH3")  
+    testCompound = Compound("CH1Cl2 CH2 CH3")  
     print testCompound #Testing
-
+    
 BeginProgram()

@@ -1,4 +1,4 @@
-Changelog (updated 12/26/2013):
+Changelog (updated 1/6/2014):
 Current stage of development: Pre-Alpha
 Current program version: NA
 
@@ -60,7 +60,13 @@ Current program version: NA
                 - made all other classes (Element, Mendeleev, Bond, Compound) subclasses of 
                   the Chemistry superclass
 
-12/27/2013 - Added more functionality to compound class and compound creation
+12/27/2013 - Added more functionality to Compound class and compound creation
            - slightly edited functionality of all other chemistry subclasses
            
 01/02/2014 - Added functionality to Compound Class
+
+01/05/2014 - Began adding support for structural relationships in Compound Class
+
+1/06/2014 - Completed initial support for element placing in Compound Class
+          - Began creating support for bond creation/placing in Compound Class
+                - Enhanced bond creation functionality in Element Class
