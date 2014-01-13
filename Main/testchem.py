@@ -1,6 +1,7 @@
+import pyparsing as pyp
 import numpy as np
-import re
 
+numList = ['1','2','3','4','5','6','7','8','9']
 atomicFamilies = {1:"Alkali Metals",
                   2:"Alkaline Earth Metals",
                   3:"Transition Metals",
@@ -23,6 +24,7 @@ atomicFamilies = {1:"Alkali Metals",
                   20:"Actinoids"}
 
 class Chemistry: pass
+
 class Reactions(Chemistry): pass
 
 class Element(Chemistry):
@@ -194,21 +196,19 @@ class Bond(Chemistry):
             return 'None'
 
 def branching(anObject,structure,location):
-    """function that takes a 'center' type object in (ie ['C',['H',1],['Cl',2]]), 
-    a 'structure' (N x N matrix that represents the structure of a compound),
-    and a location (2 x 1 matrix that represents the x,y coordinates of the 
-    structure matrix) for the center to start branching from.  It then
-    places the substituents in the appropriate places"""
-    #Creates the constituents
+    #Creates the components
     primary = anObject[0]
-    print primary,anObject[0]
-    print type(primary),type(anObject[0])
-    tempsec = anObject[1:]
-    secondaries = []
+    substituents = anObject[1:]
 
-    for subs in tempsec:
-        for length in range(subs[-1]):
-            secondaries.append(subs[0])            
+    i = 1
+    while i < len(substituents):
+        aNum = substituents.pop(i)
+        if aNum > 1:
+            for j in range(aNum):
+                substituents.insert(substituents[i-1],i+j)
+        i+=(j+2)
+        
+    print substituents
 
     locX = location[0]
     locY = location[1]
@@ -282,6 +282,30 @@ def stringify(anArray):
             newArray[i][j] = str(anArray[i][j])
                                     
     return newArray
+
+def stoElement(anObject):
+    if type(anObject) == type([]) or type(anObject) == type(np.zeros(1)):
+        newList = range(len(anObject))#np.empty(len(anObject),dtype = object)
+        for i in range(len(anObject)):
+            newList[i] = stoElement(anObject[i])
+        return newList
+    
+    if type(anObject) == type(''):
+        if anObject[0] not in numList:
+            anObject = str(theTable.getElement(anObject))
+        return anObject          
+        
+def toElement(anObject):  
+    if type(anObject) == type([]) or type(anObject) == type(np.zeros(1)):
+        newList = range(len(anObject))#np.empty(len(anObject),dtype = object)
+        for i in range(len(anObject)):
+            newList[i] = toElement(anObject[i])
+        return newList
+    
+    if type(anObject) == type(''):
+        if anObject[0] not in numList:
+            anObject = str(theTable.getElement(anObject))
+        return anObject              
                                                                               
 class Compound(Chemistry):
     
@@ -299,56 +323,38 @@ class Compound(Chemistry):
         size = (3*len(self.centers)+1)**2
         sidelen = int(np.sqrt(size))
         self.structure = np.empty((sidelen,sidelen), dtype = object)
-        numList = ['1','2','3','4','5','6','7','8','9']
-       
-        #Separates the formula in order to create the bond
-        inc = 0
-        for part in self.centers:
-            theCenter = [part[0]]
-            theRest = re.split('(\d+)',part[1:])[:-1]
-            trueRest = [theRest[i]+theRest[i+1] for i in range(0,len(theRest),2)]
-            self.centers[inc] = theCenter+trueRest
-            inc += 1
-        print self.centers
-        #Splits up the substituents so as to indicate the number of them that are bonded to the center
-        for part in self.centers:
-            for substituent in range(1,len(part)):
-                part[substituent] = re.split('(\d+)',part[substituent])[:-1]
-        print self.centers
-        #Convert the symbols to element objects
-        for part in range(len(self.centers)):
-            for i in range(len(self.centers[part])):
-                if str(type(self.centers[part][i])) == "<type 'str'>":
-                    tempSub = theTable.getElement(self.centers[part][i])
-                    self.centers[part][i] = tempSub
-                elif str(type(self.centers[part][i])) == "<type 'list'>":
-                    for j in range(len(self.centers[part][i])):
-                        if self.centers[part][i][j][0:1] not in numList:
-                            tempSubSub = theTable.getElement(self.centers[part][i][j])
-                            self.centers[part][i][j]  = tempSubSub
-                        else:
-                            self.centers[part][i][j] = int(self.centers[part][i][j])          
-        print self.centers                    
+        
+        #Separates the compound
+        for i in range(len(self.centers)):
+            self.centers[i] = [self.centers[i][:self.centers[i].find('(')],
+                               pyp.nestedExpr().parseString(self.centers[i][1:]).asList()[0]]
+        
+        #Associates symbols with their element objects
+        self.stringCenters = stoElement(self.centers)
+        self.centers = toElement(self.centers)
+        print self.stringCenters
+        
+        
         #Associates the compound with self.structure and creates bonds
         middle = int(len(self.structure)/2)
         i=middle
         j=2
         k=0
-        #self.centers = [['C',['H',1],['Cl',2]],['C',['H',3]]]
+        
         while k < len(self.centers):
             self.structure = branching(self.centers[k],self.structure,[j,i])
             k+=1
             j+=2            
-        print self.centers
+       
         j=3
         for i in range(len(self.centers)-1):
            self.structure[middle][j] = Bond(self.structure[middle][j-1],self.structure[middle][j+1],1)
            bothBonds(self.structure[middle][j-1],self.structure[middle][j+1],1)
            j+=2
-        print self.centers            
+        
         print stringify(self.structure)
         #print self.structure
-    
+        
     def __str__(self):
         """the string value of a compound object"""
         return str(self.formula)  
@@ -361,7 +367,7 @@ def BeginProgram():
     #printTable = theTable.printableTable()
     
     ###sample compound    
-    testCompound = Compound("CH1Cl2 CH2 CH3")  
+    testCompound = Compound("C((H)1(Cl)2)")  
     print testCompound #Testing
     
 BeginProgram()

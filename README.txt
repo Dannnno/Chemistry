@@ -1,4 +1,4 @@
-README last updated on 12/09/2013   
+README last updated on 1/12/2014   
 
 Program written by:
 
@@ -22,4 +22,4 @@ Goals of this program:
     
 Current stage of development - Pre-Alpha
 Current version - NA
-Expected date of Alpha release - a long time from now (September 2014) 
+Expected date of Alpha release - a long time from now (late 2014-early 2015?) 

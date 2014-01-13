@@ -1,4 +1,4 @@
-Changelog (updated 1/6/2014):
+Changelog (updated 1/12/2014):
 Current stage of development: Pre-Alpha
 Current program version: NA
 
@@ -59,6 +59,7 @@ Current program version: NA
            - Created superclass Chemistry
                 - made all other classes (Element, Mendeleev, Bond, Compound) subclasses of 
                   the Chemistry superclass
+                - superclass currently has no functionality
 
 12/27/2013 - Added more functionality to Compound class and compound creation
            - slightly edited functionality of all other chemistry subclasses
@@ -70,3 +71,9 @@ Current program version: NA
 1/06/2014 - Completed initial support for element placing in Compound Class
           - Began creating support for bond creation/placing in Compound Class
                 - Enhanced bond creation functionality in Element Class
+                
+1/12/2014 - After much ado found a working solution with pyparsing for complex/branched compounds
+                - Began rewriting functionality to support association with self.structure
+                - Early functionality with forked compounds - need to work on sizing issues of self.structure
+          - Created superclass Reactions
+                - Doesn't do anything, but made me feel good inside

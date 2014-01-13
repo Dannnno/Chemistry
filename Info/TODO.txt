@@ -1,4 +1,4 @@
-TODO List - updated 12/9/2013
+TODO List - updated 1/12/2014
     
 GitHub:
     - Understand how GitHub works
@@ -40,16 +40,16 @@ GUI:
     - Should be a way to save current work without publishing molecule
     
 Classes:
-    - Chemistry (Not started)
-    - Element (Initiated 12/06/2013, workable 12/08/2013)
-        - Better docstrings needed
-    - Compound (Not Started)
-    - Resonance (Not Started)
-    - Bonds (Not started)
-    - Lone pairs (Not started)
-    - IUPAC (Not started)
-    - Acid (Not started)
-    - Base (Not started)
+    - Chemistry (Initial support)
+        - Element (Initial support)
+        - Compound (Initial support)
+        - Resonance (Not Started)
+        - Bonds (Initial support)
+        - Lone pairs (Not started)
+        - IUPAC (Not started)
+        - Reactions
+            - Acid (Not started)
+            - Base (Not started)
     - More to come
     
 Long term:
@@ -58,3 +58,4 @@ Long term:
     - Port to mobile devices
         - iOS first
             - learn Obj. C
+        - Android
