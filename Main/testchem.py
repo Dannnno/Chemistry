@@ -376,6 +376,10 @@ class Compound(Chemistry):
     def __str__(self):
         """the string value of a compound object"""
         return str(self.formula)  
+        
+class Ring(Compound):pass
+
+class BridgedStructure(Ring):pass
 
 def BeginProgram():
     """Function that initializes the program""" 
