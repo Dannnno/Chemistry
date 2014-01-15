@@ -198,21 +198,29 @@ class Bond(Chemistry):
 def branching(anObject,structure,location):
     #Creates the components
     primary = anObject[0]
-    substituents = anObject[1:]
-
-    i = 1
-    while i < len(substituents):
-        aNum = substituents.pop(i)
+    substituents = anObject[1:][0]
+    locDict = {}
+    
+    for i in range(len(substituents)):
+        try:
+            locDict[i] = int(substituents[i])
+        except ValueError:
+            pass
+        except TypeError:
+            pass
+            
+    locKeys = locDict.keys();locKeys.sort();locKeys.reverse()
+    for item in locKeys:
+        theElement = substituents[item-1]
+        aNum = int(substituents.pop(item))
         if aNum > 1:
-            for j in range(aNum):
-                substituents.insert(substituents[i-1],i+j)
-        i+=(j+2)
-        
-    print substituents
+            for i in range(aNum-1):
+                substituents.insert(i+item,theElement)
 
     locX = location[0]
     locY = location[1]
     structure[locY][locX] = primary
+    
     #Checks if the 4 cardinal points are occupied
     cardinals = [structure[locY-2][locX], #Checks the point above
                  structure[locY][locX-2], #Checks the point to the left
@@ -231,39 +239,52 @@ def branching(anObject,structure,location):
     j=0
 
     for point in status:
-        if j <= len(secondaries)-1:
+        if j <= len(substituents)-1:
             if point:
-                if i == 1:
-                    #Put something north
-                    structure[locY-2][locX] = secondaries[j]
-                    structure[locY-1][locX] = Bond(primary,secondaries[j],1)
-                    bothBonds(primary,secondaries[j],1)
-                if i == 2:
-                    #Put something west
-                    structure[locY][locX-2] = secondaries[j]
-                    structure[locY][locX-1] = Bond(primary,secondaries[j],1)
-                    bothBonds(primary,secondaries[j],1)
-                if i == 3:
-                    #Put something south
-                    structure[locY+2][locX] = secondaries[j]
-                    structure[locY+1][locX] = Bond(primary,secondaries[j],1)
-                    bothBonds(primary,secondaries[j],1)
-                if i == 4:
-                    #Put something east
-                    structure[locY][locX+2] = secondaries[j]
-                    structure[locY][locX+1] = Bond(primary,secondaries[j],1)
-                    bothBonds(primary,secondaries[j],1)
-                j +=1
-        else:
-            if i == 1:
-                structure[locY-2][locX] = None
-            if i == 2:
-                structure[locY][locX-2] = None
-            if i == 3:
-                structure[locY+2][locX] = None
-            if i == 4:
-                structure[locY][locX+2] = None
-        i+=1
+                theElement = substituents[j]
+                aBool = False
+                if type(theElement) != type(''):
+                    for part in theElement:
+                        if type(part) == type([]) or type(part) == type(np.zeros(1)):
+                            aBool = True
+                if aBool:
+                    if i == 1:
+                        tempstructure = branching(theElement,structure,[locX,locY-2])
+                        structure = tempstructure
+                    if i == 2:
+                        tempstructure = branching(theElement,structure,[locX-2,locY])
+                        structure = tempstructure
+                    if i == 3:
+                        tempstructure = branching(theElement,structure,[locX,locY+2])
+                        structure = tempstructure
+                    if i == 4:
+                        tempstructure = branching(theElement,structure,[locX+2,locY])
+                        structure = tempstructure
+                    j+=1
+                else:
+                    theElement = theElement[0]
+                    if i == 1:
+                        #Put something north
+                        structure[locY-2][locX] = theElement
+                        structure[locY-1][locX] = Bond(primary,theElement,1)
+                        bothBonds(primary,theElement,1)
+                    if i == 2:
+                        #Put something west
+                        structure[locY][locX-2] = theElement
+                        structure[locY][locX-1] = Bond(primary,theElement,1)
+                        bothBonds(primary,theElement,1)
+                    if i == 3:
+                        #Put something south
+                        structure[locY+2][locX] = theElement
+                        structure[locY+1][locX] = Bond(primary,theElement,1)
+                        bothBonds(primary,theElement,1)
+                    if i == 4:
+                        #Put something east
+                        structure[locY][locX+2] = theElement
+                        structure[locY][locX+1] = Bond(primary,theElement,1)
+                        bothBonds(primary,theElement,1)
+                    j +=1
+            i+=1
 
     return structure
 
@@ -304,7 +325,7 @@ def toElement(anObject):
     
     if type(anObject) == type(''):
         if anObject[0] not in numList:
-            anObject = str(theTable.getElement(anObject))
+            anObject = theTable.getElement(anObject)
         return anObject              
                                                                               
 class Compound(Chemistry):
@@ -320,7 +341,7 @@ class Compound(Chemistry):
         #Initializes variables
         self.formula = formula
         self.centers = formula.split()
-        size = (3*len(self.centers)+1)**2
+        size = (6*len(self.centers)+1)**2
         sidelen = int(np.sqrt(size))
         self.structure = np.empty((sidelen,sidelen), dtype = object)
         
@@ -332,13 +353,11 @@ class Compound(Chemistry):
         #Associates symbols with their element objects
         self.stringCenters = stoElement(self.centers)
         self.centers = toElement(self.centers)
-        print self.stringCenters
-        
         
         #Associates the compound with self.structure and creates bonds
         middle = int(len(self.structure)/2)
         i=middle
-        j=2
+        j=4
         k=0
         
         while k < len(self.centers):
@@ -346,14 +365,13 @@ class Compound(Chemistry):
             k+=1
             j+=2            
        
-        j=3
-        for i in range(len(self.centers)-1):
+        j=5
+        for i in range(len(self.centers)):
            self.structure[middle][j] = Bond(self.structure[middle][j-1],self.structure[middle][j+1],1)
-           bothBonds(self.structure[middle][j-1],self.structure[middle][j+1],1)
+           #bothBonds(self.structure[middle][j-1],self.structure[middle][j+1],1)
            j+=2
         
         print stringify(self.structure)
-        #print self.structure
         
     def __str__(self):
         """the string value of a compound object"""
@@ -367,7 +385,7 @@ def BeginProgram():
     #printTable = theTable.printableTable()
     
     ###sample compound    
-    testCompound = Compound("C((H)1(Cl)2)")  
+    testCompound = Compound("C((H)1(Cl)2) C((H)2(C((H)3))1)")  
     print testCompound #Testing
     
 BeginProgram()
