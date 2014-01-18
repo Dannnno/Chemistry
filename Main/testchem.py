@@ -36,8 +36,9 @@ class Element(Chemistry):
                  name,
                  electronegativity,
                  family):
-        """Creates an element object"""
-       
+        """Creates an element object using the atomic mass, number, symbol, name, electronegativity and atomic family"""
+        #!!Needs octet rule support!!
+        
         self.atomicMass = mass
         self.atomicNumber = number
         self.atomicSymbol = symbol
@@ -47,40 +48,44 @@ class Element(Chemistry):
         self.bondList = []  
         
     def __str__(self):
-        """The string output of an element object is returned"""
+        """The string version of an element object -- its name"""
         return self.elementName
             
     def getmass(self):
-        """float - returns the average atomic mass of the element"""
+        """returns the atomic mass as a float"""
         return self.atomicMass
         
     def getnumber(self):
-        """int - returns the atomic number of the element"""
+        """returns the atomic number as an integer"""
         return self.atomicNumber
         
     def getname(self):
-        """string - returns the name of the element"""
+        """returns the element's name as a string"""
         return self.elementName
         
     def getsymbol(self):
-        """string - returns the atomic symbol of the element"""
+        """returns the atomic symbol as a string"""
         return self.atomicSymbol
         
     def getneg(self):
-        """"float - returns the electronegativity of the element"""
+        """"returns the electronegativity as a float"""
         return self.electroneg
                 
     def addBond(self,end,order=1):
+        """adds a Bond object to the element's list of Bonds.
+        !!Needs more support for if number of bonds exceeds octet!!"""
         self.bondList.append(Bond(self,end,order))
         
     def getBonds(self):
+        """returns the list of bonds the element is a part of"""
         return self.bondList
         
     def getfam(self):
-        """returns a string that represents the atomic family of the element"""
+        """returns the atomic family as a string"""
         return atomicFamilies[int(self.atomicFamily)]
         
 def bothBonds(first,second,order):
+    """adds the bond to both elements"""
     first.addBond(second,order)
     second.addBond(first,order)
                 
@@ -89,7 +94,7 @@ class Mendeleev(Chemistry):
     def __init__(self,
                  loc1,
                  loc2):
-        """Initializes the periodic Table of the Elements"""
+        """Creates a periodic table of the elements. Only call this once"""
         
         #generates an array of 1s and 0s to create the shape of the periodic table     
         ptable = np.genfromtxt(loc1,dtype='S', unpack=True)
@@ -148,7 +153,7 @@ class Mendeleev(Chemistry):
                             return atom
     
     def __str__(self):
-        """returns the string value of a Mendeleev object"""
+        """String representation of the periodic table"""
         return "The Periodic Table of the Elements"
         
 class Bond(Chemistry):
@@ -156,9 +161,8 @@ class Bond(Chemistry):
     def __init__(self,
                  start,
                  end,
-                 order):
-        """input the starting element and the ending element (bond from X to Y) and the order
-        (single, double, triple) as an integer (1,2,3) of the bond."""
+                 order=1):
+        """Creates a Bond object - input the two elements, and the order (default 1) of the bond"""
                
         #Declares the level of the bond and the elements bonded by it
         self.startElement = start
@@ -174,18 +178,23 @@ class Bond(Chemistry):
             self.descriptor = None    
             
     def getStart(self):
+        """returns the element object at the 'front' of the bond"""
         return self.startElement
         
     def getEnd(self):
+        """returns the element object at the 'back' of the bond"""
         return self.endElement
         
     def getOrder(self):
+        """returns the order of the bond as an integer"""
         return self.order
         
     def getDescrip(self):
+        """returns a string version of the bond's order"""
         return self.descriptor   
 
     def __str__(self):
+        """returns a string depiction of a bond"""
         if self.order == 1:
             return 'sb'
         elif self.order == 2:
@@ -196,18 +205,16 @@ class Bond(Chemistry):
             return 'None'
 
 def branching(anObject,structure,location):
+    """recursive function that takes an array of element objects, a structure to place them in
+    and the starting location and uses it to make a compound"""
     #Creates the components
     primary = anObject[0]
     substituents = anObject[1:][0]
     locDict = {}
     
     for i in range(len(substituents)):
-        try:
-            locDict[i] = int(substituents[i])
-        except ValueError:
-            pass
-        except TypeError:
-            pass
+        try:locDict[i] = int(substituents[i])
+        except (ValueError,TypeError): pass
             
     locKeys = locDict.keys();locKeys.sort();locKeys.reverse()
     for item in locKeys:
@@ -222,19 +229,28 @@ def branching(anObject,structure,location):
     structure[locY][locX] = primary
     
     #Checks if the 4 cardinal points are occupied
-    cardinals = [structure[locY-2][locX], #Checks the point above
-                 structure[locY][locX-2], #Checks the point to the left
-                 structure[locY+2][locX], #Checks the point below
-                 structure[locY][locX+2]] #Checks the point to the right
+    if (locY - 2) < 0: a1 = 1
+    else:
+        try:a1 = structure[locY-2][locX]
+        except:a1 = 1
+    if (locX - 2) < 0: a2 = 1
+    else:
+        try:a2 = structure[locY][locX-2]
+        except: a2 = 1
+    
+    try: a3 = structure[locY+2][locX]
+    except: a3 = 1
+    try: a4 = structure[locY][locX+2]
+    except: a4 = 1
+    
+    cardinals = [a1,a2,a3,a4]
 
     status = [] #reports on the four cardinal positions (True if empty, False if not)
 
     for direction in cardinals:
-        if direction == None:
-            status.append(True)
-        else:
-            status.append(False)
-                
+        if direction == None: status.append(True)
+        else: status.append(False)
+                        
     i=1
     j=0
 
@@ -243,46 +259,133 @@ def branching(anObject,structure,location):
             if point:
                 theElement = substituents[j]
                 aBool = False
+                bBool = False
+                cBool = False
                 if type(theElement) != type(''):
                     for part in theElement:
                         if type(part) == type([]) or type(part) == type(np.zeros(1)):
                             aBool = True
                 if aBool:
+                    if type(theElement[0]) == type(''):
+                        if theElement[0][0] == '+':
+                            theElement[0] = theTable.getElement(theElement[0][1:])
+                            bBool = True
+                        elif theElement[0][0] == '*':
+                            theElement[0] = theTable.getElement(theElement[0][1:])
+                            cBool = True
                     if i == 1:
-                        tempstructure = branching(theElement,structure,[locX,locY-2])
-                        structure = tempstructure
+                        subStruct = np.empty((3,5),dtype = object)
+                        tempstructure = branching(theElement,subStruct,[2,2])
+                        structure[locY-2][locX] = tempstructure
+                        if bBool:
+                            structure[locY-1][locX] = Bond(primary,tempstructure[2][2],2)
+                            bothBonds(primary,tempstructure[2][2],2)
+                        elif cBool:
+                            structure[locY-1][locX] = Bond(primary,tempstructure[2][2],3)
+                            bothBonds(primary,tempstructure[2][2],3)
+                        else:                            
+                            structure[locY-1][locX] = Bond(primary,tempstructure[2][2])
+                            bothBonds(primary,tempstructure[2][2],1)
+
                     if i == 2:
-                        tempstructure = branching(theElement,structure,[locX-2,locY])
-                        structure = tempstructure
+                        subStruct = np.empty((5,3),dtype = object)
+                        tempstructure = branching(theElement,subStruct,[2,2])
+                        structure[locY][locX-2] = tempstructure
+                        if bBool:
+                            structure[locY][locX-1] = Bond(primary,tempstructure[2][2],2)
+                            bothBonds(primary,tempstructure[2][2],2)
+                        elif cBool:
+                            structure[locY][locX-1] = Bond(primary,tempstructure[2][2],3)
+                            bothBonds(primary,tempstructure[2][2],3)
+                        else:                            
+                            structure[locY][locX-1] = Bond(primary,tempstructure[2][2])
+                            bothBonds(primary,tempstructure[2][2],1)
                     if i == 3:
-                        tempstructure = branching(theElement,structure,[locX,locY+2])
-                        structure = tempstructure
+                        subStruct = np.empty((3,5),dtype = object)
+                        tempstructure = branching(theElement,subStruct,[2,0])
+                        structure[locY+2][locX] = tempstructure
+                        if bBool:
+                            structure[locY+1][locX] = Bond(primary,tempstructure[0][2],2)
+                            bothBonds(primary,tempstructure[0][2],2)
+                        elif cBool:
+                            structure[locY+1][locX] = Bond(primary,tempstructure[0][2],3)
+                            bothBonds(primary,tempstructure[0][2],3)
+                        else:                            
+                            structure[locY+1][locX] = Bond(primary,tempstructure[0][2])
+                            bothBonds(primary,tempstructure[0][2],1)
                     if i == 4:
-                        tempstructure = branching(theElement,structure,[locX+2,locY])
-                        structure = tempstructure
+                        subStruct = np.empty((5,3),dtype = object)
+                        tempstructure = branching(theElement,subStruct,[0,2])
+                        structure[locY][locX+2] = tempstructure
+                        if bBool:
+                            structure[locY][locX+1] = Bond(primary,tempstructure[2][0],2)
+                            bothBonds(primary,tempstructure[2][0],2)
+                        elif cBool:
+                            structure[locY][locX+1] = Bond(primary,tempstructure[2][0],3)
+                            bothBonds(primary,tempstructure[2][0],3)
+                        else:                            
+                            structure[locY][locX+1] = Bond(primary,tempstructure[2][0])
+                            bothBonds(primary,tempstructure[2][0],1)
                     j+=1
                 else:
                     theElement = theElement[0]
+                    if type(theElement) == type(''):
+                        if theElement[0] == '+':
+                            tempElement = theElement[1:]
+                            theElement = theTable.getElement(tempElement)
+                            bBool = True
+                        elif theElement[0] == '*':
+                            tempElement = theElement[1:]
+                            theElement = theTable.getElement(tempElement)
+                            cBool = True
                     if i == 1:
                         #Put something north
                         structure[locY-2][locX] = theElement
-                        structure[locY-1][locX] = Bond(primary,theElement,1)
-                        bothBonds(primary,theElement,1)
+                        if bBool:
+                            structure[locY-1][locX] = Bond(primary,theElement,2)
+                            bothBonds(primary,theElement,2)
+                        elif cBool:
+                            structure[locY-1][locX] = Bond(primary,theElement,3)
+                            bothBonds(primary,theElement,3)
+                        else:                            
+                            structure[locY-1][locX] = Bond(primary,theElement)
+                            bothBonds(primary,theElement,1)
                     if i == 2:
                         #Put something west
                         structure[locY][locX-2] = theElement
-                        structure[locY][locX-1] = Bond(primary,theElement,1)
-                        bothBonds(primary,theElement,1)
+                        if bBool:
+                            structure[locY][locX-1] = Bond(primary,theElement,2)
+                            bothBonds(primary,theElement,2)
+                        elif cBool:
+                            structure[locY][locX-1] = Bond(primary,theElement,3)
+                            bothBonds(primary,theElement,3)
+                        else:                            
+                            structure[locY][locX-1] = Bond(primary,theElement)
+                            bothBonds(primary,theElement,1)
                     if i == 3:
                         #Put something south
                         structure[locY+2][locX] = theElement
-                        structure[locY+1][locX] = Bond(primary,theElement,1)
-                        bothBonds(primary,theElement,1)
+                        if bBool:
+                            structure[locY+1][locX] = Bond(primary,theElement,2)
+                            bothBonds(primary,theElement,2)
+                        elif cBool:
+                            structure[locY+1][locX] = Bond(primary,theElement,3)
+                            bothBonds(primary,theElement,3)
+                        else:                            
+                            structure[locY+1][locX] = Bond(primary,theElement)
+                            bothBonds(primary,theElement,1)
                     if i == 4:
                         #Put something east
-                        structure[locY][locX+2] = theElement
-                        structure[locY][locX+1] = Bond(primary,theElement,1)
-                        bothBonds(primary,theElement,1)
+                        structure[locY][locX+2] = theElement                        
+                        if bBool:
+                            structure[locY][locX+1] = Bond(primary,theElement,2)
+                            bothBonds(primary,theElement,2)
+                        elif cBool:
+                            structure[locY][locX+1] = Bond(primary,theElement,3)
+                            bothBonds(primary,theElement,3)
+                        else:                            
+                            structure[locY][locX+1] = Bond(primary,theElement)
+                            bothBonds(primary,theElement,1)
                     j +=1
             i+=1
 
@@ -297,46 +400,48 @@ def stringify(anArray):
     """takes an array and converts every object within to a string"""
     height = len(anArray)
     width = len(anArray[0])
-    newArray = np.empty((width,height),dtype=object)
+    newArray = np.empty((height,width),dtype=object)
     for i in range(height):
         for j in range(width):
-            newArray[i][j] = str(anArray[i][j])
+            if type(anArray[i][j]) == type([]) or type(anArray[i][j]) == type(np.zeros(1)): newArray[i][j] = stringify(anArray[i][j])
+            elif anArray[i][j] == None: newArray[i][j] = anArray[i][j]
+            else: newArray[i][j] = str(anArray[i][j])
                                     
     return newArray
 
 def stoElement(anObject):
+    """recursive function that turns atomic symbols into string representations of their element"""
     if type(anObject) == type([]) or type(anObject) == type(np.zeros(1)):
-        newList = range(len(anObject))#np.empty(len(anObject),dtype = object)
+        newList = range(len(anObject))
         for i in range(len(anObject)):
             newList[i] = stoElement(anObject[i])
         return newList
     
     if type(anObject) == type(''):
-        if anObject[0] not in numList:
-            anObject = str(theTable.getElement(anObject))
+        if anObject[0] in ['+','*','@']:
+            return str(anObject)
+        if anObject[0] not in numList: anObject = str(theTable.getElement(anObject))
         return anObject          
         
 def toElement(anObject):  
+    """Recursive function that turns atomic symbols into their element"""
     if type(anObject) == type([]) or type(anObject) == type(np.zeros(1)):
-        newList = range(len(anObject))#np.empty(len(anObject),dtype = object)
+        newList = range(len(anObject))
         for i in range(len(anObject)):
             newList[i] = toElement(anObject[i])
         return newList
     
     if type(anObject) == type(''):
-        if anObject[0] not in numList:
-            anObject = theTable.getElement(anObject)
+        if anObject[0] in ['+','*','@']:
+            return anObject
+        if anObject[0] not in numList: anObject = theTable.getElement(anObject)
         return anObject              
                                                                               
 class Compound(Chemistry):
     
-    def __init__(self,
-                 formula):   
-        """Input a formula (complete, don't reduce) of the molecule.  Should indicate connectivity
-        by separating each molecular center. Ignore double/triple bonds and just show atoms.
-        Formula should have form "CHxXxOx CHxXx" etc.  IE CHCl2 CH3
-        Something like N-N (triple bond) would be represented as "N N". Bonds will be generated by 
-        later functions"""
+    def __init__(self,formula):   
+        """Input a formula for a chemical compound.  (currently) requires special
+        syntax in order to be properly parsed."""
 
         #Initializes variables
         self.formula = formula
@@ -344,6 +449,7 @@ class Compound(Chemistry):
         size = (6*len(self.centers)+1)**2
         sidelen = int(np.sqrt(size))
         self.structure = np.empty((sidelen,sidelen), dtype = object)
+        self.strstructure = np.empty((sidelen,sidelen), dtype = object)
         
         #Separates the compound
         for i in range(len(self.centers)):
@@ -357,7 +463,7 @@ class Compound(Chemistry):
         #Associates the compound with self.structure and creates bonds
         middle = int(len(self.structure)/2)
         i=middle
-        j=4
+        j=2
         k=0
         
         while k < len(self.centers):
@@ -365,21 +471,28 @@ class Compound(Chemistry):
             k+=1
             j+=2            
        
-        j=5
-        for i in range(len(self.centers)):
+        j=3
+        for i in range(len(self.centers)-1):
            self.structure[middle][j] = Bond(self.structure[middle][j-1],self.structure[middle][j+1],1)
-           #bothBonds(self.structure[middle][j-1],self.structure[middle][j+1],1)
+           bothBonds(self.structure[middle][j-1],self.structure[middle][j+1],1)
            j+=2
         
-        print stringify(self.structure)
+        self.strstructure = stringify(self.structure)
+        print self.strstructure
         
     def __str__(self):
-        """the string value of a compound object"""
+        """the string representation of a compound object"""
         return str(self.formula)  
         
-class Ring(Compound):pass
+class Ring(Compound):
+    
+    def __init__(self,ringForm):                 
+        """constructs a compound of type Ring"""
+        
 
-class BridgedStructure(Ring):pass
+class BridgedStructure(Ring):
+    
+    def __init__(self,aRing):pass
 
 def BeginProgram():
     """Function that initializes the program""" 
@@ -389,7 +502,11 @@ def BeginProgram():
     #printTable = theTable.printableTable()
     
     ###sample compound    
-    testCompound = Compound("C((H)1(Cl)2) C((H)2(C((H)3))1)")  
+    #testCompound = Compound("C((C((C((H)3))3))3) C((H)2(Cl)1)") #Compound C(C(CH3)3)3)C(H2Cl1)
+    #testCompound = Compound("C((+O)2)")
+    #testCompound = Compound("N((*N)1)")
+    #testCompound = Compound('C((+O((C((H)3))1))1(H)2))')
+
     print testCompound #Testing
     
 BeginProgram()
