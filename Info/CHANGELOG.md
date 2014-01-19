@@ -1,4 +1,4 @@
-###Changelog - updated 1/18/2014 11:49:07 AM 
+###Changelog - updated 1/18/2014 1:20:16 PM 
 ---
 Current stage of development: Pre-Alpha  
 Current program version: NA
@@ -138,5 +138,4 @@ Current program version: NA
 
 - Completed initial support for double and triple bonds in `branching()` within `testchem.py`
 - Completed initial support for rings in `test.py`
-	- preparing for implementation within `testchem.py`
-	- plan to have working initial support by end of day, move all to `testchem.py ` and in turn `chemistry.py` 
+	- began working on `class Compound()` and related functions to support the addition of rings in `testchem.py`
