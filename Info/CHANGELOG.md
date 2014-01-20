@@ -1,4 +1,4 @@
-###Changelog - updated 1/18/2014 1:20:16 PM 
+###Changelog - updated 1/19/2014 6:48:06 PM 
 ---
 Current stage of development: Pre-Alpha  
 Current program version: NA
@@ -107,19 +107,18 @@ Current program version: NA
 	- Began adding functionality for very complex compounds 
 		-  need to fix overlap issue, nested arrays?
 		-  need to fix sizing of self.structure
-		-  need to add functionality for resizing/shaping self.structure
+		-  need to add functionality for re-sizing/shaping self.structure
 	- Began adding functionality for rings (class Ring(Compound)) and bridged structures (class BridgedStructure(Ring))
 	- Began adding functionality for double/triple bonds in a compound
-- Transitioned all user-side text documents `README.txt`, `TODO.txt`, `CHANGELOG.txt` to MarkDown equivalents `README.md`, `TODO.md`, `CHANGELOG.md`
+- Transitioned all user-side text documents `README.txt`, `TODO.txt`, `CHANGELOG.txt` to **MarkDown** equivalents `README.md`, `TODO.md`, `CHANGELOG.md`
                   
 **1/16/2014**
 
--  Began considering the `enable` and `enaml` modules for use in construction of a GUI - look into it more!
--  Downloaded `git` and began looking into its uses - going to focus on getting the backbones working before I move into GUI stuff
+-  Began considering the `enable` and `enaml` modules for use in construction of a GUI
 -  Continued adding support for nested/very complex compounds
 	- Works fine as long as proper parentheses are present
 	- work on a function that will take a normal string version of a formula and add parentheses
-	- or don't. low priority  
+	- or don't ~ low priority  
 
 **1/17/2014**
 
@@ -139,3 +138,11 @@ Current program version: NA
 - Completed initial support for double and triple bonds in `branching()` within `testchem.py`
 - Completed initial support for rings in `test.py`
 	- began working on `class Compound()` and related functions to support the addition of rings in `testchem.py`
+
+**1/19/2014**
+
+- Completed support for rings in `testchem.py`
+	- still needs support for double bonds to/within the ring 
+- Need to adjust `class Mendeleev()` and `toElement()` so that they create a unique element each time
+- Adjust methods of bond creation so they are less cumbersome - put it all in bothBonds?
+- find a better way to put all the substituents on a ring

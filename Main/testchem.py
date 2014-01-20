@@ -258,141 +258,173 @@ def branching(anObject,structure,location):
         if j <= len(substituents)-1:
             if point:
                 theElement = substituents[j]
-                print stringify(theElement)
                 aBool = False
                 bBool = False
                 cBool = False
-                if type(theElement) == type([]) or type(theElement) == type(np.zeros(1)):
-                    for part in theElement:
-                        if type(part) == type([]) or type(part) == type(np.zeros(1)):
-                            aBool = True
-                if aBool:
-                    if type(theElement[0]) == type(''):
-                        if theElement[0][0] == '+':
-                            theElement[0] = theTable.getElement(theElement[0][1:])
-                            bBool = True
-                        elif theElement[0][0] == '*':
-                            theElement[0] = theTable.getElement(theElement[0][1:])
-                            cBool = True
-                    if i == 1:
-                        subStruct = np.empty((3,5),dtype = object)
-                        tempstructure = branching(theElement,subStruct,[2,2])
-                        structure[locY-2][locX] = tempstructure
-                        if bBool:
-                            structure[locY-1][locX] = Bond(primary,tempstructure[2][2],2)
-                            bothBonds(primary,tempstructure[2][2],2)
-                        elif cBool:
-                            structure[locY-1][locX] = Bond(primary,tempstructure[2][2],3)
-                            bothBonds(primary,tempstructure[2][2],3)
-                        else:                            
-                            structure[locY-1][locX] = Bond(primary,tempstructure[2][2])
-                            bothBonds(primary,tempstructure[2][2],1)
-
-                    if i == 2:
-                        subStruct = np.empty((5,3),dtype = object)
-                        tempstructure = branching(theElement,subStruct,[2,2])
-                        structure[locY][locX-2] = tempstructure
-                        if bBool:
-                            structure[locY][locX-1] = Bond(primary,tempstructure[2][2],2)
-                            bothBonds(primary,tempstructure[2][2],2)
-                        elif cBool:
-                            structure[locY][locX-1] = Bond(primary,tempstructure[2][2],3)
-                            bothBonds(primary,tempstructure[2][2],3)
-                        else:                            
-                            structure[locY][locX-1] = Bond(primary,tempstructure[2][2])
-                            bothBonds(primary,tempstructure[2][2],1)
-                    if i == 3:
-                        subStruct = np.empty((3,5),dtype = object)
-                        tempstructure = branching(theElement,subStruct,[2,0])
-                        structure[locY+2][locX] = tempstructure
-                        if bBool:
-                            structure[locY+1][locX] = Bond(primary,tempstructure[0][2],2)
-                            bothBonds(primary,tempstructure[0][2],2)
-                        elif cBool:
-                            structure[locY+1][locX] = Bond(primary,tempstructure[0][2],3)
-                            bothBonds(primary,tempstructure[0][2],3)
-                        else:                            
-                            structure[locY+1][locX] = Bond(primary,tempstructure[0][2])
-                            bothBonds(primary,tempstructure[0][2],1)
-                    if i == 4:
-                        subStruct = np.empty((5,3),dtype = object)
-                        tempstructure = branching(theElement,subStruct,[0,2])
-                        structure[locY][locX+2] = tempstructure
-                        if bBool:
-                            structure[locY][locX+1] = Bond(primary,tempstructure[2][0],2)
-                            bothBonds(primary,tempstructure[2][0],2)
-                        elif cBool:
-                            structure[locY][locX+1] = Bond(primary,tempstructure[2][0],3)
-                            bothBonds(primary,tempstructure[2][0],3)
-                        else:                            
-                            structure[locY][locX+1] = Bond(primary,tempstructure[2][0])
-                            bothBonds(primary,tempstructure[2][0],1)
-                    j+=1
+                if len(theElement) != 1:
+                    if str(theElement[-1]) == 'aRing':
+                        theElement = theElement[-1]
+                        someLoc = theElement.getLoc()
+                        eleLoc = someLoc[0]
+                        bondLoc = someLoc[-1]
+                        rStruc = theElement.getStruc()
+                        if i == 1:
+                            structure[locY-2][locX] = theElement
+                            structure[locY-1][locX] = Bond(structure[locY][locX],rStruc[eleLoc[0]][eleLoc[1]])
+                            rStruc[bondLoc[0]][bondLoc[1]] = Bond(rStruc[eleLoc[0]][eleLoc[1]],structure[locY][locX])
+                            bothBonds(rStruc[eleLoc[0]][eleLoc[1]],structure[locY][locX])
+                            structure[locY-2][locX].setStruc(rStruc)
+                        if i == 2:
+                            structure[locY][locX-2] = theElement
+                            structure[locY][locX-1] = Bond(structure[locY][locX],rStruc[eleLoc[0]][eleLoc[1]])
+                            rStruc[bondLoc[0]][bondLoc[1]] = Bond(rStruc[eleLoc[0]][eleLoc[1]],structure[locY][locX])
+                            bothBonds(rStruc[eleLoc[0]][eleLoc[1]],structure[locY][locX])
+                            structure[locY][locX-2].setStruc(rStruc)
+                        if i == 3:
+                            structure[locY+2][locX] = theElement
+                            structure[locY+1][locX] = Bond(structure[locY][locX],rStruc[eleLoc[0]][eleLoc[1]])
+                            rStruc[bondLoc[0]][bondLoc[1]] = Bond(rStruc[eleLoc[0]][eleLoc[1]],structure[locY][locX])
+                            bothBonds(rStruc[eleLoc[0]][eleLoc[1]],structure[locY][locX])
+                            structure[locY+2][locX].setStruc(rStruc)
+                        if i == 4:
+                            structure[locY][locX+2]
+                            structure[locY][locX+1] = Bond(structure[locY][locX],rStruc[eleLoc[0]][eleLoc[1]])
+                            rStruc[bondLoc[0]][bondLoc[1]] = Bond(rStruc[eleLoc[0]][eleLoc[1]],structure[locY][locX])
+                            bothBonds(rStruc[eleLoc[0]][eleLoc[1]],structure[locY][locX])
+                            structure[locY][locX+2].setStruc(rStruc)
+                        j += 1
                 else:
-                    try:
-                        theElement = theElement[0]
-                        if type(theElement) == type(''):
-                            if theElement[0] == '+':
-                                tempElement = theElement[1:]
-                                theElement = theTable.getElement(tempElement)
+                    if type(theElement) == type([]) or type(theElement) == type(np.zeros(1)):
+                        for part in theElement:
+                            if type(part) == type([]) or type(part) == type(np.zeros(1)):
+                                aBool = True
+                    if aBool:
+                        if type(theElement[0]) == type(''):
+                            if theElement[0][0] == '+':
+                                theElement[0] = theTable.getElement(theElement[0][1:])
                                 bBool = True
-                            elif theElement[0] == '*':
-                                tempElement = theElement[1:]
-                                theElement = theTable.getElement(tempElement)
+                            elif theElement[0][0] == '*':
+                                theElement[0] = theTable.getElement(theElement[0][1:])
                                 cBool = True
                         if i == 1:
-                            #Put something north
-                            structure[locY-2][locX] = theElement
+                            subStruct = np.empty((3,5),dtype = object)
+                            tempstructure = branching(theElement,subStruct,[2,2])
+                            structure[locY-2][locX] = tempstructure
                             if bBool:
-                                structure[locY-1][locX] = Bond(primary,theElement,2)
-                                bothBonds(primary,theElement,2)
+                                structure[locY-1][locX] = Bond(primary,tempstructure[2][2],2)
+                                bothBonds(primary,tempstructure[2][2],2)
                             elif cBool:
-                                structure[locY-1][locX] = Bond(primary,theElement,3)
-                                bothBonds(primary,theElement,3)
+                                structure[locY-1][locX] = Bond(primary,tempstructure[2][2],3)
+                                bothBonds(primary,tempstructure[2][2],3)
                             else:                            
-                                structure[locY-1][locX] = Bond(primary,theElement)
-                                bothBonds(primary,theElement,1)
+                                structure[locY-1][locX] = Bond(primary,tempstructure[2][2])
+                                bothBonds(primary,tempstructure[2][2],1)
+    
                         if i == 2:
-                            #Put something west
-                            structure[locY][locX-2] = theElement
+                            subStruct = np.empty((5,3),dtype = object)
+                            tempstructure = branching(theElement,subStruct,[2,2])
+                            structure[locY][locX-2] = tempstructure
                             if bBool:
-                                structure[locY][locX-1] = Bond(primary,theElement,2)
-                                bothBonds(primary,theElement,2)
+                                structure[locY][locX-1] = Bond(primary,tempstructure[2][2],2)
+                                bothBonds(primary,tempstructure[2][2],2)
                             elif cBool:
-                                structure[locY][locX-1] = Bond(primary,theElement,3)
-                                bothBonds(primary,theElement,3)
+                                structure[locY][locX-1] = Bond(primary,tempstructure[2][2],3)
+                                bothBonds(primary,tempstructure[2][2],3)
                             else:                            
-                                structure[locY][locX-1] = Bond(primary,theElement)
-                                bothBonds(primary,theElement,1)
+                                structure[locY][locX-1] = Bond(primary,tempstructure[2][2])
+                                bothBonds(primary,tempstructure[2][2],1)
                         if i == 3:
-                            #Put something south
-                            structure[locY+2][locX] = theElement
+                            subStruct = np.empty((3,5),dtype = object)
+                            tempstructure = branching(theElement,subStruct,[2,0])
+                            structure[locY+2][locX] = tempstructure
                             if bBool:
-                                structure[locY+1][locX] = Bond(primary,theElement,2)
-                                bothBonds(primary,theElement,2)
+                                structure[locY+1][locX] = Bond(primary,tempstructure[0][2],2)
+                                bothBonds(primary,tempstructure[0][2],2)
                             elif cBool:
-                                structure[locY+1][locX] = Bond(primary,theElement,3)
-                                bothBonds(primary,theElement,3)
+                                structure[locY+1][locX] = Bond(primary,tempstructure[0][2],3)
+                                bothBonds(primary,tempstructure[0][2],3)
                             else:                            
-                                structure[locY+1][locX] = Bond(primary,theElement)
-                                bothBonds(primary,theElement,1)
+                                structure[locY+1][locX] = Bond(primary,tempstructure[0][2])
+                                bothBonds(primary,tempstructure[0][2],1)
                         if i == 4:
-                            #Put something east
-                            structure[locY][locX+2] = theElement                        
+                            subStruct = np.empty((5,3),dtype = object)
+                            tempstructure = branching(theElement,subStruct,[0,2])
+                            structure[locY][locX+2] = tempstructure
                             if bBool:
-                                structure[locY][locX+1] = Bond(primary,theElement,2)
-                                bothBonds(primary,theElement,2)
+                                structure[locY][locX+1] = Bond(primary,tempstructure[2][0],2)
+                                bothBonds(primary,tempstructure[2][0],2)
                             elif cBool:
-                                structure[locY][locX+1] = Bond(primary,theElement,3)
-                                bothBonds(primary,theElement,3)
+                                structure[locY][locX+1] = Bond(primary,tempstructure[2][0],3)
+                                bothBonds(primary,tempstructure[2][0],3)
                             else:                            
-                                structure[locY][locX+1] = Bond(primary,theElement)
-                                bothBonds(primary,theElement,1)
-                        j += 1
-                    except:
-                        #Do something here that locates the proper place on the ring to bond
-                        
-                        j += 1
+                                structure[locY][locX+1] = Bond(primary,tempstructure[2][0])
+                                bothBonds(primary,tempstructure[2][0],1)
+                        j+=1
+                    else:
+                        try:
+                            theElement = theElement[0]
+                            if type(theElement) == type(''):
+                                if theElement[0] == '+':
+                                    tempElement = theElement[1:]
+                                    theElement = theTable.getElement(tempElement)
+                                    bBool = True
+                                elif theElement[0] == '*':
+                                    tempElement = theElement[1:]
+                                    theElement = theTable.getElement(tempElement)
+                                    cBool = True
+                            if i == 1:
+                                #Put something north
+                                structure[locY-2][locX] = theElement
+                                if bBool:
+                                    structure[locY-1][locX] = Bond(primary,theElement,2)
+                                    bothBonds(primary,theElement,2)
+                                elif cBool:
+                                    structure[locY-1][locX] = Bond(primary,theElement,3)
+                                    bothBonds(primary,theElement,3)
+                                else:                            
+                                    structure[locY-1][locX] = Bond(primary,theElement)
+                                    bothBonds(primary,theElement,1)
+                            if i == 2:
+                                #Put something west
+                                structure[locY][locX-2] = theElement
+                                if bBool:
+                                    structure[locY][locX-1] = Bond(primary,theElement,2)
+                                    bothBonds(primary,theElement,2)
+                                elif cBool:
+                                    structure[locY][locX-1] = Bond(primary,theElement,3)
+                                    bothBonds(primary,theElement,3)
+                                else:                            
+                                    structure[locY][locX-1] = Bond(primary,theElement)
+                                    bothBonds(primary,theElement,1)
+                            if i == 3:
+                                #Put something south
+                                structure[locY+2][locX] = theElement
+                                if bBool:
+                                    structure[locY+1][locX] = Bond(primary,theElement,2)
+                                    bothBonds(primary,theElement,2)
+                                elif cBool:
+                                    structure[locY+1][locX] = Bond(primary,theElement,3)
+                                    bothBonds(primary,theElement,3)
+                                else:                            
+                                    structure[locY+1][locX] = Bond(primary,theElement)
+                                    bothBonds(primary,theElement,1)
+                            if i == 4:
+                                #Put something east
+                                structure[locY][locX+2] = theElement                        
+                                if bBool:
+                                    structure[locY][locX+1] = Bond(primary,theElement,2)
+                                    bothBonds(primary,theElement,2)
+                                elif cBool:
+                                    structure[locY][locX+1] = Bond(primary,theElement,3)
+                                    bothBonds(primary,theElement,3)
+                                else:                            
+                                    structure[locY][locX+1] = Bond(primary,theElement)
+                                    bothBonds(primary,theElement,1)
+                            j += 1
+                        except:
+                            #Do something here that locates the proper place on the ring to bond
+                            
+                            j += 1
                 i+=1
 
     return structure
@@ -411,46 +443,17 @@ def stringify(anObject):
         return newList
     if type(anObject) == type(''):return anObject
     if anObject == None:return anObject
-    else:return str(anObject)
-    
-    """height = len(anArray)
-    width = len(anArray[0])
-    newArray = np.empty((height,width),dtype=object)
-    for i in range(height):
-        for j in range(width):
-            if type(anArray[i][j]) == type([]) or type(anArray[i][j]) == type(np.zeros(1)): newArray[i][j] = stringify(anArray[i][j])
-            elif anArray[i][j] == None: newArray[i][j] = anArray[i][j]
-            else: newArray[i][j] = str(anArray[i][j])
-                                    
-    return newArray"""
-
-def stoElement(anObject):
-    """recursive function that turns atomic symbols into string representations of their element"""
-    if type(anObject) == type([]) or type(anObject) == type(np.zeros(1)):
-        newList = range(len(anObject))
-        for i in range(len(anObject)):
-            if anObject[i][0] == '@':
-                print newList[i]
-                newList[i] = Ring(toElement(anObject[i][1:]))
-                print newList[i]
-            else:
-                newList[i] = toElement(anObject[i])
-        return newList
-    
-    if type(anObject) == type(''):
-        if anObject[0] in ['+','*','@','!']:
-            return str(anObject)
-        if anObject[0] not in numList: anObject = str(theTable.getElement(anObject))
-        return anObject          
+    else:return str(anObject)   
         
 def toElement(anObject):  
     """Recursive function that turns atomic symbols into their element"""
     if type(anObject) == type([]) or type(anObject) == type(np.zeros(1)):
         newList = range(len(anObject))
         for i in range(len(anObject)):
-            if '@' in anObject[i]:
-                aNum = anObject[i].find('@')
-                newList[i] = [anObject[i][:aNum],Ring(toElement(anObject[i+1:]))]
+            if '@' in anObject[i][0]:
+                aNum = anObject[i][0].find('@')
+                newList[i] = [anObject[i][0][:aNum],Ring(toElement(anObject[i][1:]),anObject[i][0][:aNum])]
+                i += 1
             else:
                 newList[i] = toElement(anObject[i])
         return newList
@@ -502,6 +505,7 @@ class Compound(Chemistry):
            j+=2
         
         self.strstructure = stringify(self.structure)
+        print self.structure
         print self.strstructure
         
     def __str__(self):
@@ -538,9 +542,10 @@ def populate(anObject):
     
     else:return anObject
 
-def circulate(aRing,aStruc):
+def circulate(aRing,aStruc,mark=''):
     #aRing = stringify(aRing[0])
     """"""
+    loc = []
     k = 0
     primarys = [part[0] for part in aRing]
     substituents = [part[1] for part in aRing]
@@ -549,43 +554,73 @@ def circulate(aRing,aStruc):
             aStruc[2][i] = primarys[k]
             if i == 2:
                 aStruc[0][i] = substituents[k][0][0]
-                aStruc[1][i] = Bond(aStruc[2][i],substituents[k][0][0])
-                bothBonds(aStruc[2][i],substituents[k][0][0])
+                if substituents[k][0][0] != mark:
+                    aStruc[1][i] = Bond(aStruc[2][i],aStruc[0][i])
+                    bothBonds(aStruc[2][i],aStruc[0][i])
+                else:
+                    loc = [[2,i],[1,i]]
                 aStruc[2][i-2] = substituents[k][1][0]
-                aStruc[1][i-2] = Bond(aStruc[2][i-2],substituents[k][1][0])
-                bothBonds(aStruc[2][i],substituents[k][1][0])
+                if substituents[k][1][0] != mark:                    
+                    aStruc[1][i-2] = Bond(aStruc[2][i-2],aStruc[2][i-2])
+                    bothBonds(aStruc[2][i],aStruc[2][i-2])
+                else:
+                    loc = [[2,i],[1,i-2]]
             else:
                 aStruc[0][i-1] = substituents[k][0][0]
-                aStruc[1][i-1] = Bond(aStruc[2][i],substituents[k][0][0])
-                bothBonds(aStruc[2][i],substituents[k][0][0])
+                if substituents[k][0][0] != mark:
+                    aStruc[1][i-1] = Bond(aStruc[2][i],aStruc[0][i-1])
+                    bothBonds(aStruc[2][i],aStruc[0][i-1])
+                else:
+                    loc = [[2,i],[1,i-1]]
                 aStruc[0][i] = substituents[k][1][0]
-                aStruc[1][i] = Bond(aStruc[2][i],substituents[k][1][0])
-                bothBonds(aStruc[2][i],substituents[k][1][0])
+                if substituents[k][1][0] != mark:
+                    aStruc[1][i] = Bond(aStruc[2][i],aStruc[0][i])
+                    bothBonds(aStruc[2][i],aStruc[0][i])
+                else:
+                    loc = [[2,i],[1,i]]
             k += 1            
         aStruc[3][-3] = primarys[k]
         aStruc[2][-1] = substituents[k][0][0]
-        aStruc[2][-2] = Bond(aStruc[3][-3],substituents[k][0][0])
-        bothBonds(aStruc[3][-3],substituents[k][0][0])
+        if substituents[k][0][0] != mark:
+            aStruc[2][-2] = Bond(aStruc[3][-3],aStruc[2][-1])
+            bothBonds(aStruc[3][-3],aStruc[2][-1])
+        else:
+            loc = [[3,-3],[2,-2]]
         aStruc[3][-1] = substituents[k][1][0]
-        aStruc[3][-2] = Bond(aStruc[3][-3],substituents[k][1][0])
-        bothBonds(aStruc[3][-3],substituents[k][1][0])
+        if substituents[k][1][0] != mark:
+            aStruc[3][-2] = Bond(aStruc[3][-3],aStruc[3][-1])
+            bothBonds(aStruc[3][-3],aStruc[3][-1]) 
+        else:
+            loc = [[3,-3],[3,-2]]
         k += 1
         for i in range(len(aStruc[2])-4,2,-2):
             aStruc[4][i] = primarys[k]
             aStruc[6][i+1] = substituents[k][0][0]
-            aStruc[5][i+1] = Bond(aStruc[4][i],substituents[k][0][0])
-            bothBonds(aStruc[4][i],substituents[k][0][0])
+            if substituents[k][0][0] != mark:
+                aStruc[5][i+1] = Bond(aStruc[4][i],aStruc[6][i+1])
+                bothBonds(aStruc[4][i],aStruc[6][i+1])
+            else:
+                loc = [[4,i],[5,i+1]]
             aStruc[6][i] = substituents[k][1][0]
-            aStruc[5][i] = Bond(aStruc[4][i],substituents[k][1][0])
-            bothBonds(aStruc[4][i],substituents[k][1][0])
+            if substituents[k][1][0] != mark:
+                aStruc[5][i] = Bond(aStruc[4][i],aStruc[6][i])
+                bothBonds(aStruc[4][i],aStruc[6][i])
+            else:
+                loc = [[4,i],[5,i]]
             k += 1
         aStruc[4][2] = primarys[k]
         aStruc[4][0] = substituents[k][0][0]
-        aStruc[4][1] = Bond(aStruc[4][2],substituents[k][0][0])
-        bothBonds(aStruc[4][2],substituents[k][0][0])
+        if substituents[k][0][0] != mark:
+            aStruc[4][1] = Bond(aStruc[4][2],aStruc[4][0])
+            bothBonds(aStruc[4][2],aStruc[4][0])
+        else:
+            loc = [[4,2],[4,1]]
         aStruc[6][2] = substituents[k][1][0]
-        aStruc[5][2] = Bond(aStruc[4][2],substituents[k][1][0])
-        bothBonds(aStruc[4][2],substituents[k][1][0])
+        if substituents[k][1][0] != mark:
+            aStruc[5][2] = Bond(aStruc[4][2],aStruc[6][2])
+            bothBonds(aStruc[4][2],aStruc[6][2])
+        else:
+            loc = [[4,2],[5,2]]
         for i in range(3,len(aStruc[0])-2,2):
             aStruc[2][i] = Bond(aStruc[2][i-1],aStruc[2][i+1])
             bothBonds(aStruc[2][i-1],aStruc[2][i+1])
@@ -593,55 +628,91 @@ def circulate(aRing,aStruc):
             aStruc[4][i] = Bond(aStruc[4][i-1],aStruc[4][i+1])
             bothBonds(aStruc[4][i-1],aStruc[4][i+1])
         aStruc[3][2] = Bond(aStruc[2][2],aStruc[4][2])
-        #bothBonds(aStruc[2][2],aStruc[4][2])
+        bothBonds(aStruc[2][2],aStruc[4][2])
     else:
         for i in range(2,len(aStruc[0])-2,2):
             aStruc[2][i] = primarys[k]
             if i == 2:
                 aStruc[0][i] = substituents[k][0][0]
-                aStruc[1][i] = Bond(aStruc[2][i],aStruc[0][i])
-                bothBonds(aStruc[2][i],aStruc[0][i])
+                if substituents[k][0][0] != mark:
+                    aStruc[1][i] = Bond(aStruc[2][i],aStruc[0][i])
+                    bothBonds(aStruc[2][i],aStruc[0][i])
+                else:
+                    loc = [[2,i],[1,i]]
                 aStruc[2][0] = substituents[k][1][0]
-                aStruc[1][0] = Bond(aStruc[2][i],aStruc[2][0])
-                bothBonds(aStruc[2][i],aStruc[2][0])
+                if substituents[k][1][0] != mark:
+                    aStruc[2][1] = Bond(aStruc[2][i],aStruc[2][0])
+                    bothBonds(aStruc[2][i],aStruc[2][0])
+                else:
+                    loc = [[2,i],[2,1]]
             elif i == len(aStruc[0])-3:
                 aStruc[0][i] = substituents[k][0][0]
-                aStruc[1][i] = Bond(aStruc[2][i],aStruc[0][i])
-                bothBonds(aStruc[2][i],aStruc[0][i])
+                if substituents[k][0][0] != mark:
+                    aStruc[1][i] = Bond(aStruc[2][i],aStruc[0][i])
+                    bothBonds(aStruc[2][i],aStruc[0][i])
+                else:
+                    loc = [[2,i],[1,i]]
                 aStruc[2][-1] = substituents[k][1][0]
-                aStruc[2][-2] = Bond(aStruc[2][i],aStruc[2][-1])
-                bothBonds(aStruc[2][i],aStruc[2][-1])
+                if substituents[k][1][0] != mark:
+                    aStruc[2][-2] = Bond(aStruc[2][i],aStruc[2][-1])
+                    bothBonds(aStruc[2][i],aStruc[2][-1])
+                else:
+                    loc = [[2,i],[2,-2]]
             else:
                 aStruc[0][i-1] = substituents[k][0][0]
-                aStruc[1][i-1] = Bond(aStruc[2][i],aStruc[0][i-1])
-                bothBonds(aStruc[2][i],aStruc[0][i-1])
+                if substituents[k][0][0] != mark:
+                    aStruc[1][i-1] = Bond(aStruc[2][i],aStruc[0][i-1])
+                    bothBonds(aStruc[2][i],aStruc[0][i-1])
+                else:
+                    loc = [[2,i],[1,i-1]]
                 aStruc[0][i] = substituents[k][1][0]
-                aStruc[1][i] = Bond(aStruc[2][i],aStruc[0][i])
-                bothBonds(aStruc[2][i],aStruc[0][i])
+                if substituents[k][1][0] != mark:
+                    aStruc[1][i] = Bond(aStruc[2][i],aStruc[0][i])
+                    bothBonds(aStruc[2][i],aStruc[0][i])
+                else:
+                    loc = [[2,i],[1,i]]
             k += 1
         for i in range(len(aStruc[2])-3,0,-2):
             aStruc[4][i] = primarys[k]
             if i == 2:
                 aStruc[-1][i] = substituents[k][0][0]
-                aStruc[-2][i] = Bond(aStruc[4][i],aStruc[-1][i])
-                bothBonds(aStruc[4][i],aStruc[-1][i])
+                if substituents[k][0][0] != mark:
+                    aStruc[-2][i] = Bond(aStruc[4][i],aStruc[-1][i])
+                    bothBonds(aStruc[4][i],aStruc[-1][i])
+                else:
+                    loc = [[4,i],[-2,i]]
                 aStruc[4][0] = substituents[k][1][0]
-                aStruc[4][1] = Bond(aStruc[4][i],aStruc[4][0])
-                bothBonds(aStruc[4][i],aStruc[4][0])
+                if substituents[k][1][0] != mark:
+                    aStruc[4][1] = Bond(aStruc[4][i],aStruc[4][0])
+                    bothBonds(aStruc[4][i],aStruc[4][0])
+                else:
+                    loc = [[4,i],[4,1]]
             elif i == len(aStruc[2]) - 3:
                 aStruc[4][-1] = substituents[k][0][0]
-                aStruc[4][-2] = Bond(aStruc[4][i],aStruc[4][-1])
-                bothBonds(aStruc[4][i],aStruc[4][-1])
+                if substituents[k][0][0] != mark:
+                    aStruc[4][-2] = Bond(aStruc[4][i],aStruc[4][-1])
+                    bothBonds(aStruc[4][i],aStruc[4][-1])
+                else:
+                    loc = [[4,i],[4,-2]]
                 aStruc[-1][i] = substituents[k][1][0]
-                aStruc[-2][i] = Bond(aStruc[4][i],aStruc[-1][i])
-                bothBonds(aStruc[4][i],aStruc[-1][i])
+                if substituents[k][1][0] != mark:
+                    aStruc[-2][i] = Bond(aStruc[4][i],aStruc[-1][i])
+                    bothBonds(aStruc[4][i],aStruc[-1][i])
+                else:
+                    loc = [[4,i],[-2,i]]
             else:
                 aStruc[-1][i+1] = substituents[k][0][0]
-                aStruc[-2][i+1] = Bond(aStruc[4][i],aStruc[-1][i+1])
-                bothBonds(aStruc[4][i],aStruc[-1][i+1])
+                if substituents[k][0][0] != mark:
+                    aStruc[-2][i+1] = Bond(aStruc[4][i],aStruc[-1][i+1])
+                    bothBonds(aStruc[4][i],aStruc[-1][i+1])
+                else:
+                    loc = [[4,i],[-2,i+1]]
                 aStruc[-1][i] = substituents[k][1][0]
-                aStruc[-2][i] = Bond(aStruc[4][i],aStruc[-1][i])
-                bothBonds(aStruc[4][i],aStruc[-1][i])
+                if substituents[k][1][0] != mark:
+                    aStruc[-2][i] = Bond(aStruc[4][i],aStruc[-1][i])
+                    bothBonds(aStruc[4][i],aStruc[-1][i])
+                else:
+                    loc = [[4,i],[-2,i]]
             k+= 1
         for i in range(3,len(aStruc[0])-2,2):
             aStruc[2][i] = Bond(aStruc[2][i-1],aStruc[2][i+1])
@@ -653,20 +724,38 @@ def circulate(aRing,aStruc):
             bothBonds(aStruc[4][i+1],aStruc[4][i-1])
         aStruc[3][2] = Bond(aStruc[2][2],aStruc[4][2])
         bothBonds(aStruc[2][2],aStruc[4][2])
-        
-    return aStruc   
+    
+    return loc,aStruc   
         
 class Ring(Compound):
-    def __init__(self,ringList):
+    def __init__(self,ringList,mark = ''):
         """"""
+        self.mark = mark
         self.ringList = populate(ringList)[0]
         self.aLen = len(self.ringList)*2
         self.structure = np.empty((7,4+(self.aLen-2)/2),dtype=object)
-        print self.structure
-        self.structure = circulate(self.ringList,self.structure)
-        print stringify(self.structure)
+        self.someObject = circulate(self.ringList,self.structure,mark)
+        self.theLoc = self.someObject[0]
+        self.structure = self.someObject[1]
+        
+    def getMark(self):
+        """"""
+        return self.mark
+    
+    def getLoc(self):
+        """"""
+        return self.theLoc
+        
+    def getStruc(self):
+        """"""
+        return self.structure
+        
+    def setStruc(self,newStruc):
+        """"""
+        self.structure = newStruc
         
     def __str__(self):
+        """"""
         return 'aRing'  
 
 class BridgedStructure(Ring):
