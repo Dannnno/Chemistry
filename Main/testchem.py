@@ -261,8 +261,7 @@ def branching(anObject,structure,location):
                 aBool = False
                 bBool = False
                 cBool = False
-                if len(theElement) != 1:
-                    if str(theElement[-1]) == 'aRing':
+                if len(theElement) != 1 and str(theElement[-1]) == 'aRing':
                         theElement = theElement[-1]
                         someLoc = theElement.getLoc()
                         eleLoc = someLoc[0]
@@ -501,11 +500,10 @@ class Compound(Chemistry):
         j=3
         for i in range(len(self.centers)-1):
            self.structure[middle][j] = Bond(self.structure[middle][j-1],self.structure[middle][j+1],1)
-           bothBonds(self.structure[middle][j-1],self.structure[middle][j+1],1)
+           #bothBonds(self.structure[middle][j-1],self.structure[middle][j+1],1)
            j+=2
         
         self.strstructure = stringify(self.structure)
-        print self.structure
         print self.strstructure
         
     def __str__(self):
@@ -778,7 +776,7 @@ def BeginProgram():
     #print testCompound #Testing
     #testCompound = Compound('C((+O((C((H)3))1))1(H)2))')
     #print testCompound #Testing
-    testCompound = Compound('C((!@((C((H)2))5(C((H)1(!)1))1))1(H)3)')
+    testCompound = Compound('C((!@((C((H)2))5(C((H)1(!)1))1))1(H)2) C((C((H)3))3)')
     print testCompound
     
 BeginProgram()
