@@ -1,4 +1,4 @@
-###Changelog - updated 1/19/2014 6:48:06 PM 
+###Changelog - updated 1/21/2014 11:10:04 PM 
 ---
 Current stage of development: Pre-Alpha  
 Current program version: NA
@@ -79,7 +79,7 @@ Current program version: NA
 - Added more functionality to Compound class and compound creation
 - slightly edited functionality of all other chemistry subclasses
            
-**01/02/2014** 
+**1/02/2014** 
 
 - Added functionality to Compound Class
 **
@@ -146,3 +146,10 @@ Current program version: NA
 - Need to adjust `class Mendeleev()` and `toElement()` so that they create a unique element each time
 - Adjust methods of bond creation so they are less cumbersome - put it all in bothBonds?
 - find a better way to put all the substituents on a ring
+
+**1/21/2014**
+
+- Finished updating `chemistry.py`
+- Working on optimizing the creation of bonds by type, location, etc
+- Working on creating unique element objects instead of copying them
+	- Began working on improved `populate()` and `toElement()` functions in **`test.py`**

@@ -38,6 +38,7 @@ class Element(Chemistry):
                  family):
         """Creates an element object using the atomic mass, number, symbol, name, electronegativity and atomic family"""
         #!!Needs octet rule support!!
+        #!!Needs valence support!!
         
         self.atomicMass = mass
         self.atomicNumber = number
@@ -117,13 +118,12 @@ class Mendeleev(Chemistry):
                 if tempTable[i][j] == '0':
                     theTable.append(None)
                 else:
-                    anElement=Element(massList[inc],
-                                      nList[inc],
-                                      symList[inc],
-                                      nameList[inc],
-                                      negList[inc],
-                                      famList[inc])
-                    theTable.append(anElement)
+                    theTable.append([massList[inc],
+                                     nList[inc],
+                                     symList[inc],
+                                     nameList[inc],
+                                     negList[inc],
+                                     famList[inc]])
                     inc+=1  
         
         #shapes the periodic table        
@@ -142,15 +142,14 @@ class Mendeleev(Chemistry):
                     stringVal += str(columns)+'\n'
         return stringVal
 
-    def getElement(self,
-                   symbol):
+    def getElement(self,symbol):
         """Returns the appropriate element object given the element's symbol"""
         for rows in self.finalTable:
             for columns in self.finalTable:
                 for atom in columns:
                     if atom != None:
-                        if symbol == atom.getsymbol():
-                            return atom
+                        if symbol == atom[2]:
+                            return Element(atom[0],atom[1],atom[2],atom[3],atom[4],atom[5])
     
     def __str__(self):
         """String representation of the periodic table"""
@@ -223,6 +222,9 @@ def branching(anObject,structure,location):
         if aNum > 1:
             for i in range(aNum-1):
                 substituents.insert(i+item,theElement)
+                
+    substituents = toElement(substituents)
+    print substituents
 
     locX = location[0]
     locY = location[1]
@@ -250,7 +252,7 @@ def branching(anObject,structure,location):
     for direction in cardinals:
         if direction == None: status.append(True)
         else: status.append(False)
-                        
+
     i=1
     j=0
 
@@ -360,71 +362,66 @@ def branching(anObject,structure,location):
                                 bothBonds(primary,tempstructure[2][0],1)
                         j+=1
                     else:
-                        try:
-                            theElement = theElement[0]
-                            if type(theElement) == type(''):
-                                if theElement[0] == '+':
-                                    tempElement = theElement[1:]
-                                    theElement = theTable.getElement(tempElement)
-                                    bBool = True
-                                elif theElement[0] == '*':
-                                    tempElement = theElement[1:]
-                                    theElement = theTable.getElement(tempElement)
-                                    cBool = True
-                            if i == 1:
-                                #Put something north
-                                structure[locY-2][locX] = theElement
-                                if bBool:
-                                    structure[locY-1][locX] = Bond(primary,theElement,2)
-                                    bothBonds(primary,theElement,2)
-                                elif cBool:
-                                    structure[locY-1][locX] = Bond(primary,theElement,3)
-                                    bothBonds(primary,theElement,3)
-                                else:                            
-                                    structure[locY-1][locX] = Bond(primary,theElement)
-                                    bothBonds(primary,theElement,1)
-                            if i == 2:
-                                #Put something west
-                                structure[locY][locX-2] = theElement
-                                if bBool:
-                                    structure[locY][locX-1] = Bond(primary,theElement,2)
-                                    bothBonds(primary,theElement,2)
-                                elif cBool:
-                                    structure[locY][locX-1] = Bond(primary,theElement,3)
-                                    bothBonds(primary,theElement,3)
-                                else:                            
-                                    structure[locY][locX-1] = Bond(primary,theElement)
-                                    bothBonds(primary,theElement,1)
-                            if i == 3:
-                                #Put something south
-                                structure[locY+2][locX] = theElement
-                                if bBool:
-                                    structure[locY+1][locX] = Bond(primary,theElement,2)
-                                    bothBonds(primary,theElement,2)
-                                elif cBool:
-                                    structure[locY+1][locX] = Bond(primary,theElement,3)
-                                    bothBonds(primary,theElement,3)
-                                else:                            
-                                    structure[locY+1][locX] = Bond(primary,theElement)
-                                    bothBonds(primary,theElement,1)
-                            if i == 4:
-                                #Put something east
-                                structure[locY][locX+2] = theElement                        
-                                if bBool:
-                                    structure[locY][locX+1] = Bond(primary,theElement,2)
-                                    bothBonds(primary,theElement,2)
-                                elif cBool:
-                                    structure[locY][locX+1] = Bond(primary,theElement,3)
-                                    bothBonds(primary,theElement,3)
-                                else:                            
-                                    structure[locY][locX+1] = Bond(primary,theElement)
-                                    bothBonds(primary,theElement,1)
-                            j += 1
-                        except:
-                            #Do something here that locates the proper place on the ring to bond
-                            
-                            j += 1
-                i+=1
+                        theElement = theElement[0]
+                        if type(theElement) == type(''):
+                            if theElement[0] == '+':
+                                tempElement = theElement[1:]
+                                theElement = theTable.getElement(tempElement)
+                                bBool = True
+                            elif theElement[0] == '*':
+                                tempElement = theElement[1:]
+                                theElement = theTable.getElement(tempElement)
+                                cBool = True
+                        if i == 1:
+                            #Put something north
+                            structure[locY-2][locX] = theElement
+                            if bBool:
+                                structure[locY-1][locX] = Bond(primary,theElement,2)
+                                bothBonds(primary,theElement,2)
+                            elif cBool:
+                                structure[locY-1][locX] = Bond(primary,theElement,3)
+                                bothBonds(primary,theElement,3)
+                            else:                            
+                                structure[locY-1][locX] = Bond(primary,theElement)
+                                bothBonds(primary,theElement,1)
+                        if i == 2:
+                            #Put something west
+                            structure[locY][locX-2] = theElement
+                            if bBool:
+                                structure[locY][locX-1] = Bond(primary,theElement,2)
+                                bothBonds(primary,theElement,2)
+                            elif cBool:
+                                structure[locY][locX-1] = Bond(primary,theElement,3)
+                                bothBonds(primary,theElement,3)
+                            else:                            
+                                structure[locY][locX-1] = Bond(primary,theElement)
+                                bothBonds(primary,theElement,1)
+                        if i == 3:
+                            #Put something south
+                            structure[locY+2][locX] = theElement
+                            if bBool:
+                                structure[locY+1][locX] = Bond(primary,theElement,2)
+                                bothBonds(primary,theElement,2)
+                            elif cBool:
+                                structure[locY+1][locX] = Bond(primary,theElement,3)
+                                bothBonds(primary,theElement,3)
+                            else:                            
+                                structure[locY+1][locX] = Bond(primary,theElement)
+                                bothBonds(primary,theElement,1)
+                        if i == 4:
+                            #Put something east
+                            structure[locY][locX+2] = theElement                        
+                            if bBool:
+                                structure[locY][locX+1] = Bond(primary,theElement,2)
+                                bothBonds(primary,theElement,2)
+                            elif cBool:
+                                structure[locY][locX+1] = Bond(primary,theElement,3)
+                                bothBonds(primary,theElement,3)
+                            else:                            
+                                structure[locY][locX+1] = Bond(primary,theElement)
+                                bothBonds(primary,theElement,1)
+                        j += 1
+            i+=1
 
     return structure
 
@@ -446,6 +443,7 @@ def stringify(anObject):
         
 def toElement(anObject):  
     """Recursive function that turns atomic symbols into their element"""
+    print anObject
     if type(anObject) == type([]) or type(anObject) == type(np.zeros(1)):
         newList = range(len(anObject))
         for i in range(len(anObject)):
@@ -483,8 +481,7 @@ class Compound(Chemistry):
                                pyp.nestedExpr().parseString(self.centers[i][1:]).asList()[0]]
         
         #Associates symbols with their element objects
-        #self.stringCenters = stoElement(self.centers)
-        self.centers = toElement(self.centers)
+        #self.centers = toElement(self.centers)
         
         #Associates the compound with self.structure and creates bonds
         middle = int(len(self.structure)/2)
@@ -500,7 +497,7 @@ class Compound(Chemistry):
         j=3
         for i in range(len(self.centers)-1):
            self.structure[middle][j] = Bond(self.structure[middle][j-1],self.structure[middle][j+1],1)
-           #bothBonds(self.structure[middle][j-1],self.structure[middle][j+1],1)
+           bothBonds(self.structure[middle][j-1],self.structure[middle][j+1],1)
            j+=2
         
         self.strstructure = stringify(self.structure)
