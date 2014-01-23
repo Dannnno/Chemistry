@@ -1,4 +1,4 @@
-###Changelog - updated 1/21/2014 11:10:04 PM 
+###Changelog - updated 1/22/2014 2:35:45 PM  
 ---
 Current stage of development: Pre-Alpha  
 Current program version: NA
@@ -152,4 +152,8 @@ Current program version: NA
 - Finished updating `chemistry.py`
 - Working on optimizing the creation of bonds by type, location, etc
 - Working on creating unique element objects instead of copying them
-	- Began working on improved `populate()` and `toElement()` functions in **`test.py`**
+	- Began working on improved `populate()` and `toElement()` functions in **`test1.py`**
+
+**1/22/2014**
+
+- finished work in `test1.py`, began work on improved bond creation regardless of source in `test2.py`
