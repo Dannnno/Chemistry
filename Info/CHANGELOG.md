@@ -1,4 +1,4 @@
-###Changelog - updated 1/22/2014 2:35:45 PM  
+###Changelog - updated 1/24/2014 8:56:14 AM  
 ---
 Current stage of development: Pre-Alpha  
 Current program version: NA
@@ -157,3 +157,7 @@ Current program version: NA
 **1/22/2014**
 
 - finished work in `test1.py`, began work on improved bond creation regardless of source in `test2.py`
+
+**1/23/2014**
+
+- continued work in `test2.py` and `testchem2.py` to improve bonding

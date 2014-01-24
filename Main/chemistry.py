@@ -730,6 +730,7 @@ class Ring(Compound):
         self.someObject = circulate(self.ringList,self.structure,mark)
         self.theLoc = self.someObject[0]
         self.structure = self.someObject[1]
+        print stringify(self.structure)
         
     def getMark(self):
         """"""
