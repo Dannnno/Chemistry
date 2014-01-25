@@ -1,4 +1,4 @@
-###Changelog - updated 1/24/2014 8:56:14 AM  
+###Changelog - updated 1/25/2014 12:51:10 AM 
 ---
 Current stage of development: Pre-Alpha  
 Current program version: NA
@@ -161,3 +161,9 @@ Current program version: NA
 **1/23/2014**
 
 - continued work in `test2.py` and `testchem2.py` to improve bonding
+
+**1/24/2014**
+
+- Began major rework of `Element` class.  `Element` now contains all methods and subclasses such as `Hydrogen(Element)` and `Carbon(Element)` are each unique and contain atom specific information within.  First goal is to have common OChem elements created - program could eventually have different 'packages' for OChem, Gen Chem, P Chem, etc (?)
+	- Work currently being done in `newchem.py`
+- Created file `errors.py` to create and handle all custom exceptions I may/may not need.  Current exception is the (unused) `ValenceException` for use if an atom's valence electrons have been exceeded - currently unused and needs rework  

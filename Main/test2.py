@@ -5,8 +5,8 @@ def bondIt(aStruc,locS,locE,locB,order=1,rBool=False):
     
     if rBool:
         substituents = locS
-        print substituents
         if len(aStruc[0])%2 == 0:
+            i = 
             pass
         else:
             pass
