@@ -317,18 +317,3 @@ class Calcium(Element):
         self.charge = 0
         self.bondList = []
         self.inc = aNum
-                                      
-class Scandium(Element):
-    
-    def __init__(self,aNum):
-        self.number = 21
-        self.mass = 44.955912
-        self.name = 'Scandium'
-        self.symbol = 'Sc'
-        self.radius = 1
-        self.electronegativity = 1.36
-        self.oxidation = 1
-        raise Exception
-        self.charge = 0
-        self.bondList = []
-        self.inc = aNum
