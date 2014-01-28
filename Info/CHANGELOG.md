@@ -1,4 +1,4 @@
-###Changelog - updated 1/26/2014 7:33:32 PM 
+###Changelog - updated 1/27/2014 9:17:05 PM 
 ---
 Current stage of development: Pre-Alpha  
 Current program version: NA
@@ -166,14 +166,21 @@ Current program version: NA
 
 - Began major rework of `Element` class.  `Element` now contains all methods and subclasses such as `Hydrogen(Element)` and `Carbon(Element)` are each unique and contain atom specific information within.  First goal is to have common OChem elements created - program could eventually have different 'packages' for OChem, Gen Chem, P Chem, etc (?)
 	- Work currently being done in `newchem.py`
-- Created file `errors.py` to create and handle all custom exceptions I may/may not need.  Current exception is the (unused) `ValenceException` for use if an atom's valence electrons have been exceeded - currently unused and needs rework 
+- Created file `errors.py` to create and handle all custom exceptions I may/may not need.
 
 **1/26/2014**
 
 - Using `newchem2.py` as the temporary directory for specific element objects - contains Hydrogen, Carbon, Oxygen, Nitrogen and common halogens
 - Began rewriting program to make use of the new compounds
-	- use a dictionary to match symbols and an `'Hydrogen(1)'` type statement
+	- use a dictionary to match symbols and a `'Hydrogen()'` like statement
 	- when converting the strings to elements it should take the symbol, match to the dictionary, then use `eval()` to create the object
-	- instead of `elements.txt` created `elements2.txt` for temporary periodic table creation - will not work until I finish creating all element objects
 - added `InvalidBondException` to `errors.py`
-- moved extensive list of element objects to `elements.py`  
+- moved extensive list of element objects to `elements.py`
+
+**1/27/2014**
+
+- Used `asd.py` to iterate through the element list and update `elements.py`
+	- Completed rework (for now - still needs oxidation support) 
+- Continued updating `newchem2.py` so that it functions equivalently to `chemistry.py`
+	- goal is to create a more elegant approach to the program
+- Deleted some of the extraneous test `*.py` and `*.txt` files    
