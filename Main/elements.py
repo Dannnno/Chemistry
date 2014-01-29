@@ -19,7 +19,7 @@ class Element(Chemistry):
         try:self.bondList[index] = newBond
         except:self.addBond(newBond)
     def __str__(self):
-        return repr(self.name)
+        return self.name
 
 class Hydrogen(Element):
     def __init__(self):

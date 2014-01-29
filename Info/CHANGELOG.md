@@ -1,4 +1,4 @@
-###Changelog - updated 1/27/2014 9:17:05 PM 
+###Changelog - updated 1/28/2014 9:49:54 PM 
 ---
 Current stage of development: Pre-Alpha  
 Current program version: NA
@@ -183,4 +183,13 @@ Current program version: NA
 	- Completed rework (for now - still needs oxidation support) 
 - Continued updating `newchem2.py` so that it functions equivalently to `chemistry.py`
 	- goal is to create a more elegant approach to the program
-- Deleted some of the extraneous test `*.py` and `*.txt` files    
+- Deleted some of the extraneous test `*.py` and `*.txt` files  
+
+**1/28/2014**
+
+- Continued working on `newchem2.py`
+	- completed support for element creation, bond creation, mendeleev creation
+		- `populate()` `toElement()` `bondIt()` `stringify()` finished
+	- finished support for `Compound`
+	- began support for ring creation and bridged structure creation
+- began working with `enaml` to create a GUI - actual effectiveness tbd   

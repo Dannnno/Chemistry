@@ -1,4 +1,4 @@
-###TODO List - updated 1/17/2014 9:41:40 PM 
+###TODO List - updated 1/28/2014 2:10:28 PM 
 ---
 GitHub:
 
@@ -76,8 +76,12 @@ Programming languages: **Not started**
 - C and C based languages
 	- Objective C! 
 
-Obfuscation: **Not started**
+Readability: **meh**
 
-- Basically impossible in Python
-	- in conjunction with C/Java?
-	- Cython? 
+- Obfuscation: **not started**
+	- How?
+	- May need to use Java/C to do it
+		- Cython?
+- Commenting: **barely started**
+	- In line/block comments
+	- Docstrings

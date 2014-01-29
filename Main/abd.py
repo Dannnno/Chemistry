@@ -63,6 +63,6 @@ for i in range(1,len(aList)):
     
 elementString = startString + mainString
 
-someFile = open('C:\Users\Dan\Documents\GitHub\Chemistry\Main/elements.py','w')
+someFile = open('C:\Users\Dan\Documents\GitHub\Chemistry\Main/elements1.py','w')
 someFile.write(elementString)
 someFile.close()
