@@ -1,4 +1,4 @@
-###Changelog - updated 1/28/2014 9:49:54 PM 
+###Changelog - updated 1/30/2014 11:37:48 AM 
 ---
 Current stage of development: Pre-Alpha  
 Current program version: NA
@@ -188,8 +188,16 @@ Current program version: NA
 **1/28/2014**
 
 - Continued working on `newchem2.py`
-	- completed support for element creation, bond creation, mendeleev creation
+	- completed support for Element creation, Bond creation, Mendeleev creation
 		- `populate()` `toElement()` `bondIt()` `stringify()` finished
 	- finished support for `Compound`
 	- began support for ring creation and bridged structure creation
-- began working with `enaml` to create a GUI - actual effectiveness tbd   
+- began working with `enaml` to create a GUI - actual effectiveness tbd
+
+**1/29/2014**
+
+- continued playing with `enaml`
+
+**1/30/2014**
+
+- concluded that `enaml` is not going to work for my purposes. Investigating Java as an alternative   

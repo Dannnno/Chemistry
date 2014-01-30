@@ -110,6 +110,14 @@ class Mendeleev(Chemistry):
                 if column != None:
                     if column.keys()[0] == part:
                         return eval(column[column.keys()[0]])
+                        
+    def getArray(self):
+        anArray = []
+        for rows in self.finalTable:
+            for columns in rows:
+                try:anArray.append(columns.keys()[0])
+                except:pass
+        return anArray
     
     def __str__(self):
         """String representation of the periodic table"""
@@ -117,7 +125,7 @@ class Mendeleev(Chemistry):
 
 periodicTable = Mendeleev(ptableLoc,etableLoc)
 theTable = periodicTable.getTable()
-    
+
 def toElement(anObject):
     """"""
     if type(anObject) == type([]) or type(anObject) == type(np.zeros(1)):

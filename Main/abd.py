@@ -7,7 +7,7 @@ import numpy as np
 # Density in g/cm^3
 # Melting, Boiling Point in K
 # Heat J/g*K
-# Calculated radii pm
+# Calculated radius in pm
 at = "C:\\Users\Dan\Documents\GitHub\Chemistry\Main/at.txt"
 num,symb,element,group,weight,density,melt,boil,heat,eneg,rad = np.genfromtxt(at,dtype='S',unpack=True)
 aString = ''

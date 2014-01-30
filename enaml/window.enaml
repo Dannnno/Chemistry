@@ -1,10 +1,22 @@
 from enaml.layout.api import vbox
 from enaml.widgets.api import (
     MainWindow, ToolBar, DockPane, MenuBar, Menu, Action, ActionGroup,
-    StatusBar, StatusItem, Container, Html, PushButton, Label,
+    StatusBar, StatusItem, Container, Html, PushButton, Label, ComboBox, Field
 )
+import enaml
+from elementvalid import ElementValidator
 
 
+def loadFile(filename):
+    """This allows you to use images as buttons
+    Requires you to have them in *.png format, takes
+    the path of them as a string input"""
+    
+    with open(filename, 'rb') as f:
+        data = f.read()
+        image = enaml.image.Image(data=data)
+        return enaml.icon.Icon(images = [enaml.icon.IconImage(image=image)])
+    
 enamldef MyMenuBar(MenuBar):
     Menu:
         title = '&File'
@@ -54,47 +66,106 @@ enamldef MyStatusBar(StatusBar):
 
 
 enamldef MyToolBar(ToolBar):
+    Field:
+        max_length = 3
+        validator = ElementValidator()
+        text = validator(input)
+#        print validator(text)
+#        if validator(text) == text:
+#            status_tip = 'Yes'
+        #index = 6
+        #status_tip = str(items[index]) + " Is selected"
     ActionGroup:
+        Action:
+            separator = True        
         Action:
             checkable = True
             text = 'Add Element'
-            triggered :: print text
+            # How you would add an image to a button
+            #icon = loadFile('C://Users/Dan/Documents/GitHub/Chemistry/enaml/hi.png')
+            status_tip = "Lets you add an Element to the canvas"
+            triggered :: 
+                print text
+                method = 1
         Action:
             checkable = True
             text = 'Add Bond'
-            triggered :: print text
+            status_tip = "Lets you add a Bond to the canvas"
+            triggered :: 
+                print text
+                method = 2
         Action:
             checkable = True
             text = 'Add Charge'
-            triggered :: print text
+            status_tip = "Lets you add charge to the canvas"
+            triggered :: 
+                print text
+                method = 3
         Action:
             checkable = True
             text = 'Add Radical'
-            triggered :: print text
+            status_tip = "Lets you add a radical to the canvas"
+            triggered ::    
+                print text
+                method = 4
         Action:
             separator = True
         Action:
             checkable = True
             text = 'Change Element'
-            triggered :: print text
+            status_tip = "Lets you change an element"
+            triggered :: 
+                print text
+                method = 5
         Action:
             checkable = True
-            text = 'Change Bond'
-            triggered :: print text
+            text = 'Increase Bond'
+            status_tip = "Lets you increase a Bond"
+            triggered :: 
+                print text
+                method = 6
         Action:
             checkable = True
-            text = 'Change Charge'
-            triggered :: print text
+            text = 'Decrease Bond'
+            status_tip = "Lets you decrease a Bond"
+            triggered :: 
+                print text
+                method = 7
         Action:
             checkable = True
-            text = 'Change Radical'
-            triggered :: print text
+            text = 'Increase Charge'
+            status_tip = "Lets you increase a charge"
+            triggered :: 
+                print text
+                method = 8
+        Action:
+            checkable = True
+            text = 'Decrease Charge'
+            status_tip = "Lets you decrease a charge"
+            triggered :: 
+                print text
+                method = 9
+        Action:
+            checkable = True
+            text = 'Remove Radical'
+            status_tip = "Lets you remove a radical"
+            triggered :: 
+                print text
+                method = 10
         Action:
             separator = True
         Action:
             checkable = True
+            text = 'Finish Molecule'
+            triggered :: 
+                print text
+                method = 11
+        Action:
+            checkable = True
             text = 'Publish Molecule'
-            triggered :: print triggered
+            triggered :: 
+                print text
+                method = 12
         
 enamldef Main(MainWindow):
     MyMenuBar:
