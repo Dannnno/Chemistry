@@ -43,6 +43,7 @@ aList = aString.split()
 aList = np.array(aList).reshape(119,11)    
             
 startString = "class Chemistry():pass \n\nclass Element(Chemistry):\n    def __init__(self):pass\n    def getNum(self):return self.number\n    def getMass(self):return self.mass\n    def getName(self):return self.name\n    def getSymbol(self):return self.symbol\n    def getRadius(self):return self.radius\n    def getEneg(self):return self.electronegativity\n    def getOx(self):return self.oxidation\n    def getCharge(self):return self.charge\n    def getBonds(self):return self.bondList\n    def addBond(self,aBond):self.bondList.append(aBond)\n    def breakBond(self,index):\n        try:del self.bondList[index]\n        except:print 'No bond at this location'\n    def changeBond(self,newBond,index):\n        try:self.bondList[index] = newBond\n        except:self.addBond(newBond)\n"
+startString += "    def getHeat(self):return self.heat\n    def getBoil(self):return self.bp\n    def getMelt(self):return self.mp\n"
 mainString = '\n'
 for i in range(1,len(aList)):
     mainString += "class " + aList[i][2] + "(Element):\n    "

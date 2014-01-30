@@ -1,1908 +1,1787 @@
-public class Chemistry{} 
+public class Chemistry{}
 
 public class Element(Chemistry)
 {
     public int getNum() {return number;}
-    public double getMass() {return mass}
-    public String getName() {return name}
-    def getSymbol(self):return self.symbol
-    def getRadius(self):return self.radius
-    def getEneg(self):return self.electronegativity
-    def getOx(self):return self.oxidation
-    def getCharge(self):return self.charge
-    def getBonds(self):return self.bondList
-    def addBond(self,aBond):self.bondList.append(aBond)
-    def breakBond(self,index):
-        try:del self.bondList[index]
-        except:print 'No bond at this location'
-    def changeBond(self,newBond,index):
-        try:self.bondList[index] = newBond
-        except:self.addBond(newBond)
-
-class Hydrogen(Element):
-    def __init__(self):
-        self.number = 1
-        self.mass = 1.008
-        self.name = 'Hydrogen'
-        self.symbol = 'H'
-        self.group = 1
-        self.radius = 53
-        self.electronegativity = 2.2
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 14.304
-        self.bp = 20.28
-        self.mp = 14.01
-
-class Helium(Element):
-    def __init__(self):
-        self.number = 2
-        self.mass = 4.002602
-        self.name = 'Helium'
-        self.symbol = 'He'
-        self.group = 18
-        self.radius = 31
-        self.electronegativity = 'No_Data'
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 5.193
-        self.bp = 4.22
-        self.mp = 0.956
-
-class Lithium(Element):
-    def __init__(self):
-        self.number = 3
-        self.mass = 6.94
-        self.name = 'Lithium'
-        self.symbol = 'Li'
-        self.group = 1
-        self.radius = 167
-        self.electronegativity = 0.98
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 3.582
-        self.bp = 1560
-        self.mp = 453.69
-
-class Beryllium(Element):
-    def __init__(self):
-        self.number = 4
-        self.mass = 9.012182
-        self.name = 'Beryllium'
-        self.symbol = 'Be'
-        self.group = 2
-        self.radius = 112
-        self.electronegativity = 1.57
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 1.825
-        self.bp = 2742
-        self.mp = 1560
-
-class Boron(Element):
-    def __init__(self):
-        self.number = 5
-        self.mass = 10.81
-        self.name = 'Boron'
-        self.symbol = 'B'
-        self.group = 13
-        self.radius = 87
-        self.electronegativity = 2.04
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 1.026
-        self.bp = 4200
-        self.mp = 2349
-
-class Carbon(Element):
-    def __init__(self):
-        self.number = 6
-        self.mass = 12.011
-        self.name = 'Carbon'
-        self.symbol = 'C'
-        self.group = 14
-        self.radius = 67
-        self.electronegativity = 2.55
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.709
-        self.bp = 4300
-        self.mp = 3800
-
-class Nitrogen(Element):
-    def __init__(self):
-        self.number = 7
-        self.mass = 14.007
-        self.name = 'Nitrogen'
-        self.symbol = 'N'
-        self.group = 15
-        self.radius = 56
-        self.electronegativity = 3.04
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 1.04
-        self.bp = 77.36
-        self.mp = 63.15
-
-class Oxygen(Element):
-    def __init__(self):
-        self.number = 8
-        self.mass = 15.999
-        self.name = 'Oxygen'
-        self.symbol = 'O'
-        self.group = 16
-        self.radius = 48
-        self.electronegativity = 3.44
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.918
-        self.bp = 90.2
-        self.mp = 54.36
-
-class Fluorine(Element):
-    def __init__(self):
-        self.number = 9
-        self.mass = 18.9984032
-        self.name = 'Fluorine'
-        self.symbol = 'F'
-        self.group = 17
-        self.radius = 42
-        self.electronegativity = 3.98
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.824
-        self.bp = 85.03
-        self.mp = 53.53
-
-class Neon(Element):
-    def __init__(self):
-        self.number = 10
-        self.mass = 20.1797
-        self.name = 'Neon'
-        self.symbol = 'Ne'
-        self.group = 18
-        self.radius = 38
-        self.electronegativity = 'No_Data'
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 1.03
-        self.bp = 27.07
-        self.mp = 24.56
-
-class Sodium(Element):
-    def __init__(self):
-        self.number = 11
-        self.mass = 22.98976928
-        self.name = 'Sodium'
-        self.symbol = 'Na'
-        self.group = 1
-        self.radius = 190
-        self.electronegativity = 0.93
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 1.228
-        self.bp = 1156
-        self.mp = 370.87
-
-class Magnesium(Element):
-    def __init__(self):
-        self.number = 12
-        self.mass = 24.3059
-        self.name = 'Magnesium'
-        self.symbol = 'Mg'
-        self.group = 2
-        self.radius = 145
-        self.electronegativity = 1.31
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 1.023
-        self.bp = 1363
-        self.mp = 923
-
-class Aluminium(Element):
-    def __init__(self):
-        self.number = 13
-        self.mass = 26.9815386
-        self.name = 'Aluminium'
-        self.symbol = 'Al'
-        self.group = 13
-        self.radius = 118
-        self.electronegativity = 1.61
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.897
-        self.bp = 2792
-        self.mp = 933.47
-
-class Silicon(Element):
-    def __init__(self):
-        self.number = 14
-        self.mass = 28.085
-        self.name = 'Silicon'
-        self.symbol = 'Si'
-        self.group = 14
-        self.radius = 111
-        self.electronegativity = 1.9
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.705
-        self.bp = 3538
-        self.mp = 1687
-
-class Phosphorus(Element):
-    def __init__(self):
-        self.number = 15
-        self.mass = 30.973762
-        self.name = 'Phosphorus'
-        self.symbol = 'P'
-        self.group = 15
-        self.radius = 98
-        self.electronegativity = 2.19
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.769
-        self.bp = 550
-        self.mp = 317.3
-
-class Sulfur(Element):
-    def __init__(self):
-        self.number = 16
-        self.mass = 32.06
-        self.name = 'Sulfur'
-        self.symbol = 'S'
-        self.group = 16
-        self.radius = 88
-        self.electronegativity = 2.58
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.71
-        self.bp = 717.87
-        self.mp = 388.36
-
-class Chlorine(Element):
-    def __init__(self):
-        self.number = 17
-        self.mass = 35.45
-        self.name = 'Chlorine'
-        self.symbol = 'Cl'
-        self.group = 17
-        self.radius = 79
-        self.electronegativity = 3.16
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.479
-        self.bp = 239.11
-        self.mp = 171.6
-
-class Argon(Element):
-    def __init__(self):
-        self.number = 18
-        self.mass = 39.948
-        self.name = 'Argon'
-        self.symbol = 'Ar'
-        self.group = 18
-        self.radius = 71
-        self.electronegativity = 'No_Data'
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.52
-        self.bp = 87.3
-        self.mp = 83.8
-
-class Potassium(Element):
-    def __init__(self):
-        self.number = 19
-        self.mass = 39.0983
-        self.name = 'Potassium'
-        self.symbol = 'K'
-        self.group = 1
-        self.radius = 243
-        self.electronegativity = 0.82
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.757
-        self.bp = 1032
-        self.mp = 336.53
-
-class Calcium(Element):
-    def __init__(self):
-        self.number = 20
-        self.mass = 40.078
-        self.name = 'Calcium'
-        self.symbol = 'Ca'
-        self.group = 2
-        self.radius = 194
-        self.electronegativity = 1
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.647
-        self.bp = 1757
-        self.mp = 1115
-
-class Scandium(Element):
-    def __init__(self):
-        self.number = 21
-        self.mass = 44.955912
-        self.name = 'Scandium'
-        self.symbol = 'Sc'
-        self.group = 3
-        self.radius = 184
-        self.electronegativity = 1.36
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.568
-        self.bp = 3109
-        self.mp = 1814
-
-class Titanium(Element):
-    def __init__(self):
-        self.number = 22
-        self.mass = 47.867
-        self.name = 'Titanium'
-        self.symbol = 'Ti'
-        self.group = 4
-        self.radius = 176
-        self.electronegativity = 1.54
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.523
-        self.bp = 3560
-        self.mp = 1941
-
-class Vanadium(Element):
-    def __init__(self):
-        self.number = 23
-        self.mass = 50.9415
-        self.name = 'Vanadium'
-        self.symbol = 'V'
-        self.group = 5
-        self.radius = 171
-        self.electronegativity = 1.63
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.489
-        self.bp = 3680
-        self.mp = 2183
-
-class Chromium(Element):
-    def __init__(self):
-        self.number = 24
-        self.mass = 51.9961
-        self.name = 'Chromium'
-        self.symbol = 'Cr'
-        self.group = 6
-        self.radius = 166
-        self.electronegativity = 1.66
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.449
-        self.bp = 2944
-        self.mp = 2180
-
-class Manganese(Element):
-    def __init__(self):
-        self.number = 25
-        self.mass = 54.938045
-        self.name = 'Manganese'
-        self.symbol = 'Mn'
-        self.group = 7
-        self.radius = 161
-        self.electronegativity = 1.55
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.479
-        self.bp = 2334
-        self.mp = 1519
-
-class Iron(Element):
-    def __init__(self):
-        self.number = 26
-        self.mass = 55.845
-        self.name = 'Iron'
-        self.symbol = 'Fe'
-        self.group = 8
-        self.radius = 156
-        self.electronegativity = 1.83
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.449
-        self.bp = 3134
-        self.mp = 1811
-
-class Cobalt(Element):
-    def __init__(self):
-        self.number = 27
-        self.mass = 58.933195
-        self.name = 'Cobalt'
-        self.symbol = 'Co'
-        self.group = 9
-        self.radius = 152
-        self.electronegativity = 1.88
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.421
-        self.bp = 3200
-        self.mp = 1768
-
-class Nickel(Element):
-    def __init__(self):
-        self.number = 28
-        self.mass = 58.6934
-        self.name = 'Nickel'
-        self.symbol = 'Ni'
-        self.group = 10
-        self.radius = 149
-        self.electronegativity = 1.91
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.444
-        self.bp = 3186
-        self.mp = 1728
-
-class Copper(Element):
-    def __init__(self):
-        self.number = 29
-        self.mass = 63.546
-        self.name = 'Copper'
-        self.symbol = 'Cu'
-        self.group = 11
-        self.radius = 145
-        self.electronegativity = 1.9
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.385
-        self.bp = 2835
-        self.mp = 1357.77
-
-class Zinc(Element):
-    def __init__(self):
-        self.number = 30
-        self.mass = 65.38
-        self.name = 'Zinc'
-        self.symbol = 'Zn'
-        self.group = 12
-        self.radius = 142
-        self.electronegativity = 1.65
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.388
-        self.bp = 1180
-        self.mp = 692.88
-
-class Gallium(Element):
-    def __init__(self):
-        self.number = 31
-        self.mass = 69.723
-        self.name = 'Gallium'
-        self.symbol = 'Ga'
-        self.group = 13
-        self.radius = 136
-        self.electronegativity = 1.81
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.371
-        self.bp = 2477
-        self.mp = 302.9146
-
-class Germanium(Element):
-    def __init__(self):
-        self.number = 32
-        self.mass = 72.630
-        self.name = 'Germanium'
-        self.symbol = 'Ge'
-        self.group = 14
-        self.radius = 125
-        self.electronegativity = 2.01
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.32
-        self.bp = 3106
-        self.mp = 1211.4
-
-class Arsenic(Element):
-    def __init__(self):
-        self.number = 33
-        self.mass = 74.92160
-        self.name = 'Arsenic'
-        self.symbol = 'As'
-        self.group = 15
-        self.radius = 114
-        self.electronegativity = 2.18
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.329
-        self.bp = 887
-        self.mp = 1090
-
-class Selenium(Element):
-    def __init__(self):
-        self.number = 34
-        self.mass = 78.96
-        self.name = 'Selenium'
-        self.symbol = 'Se'
-        self.group = 16
-        self.radius = 103
-        self.electronegativity = 2.55
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.321
-        self.bp = 958
-        self.mp = 453
-
-class Bromine(Element):
-    def __init__(self):
-        self.number = 35
-        self.mass = 79.9049
-        self.name = 'Bromine'
-        self.symbol = 'Br'
-        self.group = 17
-        self.radius = 94
-        self.electronegativity = 2.96
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.474
-        self.bp = 332
-        self.mp = 265.8
-
-class Krypton(Element):
-    def __init__(self):
-        self.number = 36
-        self.mass = 83.798
-        self.name = 'Krypton'
-        self.symbol = 'Kr'
-        self.group = 18
-        self.radius = 88
-        self.electronegativity = 3
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.248
-        self.bp = 119.93
-        self.mp = 115.79
-
-class Rubidium(Element):
-    def __init__(self):
-        self.number = 37
-        self.mass = 85.4678
-        self.name = 'Rubidium'
-        self.symbol = 'Rb'
-        self.group = 1
-        self.radius = 265
-        self.electronegativity = 0.82
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.363
-        self.bp = 961
-        self.mp = 312.46
-
-class Strontium(Element):
-    def __init__(self):
-        self.number = 38
-        self.mass = 87.62
-        self.name = 'Strontium'
-        self.symbol = 'Sr'
-        self.group = 2
-        self.radius = 219
-        self.electronegativity = 0.95
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.301
-        self.bp = 1655
-        self.mp = 1050
-
-class Yttrium(Element):
-    def __init__(self):
-        self.number = 39
-        self.mass = 88.90585
-        self.name = 'Yttrium'
-        self.symbol = 'Y'
-        self.group = 3
-        self.radius = 212
-        self.electronegativity = 1.22
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.298
-        self.bp = 3609
-        self.mp = 1799
-
-class Zirconium(Element):
-    def __init__(self):
-        self.number = 40
-        self.mass = 91.224
-        self.name = 'Zirconium'
-        self.symbol = 'Zr'
-        self.group = 4
-        self.radius = 206
-        self.electronegativity = 1.33
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.278
-        self.bp = 4682
-        self.mp = 2128
-
-class Niobium(Element):
-    def __init__(self):
-        self.number = 41
-        self.mass = 92.90638
-        self.name = 'Niobium'
-        self.symbol = 'Nb'
-        self.group = 5
-        self.radius = 198
-        self.electronegativity = 1.6
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.265
-        self.bp = 5017
-        self.mp = 2750
-
-class Molybdenum(Element):
-    def __init__(self):
-        self.number = 42
-        self.mass = 95.96
-        self.name = 'Molybdenum'
-        self.symbol = 'Mo'
-        self.group = 6
-        self.radius = 190
-        self.electronegativity = 2.16
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.251
-        self.bp = 4912
-        self.mp = 2896
-
-class Technetium(Element):
-    def __init__(self):
-        self.number = 43
-        self.mass = 98]
-        self.name = 'Technetium'
-        self.symbol = 'Tc'
-        self.group = 7
-        self.radius = 183
-        self.electronegativity = 1.9
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 'No_Data'
-        self.bp = 4538
-        self.mp = 2430
-
-class Ruthenium(Element):
-    def __init__(self):
-        self.number = 44
-        self.mass = 101.07
-        self.name = 'Ruthenium'
-        self.symbol = 'Ru'
-        self.group = 8
-        self.radius = 178
-        self.electronegativity = 2.2
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.238
-        self.bp = 4423
-        self.mp = 2607
-
-class Rhodium(Element):
-    def __init__(self):
-        self.number = 45
-        self.mass = 102.90550
-        self.name = 'Rhodium'
-        self.symbol = 'Rh'
-        self.group = 9
-        self.radius = 173
-        self.electronegativity = 2.28
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.243
-        self.bp = 3968
-        self.mp = 2237
-
-class Palladium(Element):
-    def __init__(self):
-        self.number = 46
-        self.mass = 106.42
-        self.name = 'Palladium'
-        self.symbol = 'Pd'
-        self.group = 10
-        self.radius = 169
-        self.electronegativity = 2.2
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.244
-        self.bp = 3236
-        self.mp = 1828.05
-
-class Silver(Element):
-    def __init__(self):
-        self.number = 47
-        self.mass = 107.8682
-        self.name = 'Silver'
-        self.symbol = 'Ag'
-        self.group = 11
-        self.radius = 165
-        self.electronegativity = 1.93
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.235
-        self.bp = 2435
-        self.mp = 1234.93
-
-class Cadmium(Element):
-    def __init__(self):
-        self.number = 48
-        self.mass = 112.411
-        self.name = 'Cadmium'
-        self.symbol = 'Cd'
-        self.group = 12
-        self.radius = 161
-        self.electronegativity = 1.69
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.232
-        self.bp = 1040
-        self.mp = 594.22
-
-class Indium(Element):
-    def __init__(self):
-        self.number = 49
-        self.mass = 114.818
-        self.name = 'Indium'
-        self.symbol = 'In'
-        self.group = 13
-        self.radius = 156
-        self.electronegativity = 1.78
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.233
-        self.bp = 2345
-        self.mp = 429.75
-
-class Tin(Element):
-    def __init__(self):
-        self.number = 50
-        self.mass = 118.710
-        self.name = 'Tin'
-        self.symbol = 'Sn'
-        self.group = 14
-        self.radius = 145
-        self.electronegativity = 1.96
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.228
-        self.bp = 2875
-        self.mp = 505.08
-
-class Antimony(Element):
-    def __init__(self):
-        self.number = 51
-        self.mass = 121.760
-        self.name = 'Antimony'
-        self.symbol = 'Sb'
-        self.group = 15
-        self.radius = 133
-        self.electronegativity = 2.05
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.207
-        self.bp = 1860
-        self.mp = 903.78
-
-class Tellurium(Element):
-    def __init__(self):
-        self.number = 52
-        self.mass = 127.60
-        self.name = 'Tellurium'
-        self.symbol = 'Te'
-        self.group = 16
-        self.radius = 123
-        self.electronegativity = 2.1
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.202
-        self.bp = 1261
-        self.mp = 722.66
-
-class Iodine(Element):
-    def __init__(self):
-        self.number = 53
-        self.mass = 126.90447
-        self.name = 'Iodine'
-        self.symbol = 'I'
-        self.group = 17
-        self.radius = 115
-        self.electronegativity = 2.66
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.214
-        self.bp = 457.4
-        self.mp = 386.85
-
-class Xenon(Element):
-    def __init__(self):
-        self.number = 54
-        self.mass = 131.293
-        self.name = 'Xenon'
-        self.symbol = 'Xe'
-        self.group = 18
-        self.radius = 108
-        self.electronegativity = 2.6
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.158
-        self.bp = 165.03
-        self.mp = 161.4
-
-class Caesium(Element):
-    def __init__(self):
-        self.number = 55
-        self.mass = 132.9054519
-        self.name = 'Caesium'
-        self.symbol = 'Cs'
-        self.group = 1
-        self.radius = 298
-        self.electronegativity = 0.79
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.242
-        self.bp = 944
-        self.mp = 301.59
-
-class Barium(Element):
-    def __init__(self):
-        self.number = 56
-        self.mass = 137.327
-        self.name = 'Barium'
-        self.symbol = 'Ba'
-        self.group = 2
-        self.radius = 253
-        self.electronegativity = 0.89
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.204
-        self.bp = 2170
-        self.mp = 1000
-
-class Lanthanum(Element):
-    def __init__(self):
-        self.number = 57
-        self.mass = 138.90547
-        self.name = 'Lanthanum'
-        self.symbol = 'La'
-        self.group = 0
-        self.radius = 'No_Data'
-        self.electronegativity = 1.1
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.195
-        self.bp = 3737
-        self.mp = 1193
-
-class Cerium(Element):
-    def __init__(self):
-        self.number = 58
-        self.mass = 140.116
-        self.name = 'Cerium'
-        self.symbol = 'Ce'
-        self.group = 0
-        self.radius = 'No_Data'
-        self.electronegativity = 1.12
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.192
-        self.bp = 3716
-        self.mp = 1068
-
-class Praseodymium(Element):
-    def __init__(self):
-        self.number = 59
-        self.mass = 140.90765
-        self.name = 'Praseodymium'
-        self.symbol = 'Pr'
-        self.group = 0
-        self.radius = 247
-        self.electronegativity = 1.13
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.193
-        self.bp = 3793
-        self.mp = 1208
-
-class Neodymium(Element):
-    def __init__(self):
-        self.number = 60
-        self.mass = 144.242
-        self.name = 'Neodymium'
-        self.symbol = 'Nd'
-        self.group = 0
-        self.radius = 206
-        self.electronegativity = 1.14
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.19
-        self.bp = 3347
-        self.mp = 1297
-
-class Promethium(Element):
-    def __init__(self):
-        self.number = 61
-        self.mass = 145
-        self.name = 'Promethium'
-        self.symbol = 'Pm'
-        self.group = 0
-        self.radius = 205
-        self.electronegativity = 1.13
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 'No_Data'
-        self.bp = 3273
-        self.mp = 1315
-
-class Samarium(Element):
-    def __init__(self):
-        self.number = 62
-        self.mass = 150.36
-        self.name = 'Samarium'
-        self.symbol = 'Sm'
-        self.group = 0
-        self.radius = 238
-        self.electronegativity = 1.17
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.197
-        self.bp = 2067
-        self.mp = 1345
-
-class Europium(Element):
-    def __init__(self):
-        self.number = 63
-        self.mass = 151.964
-        self.name = 'Europium'
-        self.symbol = 'Eu'
-        self.group = 0
-        self.radius = 231
-        self.electronegativity = 1.2
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.182
-        self.bp = 1802
-        self.mp = 1099
-
-class Gadolinium(Element):
-    def __init__(self):
-        self.number = 64
-        self.mass = 157.25
-        self.name = 'Gadolinium'
-        self.symbol = 'Gd'
-        self.group = 0
-        self.radius = 233
-        self.electronegativity = 1.2
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.236
-        self.bp = 3546
-        self.mp = 1585
-
-class Terbium(Element):
-    def __init__(self):
-        self.number = 65
-        self.mass = 158.92535
-        self.name = 'Terbium'
-        self.symbol = 'Tb'
-        self.group = 0
-        self.radius = 225
-        self.electronegativity = 1.2
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.182
-        self.bp = 3503
-        self.mp = 1629
-
-class Dysprosium(Element):
-    def __init__(self):
-        self.number = 66
-        self.mass = 162.500
-        self.name = 'Dysprosium'
-        self.symbol = 'Dy'
-        self.group = 0
-        self.radius = 228
-        self.electronegativity = 1.22
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.17
-        self.bp = 2840
-        self.mp = 1680
-
-class Holmium(Element):
-    def __init__(self):
-        self.number = 67
-        self.mass = 164.93032
-        self.name = 'Holmium'
-        self.symbol = 'Ho'
-        self.group = 0
-        self.radius = 'No_Data'
-        self.electronegativity = 1.23
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.165
-        self.bp = 2993
-        self.mp = 1734
-
-class Erbium(Element):
-    def __init__(self):
-        self.number = 68
-        self.mass = 167.259
-        self.name = 'Erbium'
-        self.symbol = 'Er'
-        self.group = 0
-        self.radius = 226
-        self.electronegativity = 1.24
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.168
-        self.bp = 3141
-        self.mp = 1802
-
-class Thulium(Element):
-    def __init__(self):
-        self.number = 69
-        self.mass = 168.93421
-        self.name = 'Thulium'
-        self.symbol = 'Tm'
-        self.group = 0
-        self.radius = 222
-        self.electronegativity = 1.25
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.16
-        self.bp = 2223
-        self.mp = 1818
-
-class Ytterbium(Element):
-    def __init__(self):
-        self.number = 70
-        self.mass = 173.054
-        self.name = 'Ytterbium'
-        self.symbol = 'Yb'
-        self.group = 0
-        self.radius = 222
-        self.electronegativity = 1.1
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.155
-        self.bp = 1469
-        self.mp = 1097
-
-class Lutetium(Element):
-    def __init__(self):
-        self.number = 71
-        self.mass = 174.9668
-        self.name = 'Lutetium'
-        self.symbol = 'Lu'
-        self.group = 3
-        self.radius = 217
-        self.electronegativity = 1.27
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.154
-        self.bp = 3675
-        self.mp = 1925
-
-class Hafnium(Element):
-    def __init__(self):
-        self.number = 72
-        self.mass = 178.49
-        self.name = 'Hafnium'
-        self.symbol = 'Hf'
-        self.group = 4
-        self.radius = 208
-        self.electronegativity = 1.3
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.144
-        self.bp = 4876
-        self.mp = 2506
-
-class Tantalum(Element):
-    def __init__(self):
-        self.number = 73
-        self.mass = 180.94788
-        self.name = 'Tantalum'
-        self.symbol = 'Ta'
-        self.group = 5
-        self.radius = 200
-        self.electronegativity = 1.5
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.14
-        self.bp = 5731
-        self.mp = 3290
-
-class Tungsten(Element):
-    def __init__(self):
-        self.number = 74
-        self.mass = 183.84
-        self.name = 'Tungsten'
-        self.symbol = 'W'
-        self.group = 6
-        self.radius = 193
-        self.electronegativity = 2.36
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.132
-        self.bp = 5828
-        self.mp = 3695
-
-class Rhenium(Element):
-    def __init__(self):
-        self.number = 75
-        self.mass = 186.207
-        self.name = 'Rhenium'
-        self.symbol = 'Re'
-        self.group = 7
-        self.radius = 188
-        self.electronegativity = 1.9
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.137
-        self.bp = 5869
-        self.mp = 3459
-
-class Osmium(Element):
-    def __init__(self):
-        self.number = 76
-        self.mass = 190.23
-        self.name = 'Osmium'
-        self.symbol = 'Os'
-        self.group = 8
-        self.radius = 185
-        self.electronegativity = 2.2
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.13
-        self.bp = 5285
-        self.mp = 3306
-
-class Iridium(Element):
-    def __init__(self):
-        self.number = 77
-        self.mass = 192.217
-        self.name = 'Iridium'
-        self.symbol = 'Ir'
-        self.group = 9
-        self.radius = 180
-        self.electronegativity = 2.2
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.131
-        self.bp = 4701
-        self.mp = 2719
-
-class Platinum(Element):
-    def __init__(self):
-        self.number = 78
-        self.mass = 195.084
-        self.name = 'Platinum'
-        self.symbol = 'Pt'
-        self.group = 10
-        self.radius = 177
-        self.electronegativity = 2.28
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.133
-        self.bp = 4098
-        self.mp = 2041.4
-
-class Gold(Element):
-    def __init__(self):
-        self.number = 79
-        self.mass = 196.966569
-        self.name = 'Gold'
-        self.symbol = 'Au'
-        self.group = 11
-        self.radius = 174
-        self.electronegativity = 2.54
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.129
-        self.bp = 3129
-        self.mp = 1337.33
-
-class Mercury(Element):
-    def __init__(self):
-        self.number = 80
-        self.mass = 200.592
-        self.name = 'Mercury'
-        self.symbol = 'Hg'
-        self.group = 12
-        self.radius = 171
-        self.electronegativity = 2
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.14
-        self.bp = 629.88
-        self.mp = 234.43
-
-class Thallium(Element):
-    def __init__(self):
-        self.number = 81
-        self.mass = 204.389
-        self.name = 'Thallium'
-        self.symbol = 'Tl'
-        self.group = 13
-        self.radius = 156
-        self.electronegativity = 1.62
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.129
-        self.bp = 1746
-        self.mp = 577
-
-class Lead(Element):
-    def __init__(self):
-        self.number = 82
-        self.mass = 207.2
-        self.name = 'Lead'
-        self.symbol = 'Pb'
-        self.group = 14
-        self.radius = 154
-        self.electronegativity = 1.87
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.129
-        self.bp = 2022
-        self.mp = 600.61
-
-class Bismuth(Element):
-    def __init__(self):
-        self.number = 83
-        self.mass = 208.98040
-        self.name = 'Bismuth'
-        self.symbol = 'Bi'
-        self.group = 15
-        self.radius = 143
-        self.electronegativity = 2.02
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.122
-        self.bp = 1837
-        self.mp = 544.7
-
-class Polonium(Element):
-    def __init__(self):
-        self.number = 84
-        self.mass = 209
-        self.name = 'Polonium'
-        self.symbol = 'Po'
-        self.group = 16
-        self.radius = 135
-        self.electronegativity = 2
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 'No_Data'
-        self.bp = 1235
-        self.mp = 527
-
-class Astatine(Element):
-    def __init__(self):
-        self.number = 85
-        self.mass = 210
-        self.name = 'Astatine'
-        self.symbol = 'At'
-        self.group = 17
-        self.radius = 'No_Data'
-        self.electronegativity = 2.2
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 'No_Data'
-        self.bp = 610
-        self.mp = 575
-
-class Radon(Element):
-    def __init__(self):
-        self.number = 86
-        self.mass = 222
-        self.name = 'Radon'
-        self.symbol = 'Rn'
-        self.group = 18
-        self.radius = 120
-        self.electronegativity = 2.2
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.094
-        self.bp = 211.3
-        self.mp = 202
-
-class Francium(Element):
-    def __init__(self):
-        self.number = 87
-        self.mass = 223
-        self.name = 'Francium'
-        self.symbol = 'Fr'
-        self.group = 1
-        self.radius = 'No_Data'
-        self.electronegativity = 0.7
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 'No_Data'
-        self.bp = 950
-        self.mp = 300
-
-class Radium(Element):
-    def __init__(self):
-        self.number = 88
-        self.mass = 226
-        self.name = 'Radium'
-        self.symbol = 'Ra'
-        self.group = 2
-        self.radius = 'No_Data'
-        self.electronegativity = 0.9
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.094
-        self.bp = 2010
-        self.mp = 973
-
-class Actinium(Element):
-    def __init__(self):
-        self.number = 89
-        self.mass = 227
-        self.name = 'Actinium'
-        self.symbol = 'Ac'
-        self.group = 0
-        self.radius = 'No_Data'
-        self.electronegativity = 1.1
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.12
-        self.bp = 3471
-        self.mp = 1323
-
-class Thorium(Element):
-    def __init__(self):
-        self.number = 90
-        self.mass = 232.03806
-        self.name = 'Thorium'
-        self.symbol = 'Th'
-        self.group = 0
-        self.radius = 'No_Data'
-        self.electronegativity = 1.3
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.113
-        self.bp = 5061
-        self.mp = 2115
-
-class Protactinium(Element):
-    def __init__(self):
-        self.number = 91
-        self.mass = 231.03588
-        self.name = 'Protactinium'
-        self.symbol = 'Pa'
-        self.group = 0
-        self.radius = 'No_Data'
-        self.electronegativity = 1.5
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 'No_Data'
-        self.bp = 4300
-        self.mp = 1841
-
-class Uranium(Element):
-    def __init__(self):
-        self.number = 92
-        self.mass = 238.02891
-        self.name = 'Uranium'
-        self.symbol = 'U'
-        self.group = 0
-        self.radius = 'No_Data'
-        self.electronegativity = 1.38
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 0.116
-        self.bp = 4404
-        self.mp = 1405.3
-
-class Neptunium(Element):
-    def __init__(self):
-        self.number = 93
-        self.mass = 237
-        self.name = 'Neptunium'
-        self.symbol = 'Np'
-        self.group = 0
-        self.radius = 'No_Data'
-        self.electronegativity = 1.36
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 'No_Data'
-        self.bp = 4273
-        self.mp = 917
-
-class Plutonium(Element):
-    def __init__(self):
-        self.number = 94
-        self.mass = 244
-        self.name = 'Plutonium'
-        self.symbol = 'Pu'
-        self.group = 0
-        self.radius = 'No_Data'
-        self.electronegativity = 1.28
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 'No_Data'
-        self.bp = 3501
-        self.mp = 912.5
-
-class Americium(Element):
-    def __init__(self):
-        self.number = 95
-        self.mass = 243
-        self.name = 'Americium'
-        self.symbol = 'Am'
-        self.group = 0
-        self.radius = 'No_Data'
-        self.electronegativity = 1.13
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 'No_Data'
-        self.bp = 2880
-        self.mp = 1449
-
-class Curium(Element):
-    def __init__(self):
-        self.number = 96
-        self.mass = 247
-        self.name = 'Curium'
-        self.symbol = 'Cm'
-        self.group = 0
-        self.radius = 'No_Data'
-        self.electronegativity = 1.28
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 'No_Data'
-        self.bp = 3383
-        self.mp = 1613
-
-class Berkelium(Element):
-    def __init__(self):
-        self.number = 97
-        self.mass = 247
-        self.name = 'Berkelium'
-        self.symbol = 'Bk'
-        self.group = 0
-        self.radius = 'No_Data'
-        self.electronegativity = 1.3
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 'No_Data'
-        self.bp = 2900
-        self.mp = 1259
-
-class Californium(Element):
-    def __init__(self):
-        self.number = 98
-        self.mass = 251
-        self.name = 'Californium'
-        self.symbol = 'Cf'
-        self.group = 0
-        self.radius = 'No_Data'
-        self.electronegativity = 1.3
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 'No_Data'
-        self.bp = 1743
-        self.mp = 1173
-
-class Einsteinium(Element):
-    def __init__(self):
-        self.number = 99
-        self.mass = 252
-        self.name = 'Einsteinium'
-        self.symbol = 'Es'
-        self.group = 0
-        self.radius = 'No_Data'
-        self.electronegativity = 1.3
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 'No_Data'
-        self.bp = 1269
-        self.mp = 1133
-
-class Fermium(Element):
-    def __init__(self):
-        self.number = 100
-        self.mass = 257
-        self.name = 'Fermium'
-        self.symbol = 'Fm'
-        self.group = 0
-        self.radius = 'No_Data'
-        self.electronegativity = 1.3
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 'No_Data'
-        self.bp = 'No_Data'
-        self.mp = 1125
-
-class Mendelevium(Element):
-    def __init__(self):
-        self.number = 101
-        self.mass = 258
-        self.name = 'Mendelevium'
-        self.symbol = 'Md'
-        self.group = 0
-        self.radius = 'No_Data'
-        self.electronegativity = 1.3
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 'No_Data'
-        self.bp = 'No_Data'
-        self.mp = 1100
-
-class Nobelium(Element):
-    def __init__(self):
-        self.number = 102
-        self.mass = 259
-        self.name = 'Nobelium'
-        self.symbol = 'No'
-        self.group = 0
-        self.radius = 'No_Data'
-        self.electronegativity = 1.3
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 'No_Data'
-        self.bp = 'No_Data'
-        self.mp = 1100
-
-class Lawrencium(Element):
-    def __init__(self):
-        self.number = 103
-        self.mass = 262
-        self.name = 'Lawrencium'
-        self.symbol = 'Lr'
-        self.group = 3
-        self.radius = 'No_Data'
-        self.electronegativity = 1.3
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 'No_Data'
-        self.bp = 'No_Data'
-        self.mp = 1900
-
-class Rutherfordium(Element):
-    def __init__(self):
-        self.number = 104
-        self.mass = 267
-        self.name = 'Rutherfordium'
-        self.symbol = 'Rf'
-        self.group = 4
-        self.radius = 'No_Data'
-        self.electronegativity = 'No_Data'
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 'No_Data'
-        self.bp = 5800
-        self.mp = 2400
-
-class Dubnium(Element):
-    def __init__(self):
-        self.number = 105
-        self.mass = 268
-        self.name = 'Dubnium'
-        self.symbol = 'Db'
-        self.group = 5
-        self.radius = 'No_Data'
-        self.electronegativity = 'No_Data'
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 'No_Data'
-        self.bp = 'No_Data'
-        self.mp = 'No_Data'
-
-class Seaborgium(Element):
-    def __init__(self):
-        self.number = 106
-        self.mass = 269
-        self.name = 'Seaborgium'
-        self.symbol = 'Sg'
-        self.group = 6
-        self.radius = 'No_Data'
-        self.electronegativity = 'No_Data'
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 'No_Data'
-        self.bp = 'No_Data'
-        self.mp = 'No_Data'
-
-class Bohrium(Element):
-    def __init__(self):
-        self.number = 107
-        self.mass = 270
-        self.name = 'Bohrium'
-        self.symbol = 'Bh'
-        self.group = 7
-        self.radius = 'No_Data'
-        self.electronegativity = 'No_Data'
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 'No_Data'
-        self.bp = 'No_Data'
-        self.mp = 'No_Data'
-
-class Hassium(Element):
-    def __init__(self):
-        self.number = 108
-        self.mass = 269
-        self.name = 'Hassium'
-        self.symbol = 'Hs'
-        self.group = 8
-        self.radius = 'No_Data'
-        self.electronegativity = 'No_Data'
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 'No_Data'
-        self.bp = 'No_Data'
-        self.mp = 'No_Data'
-
-class Meitnerium(Element):
-    def __init__(self):
-        self.number = 109
-        self.mass = 278
-        self.name = 'Meitnerium'
-        self.symbol = 'Mt'
-        self.group = 9
-        self.radius = 'No_Data'
-        self.electronegativity = 'No_Data'
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 'No_Data'
-        self.bp = 'No_Data'
-        self.mp = 'No_Data'
-
-class Darmstadtium(Element):
-    def __init__(self):
-        self.number = 110
-        self.mass = 281
-        self.name = 'Darmstadtium'
-        self.symbol = 'Ds'
-        self.group = 10
-        self.radius = 'No_Data'
-        self.electronegativity = 'No_Data'
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 'No_Data'
-        self.bp = 'No_Data'
-        self.mp = 'No_Data'
-
-class Roentgenium(Element):
-    def __init__(self):
-        self.number = 111
-        self.mass = 281
-        self.name = 'Roentgenium'
-        self.symbol = 'Rg'
-        self.group = 11
-        self.radius = 'No_Data'
-        self.electronegativity = 'No_Data'
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 'No_Data'
-        self.bp = 'No_Data'
-        self.mp = 'No_Data'
-
-class Copernicium(Element):
-    def __init__(self):
-        self.number = 112
-        self.mass = 285
-        self.name = 'Copernicium'
-        self.symbol = 'Cn'
-        self.group = 12
-        self.radius = 'No_Data'
-        self.electronegativity = 'No_Data'
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 'No_Data'
-        self.bp = 357
-        self.mp = 'No_Data'
-
-class Ununtrium(Element):
-    def __init__(self):
-        self.number = 113
-        self.mass = 286
-        self.name = 'Ununtrium'
-        self.symbol = 'Uut'
-        self.group = 13
-        self.radius = 'No_Data'
-        self.electronegativity = 'No_Data'
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 'No_Data'
-        self.bp = 1400
-        self.mp = 700
-
-class Flerovium(Element):
-    def __init__(self):
-        self.number = 114
-        self.mass = 289
-        self.name = 'Flerovium'
-        self.symbol = 'Fl'
-        self.group = 14
-        self.radius = 'No_Data'
-        self.electronegativity = 'No_Data'
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 'No_Data'
-        self.bp = 420
-        self.mp = 340
-
-class Ununpentium(Element):
-    def __init__(self):
-        self.number = 115
-        self.mass = 288
-        self.name = 'Ununpentium'
-        self.symbol = 'Uup'
-        self.group = 15
-        self.radius = 'No_Data'
-        self.electronegativity = 'No_Data'
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 'No_Data'
-        self.bp = 1400
-        self.mp = 700
-
-class Livermorium(Element):
-    def __init__(self):
-        self.number = 116
-        self.mass = 293
-        self.name = 'Livermorium'
-        self.symbol = 'Lv'
-        self.group = 16
-        self.radius = 'No_Data'
-        self.electronegativity = 'No_Data'
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 'No_Data'
-        self.bp = 1085
-        self.mp = 708.5
-
-class Ununseptium(Element):
-    def __init__(self):
-        self.number = 117
-        self.mass = 294
-        self.name = 'Ununseptium'
-        self.symbol = 'Uus'
-        self.group = 17
-        self.radius = 'No_Data'
-        self.electronegativity = 'No_Data'
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 'No_Data'
-        self.bp = 823
-        self.mp = 673
-
-class Ununoctium(Element):
-    def __init__(self):
-        self.number = 118
-        self.mass = 294
-        self.name = 'Ununoctium'
-        self.symbol = 'Uuo'
-        self.group = 18
-        self.radius = 'No_Data'
-        self.electronegativity = 'No_Data'
-        self.oxidation = None
-        self.charge = 0
-        self.bondList = []
-        self.heat = 'No_Data'
-        self.bp = 263
-        self.mp = 258
+    public double getMass() {return mass;}
+    public String getName() {return name;}
+    public String getSymbol() {return symbol;}
+    public int getGroup() {return group;}
+    public double getDensity() {return density;}
+    public double getRadius() {return radius;}
+    public double getEneg() {return electronegativity;}
+    public int getOx() {return oxidation;}
+    public int getCharge() {return charge;}
+    public double getHeat() {return heat;}
+    public double getBoil() {return bp;}
+    public double getMelt() {return mp;}
+}
+public class Hydrogen(Element):{
+    number = 1;
+    mass = 1.008;
+    name = 'Hydrogen';
+    symbol = 'H';
+    group = 1;
+    density = 0.00008988;
+    radius = 53;
+    electronegativity = 2.2;
+    oxidation = None;
+    charge = 0;
+    heat = 14.304;
+    bp = 20.28;
+    mp = 14.01;
+}
+public class Helium(Element):{
+    number = 2;
+    mass = 4.002602;
+    name = 'Helium';
+    symbol = 'He';
+    group = 18;
+    density = 0.0001785;
+    radius = 31;
+    electronegativity = 'No_Data';
+    oxidation = None;
+    charge = 0;
+    heat = 5.193;
+    bp = 4.22;
+    mp = 0.956;
+}
+public class Lithium(Element):{
+    number = 3;
+    mass = 6.94;
+    name = 'Lithium';
+    symbol = 'Li';
+    group = 1;
+    density = 0.534;
+    radius = 167;
+    electronegativity = 0.98;
+    oxidation = None;
+    charge = 0;
+    heat = 3.582;
+    bp = 1560;
+    mp = 453.69;
+}
+public class Beryllium(Element):{
+    number = 4;
+    mass = 9.012182;
+    name = 'Beryllium';
+    symbol = 'Be';
+    group = 2;
+    density = 1.85;
+    radius = 112;
+    electronegativity = 1.57;
+    oxidation = None;
+    charge = 0;
+    heat = 1.825;
+    bp = 2742;
+    mp = 1560;
+}
+public class Boron(Element):{
+    number = 5;
+    mass = 10.81;
+    name = 'Boron';
+    symbol = 'B';
+    group = 13;
+    density = 2.34;
+    radius = 87;
+    electronegativity = 2.04;
+    oxidation = None;
+    charge = 0;
+    heat = 1.026;
+    bp = 4200;
+    mp = 2349;
+}
+public class Carbon(Element):{
+    number = 6;
+    mass = 12.011;
+    name = 'Carbon';
+    symbol = 'C';
+    group = 14;
+    density = 2.267;
+    radius = 67;
+    electronegativity = 2.55;
+    oxidation = None;
+    charge = 0;
+    heat = 0.709;
+    bp = 4300;
+    mp = 3800;
+}
+public class Nitrogen(Element):{
+    number = 7;
+    mass = 14.007;
+    name = 'Nitrogen';
+    symbol = 'N';
+    group = 15;
+    density = 0.0012506;
+    radius = 56;
+    electronegativity = 3.04;
+    oxidation = None;
+    charge = 0;
+    heat = 1.04;
+    bp = 77.36;
+    mp = 63.15;
+}
+public class Oxygen(Element):{
+    number = 8;
+    mass = 15.999;
+    name = 'Oxygen';
+    symbol = 'O';
+    group = 16;
+    density = 0.001429;
+    radius = 48;
+    electronegativity = 3.44;
+    oxidation = None;
+    charge = 0;
+    heat = 0.918;
+    bp = 90.2;
+    mp = 54.36;
+}
+public class Fluorine(Element):{
+    number = 9;
+    mass = 18.9984032;
+    name = 'Fluorine';
+    symbol = 'F';
+    group = 17;
+    density = 0.001696;
+    radius = 42;
+    electronegativity = 3.98;
+    oxidation = None;
+    charge = 0;
+    heat = 0.824;
+    bp = 85.03;
+    mp = 53.53;
+}
+public class Neon(Element):{
+    number = 10;
+    mass = 20.1797;
+    name = 'Neon';
+    symbol = 'Ne';
+    group = 18;
+    density = 0.0008999;
+    radius = 38;
+    electronegativity = 'No_Data';
+    oxidation = None;
+    charge = 0;
+    heat = 1.03;
+    bp = 27.07;
+    mp = 24.56;
+}
+public class Sodium(Element):{
+    number = 11;
+    mass = 22.98976928;
+    name = 'Sodium';
+    symbol = 'Na';
+    group = 1;
+    density = 0.971;
+    radius = 190;
+    electronegativity = 0.93;
+    oxidation = None;
+    charge = 0;
+    heat = 1.228;
+    bp = 1156;
+    mp = 370.87;
+}
+public class Magnesium(Element):{
+    number = 12;
+    mass = 24.3059;
+    name = 'Magnesium';
+    symbol = 'Mg';
+    group = 2;
+    density = 1.738;
+    radius = 145;
+    electronegativity = 1.31;
+    oxidation = None;
+    charge = 0;
+    heat = 1.023;
+    bp = 1363;
+    mp = 923;
+}
+public class Aluminium(Element):{
+    number = 13;
+    mass = 26.9815386;
+    name = 'Aluminium';
+    symbol = 'Al';
+    group = 13;
+    density = 2.698;
+    radius = 118;
+    electronegativity = 1.61;
+    oxidation = None;
+    charge = 0;
+    heat = 0.897;
+    bp = 2792;
+    mp = 933.47;
+}
+public class Silicon(Element):{
+    number = 14;
+    mass = 28.085;
+    name = 'Silicon';
+    symbol = 'Si';
+    group = 14;
+    density = 2.3296;
+    radius = 111;
+    electronegativity = 1.9;
+    oxidation = None;
+    charge = 0;
+    heat = 0.705;
+    bp = 3538;
+    mp = 1687;
+}
+public class Phosphorus(Element):{
+    number = 15;
+    mass = 30.973762;
+    name = 'Phosphorus';
+    symbol = 'P';
+    group = 15;
+    density = 1.82;
+    radius = 98;
+    electronegativity = 2.19;
+    oxidation = None;
+    charge = 0;
+    heat = 0.769;
+    bp = 550;
+    mp = 317.3;
+}
+public class Sulfur(Element):{
+    number = 16;
+    mass = 32.06;
+    name = 'Sulfur';
+    symbol = 'S';
+    group = 16;
+    density = 2.067;
+    radius = 88;
+    electronegativity = 2.58;
+    oxidation = None;
+    charge = 0;
+    heat = 0.71;
+    bp = 717.87;
+    mp = 388.36;
+}
+public class Chlorine(Element):{
+    number = 17;
+    mass = 35.45;
+    name = 'Chlorine';
+    symbol = 'Cl';
+    group = 17;
+    density = 0.003214;
+    radius = 79;
+    electronegativity = 3.16;
+    oxidation = None;
+    charge = 0;
+    heat = 0.479;
+    bp = 239.11;
+    mp = 171.6;
+}
+public class Argon(Element):{
+    number = 18;
+    mass = 39.948;
+    name = 'Argon';
+    symbol = 'Ar';
+    group = 18;
+    density = 0.0017837;
+    radius = 71;
+    electronegativity = 'No_Data';
+    oxidation = None;
+    charge = 0;
+    heat = 0.52;
+    bp = 87.3;
+    mp = 83.8;
+}
+public class Potassium(Element):{
+    number = 19;
+    mass = 39.0983;
+    name = 'Potassium';
+    symbol = 'K';
+    group = 1;
+    density = 0.862;
+    radius = 243;
+    electronegativity = 0.82;
+    oxidation = None;
+    charge = 0;
+    heat = 0.757;
+    bp = 1032;
+    mp = 336.53;
+}
+public class Calcium(Element):{
+    number = 20;
+    mass = 40.078;
+    name = 'Calcium';
+    symbol = 'Ca';
+    group = 2;
+    density = 1.54;
+    radius = 194;
+    electronegativity = 1;
+    oxidation = None;
+    charge = 0;
+    heat = 0.647;
+    bp = 1757;
+    mp = 1115;
+}
+public class Scandium(Element):{
+    number = 21;
+    mass = 44.955912;
+    name = 'Scandium';
+    symbol = 'Sc';
+    group = 3;
+    density = 2.989;
+    radius = 184;
+    electronegativity = 1.36;
+    oxidation = None;
+    charge = 0;
+    heat = 0.568;
+    bp = 3109;
+    mp = 1814;
+}
+public class Titanium(Element):{
+    number = 22;
+    mass = 47.867;
+    name = 'Titanium';
+    symbol = 'Ti';
+    group = 4;
+    density = 4.54;
+    radius = 176;
+    electronegativity = 1.54;
+    oxidation = None;
+    charge = 0;
+    heat = 0.523;
+    bp = 3560;
+    mp = 1941;
+}
+public class Vanadium(Element):{
+    number = 23;
+    mass = 50.9415;
+    name = 'Vanadium';
+    symbol = 'V';
+    group = 5;
+    density = 6.11;
+    radius = 171;
+    electronegativity = 1.63;
+    oxidation = None;
+    charge = 0;
+    heat = 0.489;
+    bp = 3680;
+    mp = 2183;
+}
+public class Chromium(Element):{
+    number = 24;
+    mass = 51.9961;
+    name = 'Chromium';
+    symbol = 'Cr';
+    group = 6;
+    density = 7.15;
+    radius = 166;
+    electronegativity = 1.66;
+    oxidation = None;
+    charge = 0;
+    heat = 0.449;
+    bp = 2944;
+    mp = 2180;
+}
+public class Manganese(Element):{
+    number = 25;
+    mass = 54.938045;
+    name = 'Manganese';
+    symbol = 'Mn';
+    group = 7;
+    density = 7.44;
+    radius = 161;
+    electronegativity = 1.55;
+    oxidation = None;
+    charge = 0;
+    heat = 0.479;
+    bp = 2334;
+    mp = 1519;
+}
+public class Iron(Element):{
+    number = 26;
+    mass = 55.845;
+    name = 'Iron';
+    symbol = 'Fe';
+    group = 8;
+    density = 7.874;
+    radius = 156;
+    electronegativity = 1.83;
+    oxidation = None;
+    charge = 0;
+    heat = 0.449;
+    bp = 3134;
+    mp = 1811;
+}
+public class Cobalt(Element):{
+    number = 27;
+    mass = 58.933195;
+    name = 'Cobalt';
+    symbol = 'Co';
+    group = 9;
+    density = 8.86;
+    radius = 152;
+    electronegativity = 1.88;
+    oxidation = None;
+    charge = 0;
+    heat = 0.421;
+    bp = 3200;
+    mp = 1768;
+}
+public class Nickel(Element):{
+    number = 28;
+    mass = 58.6934;
+    name = 'Nickel';
+    symbol = 'Ni';
+    group = 10;
+    density = 8.912;
+    radius = 149;
+    electronegativity = 1.91;
+    oxidation = None;
+    charge = 0;
+    heat = 0.444;
+    bp = 3186;
+    mp = 1728;
+}
+public class Copper(Element):{
+    number = 29;
+    mass = 63.546;
+    name = 'Copper';
+    symbol = 'Cu';
+    group = 11;
+    density = 8.96;
+    radius = 145;
+    electronegativity = 1.9;
+    oxidation = None;
+    charge = 0;
+    heat = 0.385;
+    bp = 2835;
+    mp = 1357.77;
+}
+public class Zinc(Element):{
+    number = 30;
+    mass = 65.38;
+    name = 'Zinc';
+    symbol = 'Zn';
+    group = 12;
+    density = 7.134;
+    radius = 142;
+    electronegativity = 1.65;
+    oxidation = None;
+    charge = 0;
+    heat = 0.388;
+    bp = 1180;
+    mp = 692.88;
+}
+public class Gallium(Element):{
+    number = 31;
+    mass = 69.723;
+    name = 'Gallium';
+    symbol = 'Ga';
+    group = 13;
+    density = 5.907;
+    radius = 136;
+    electronegativity = 1.81;
+    oxidation = None;
+    charge = 0;
+    heat = 0.371;
+    bp = 2477;
+    mp = 302.9146;
+}
+public class Germanium(Element):{
+    number = 32;
+    mass = 72.630;
+    name = 'Germanium';
+    symbol = 'Ge';
+    group = 14;
+    density = 5.323;
+    radius = 125;
+    electronegativity = 2.01;
+    oxidation = None;
+    charge = 0;
+    heat = 0.32;
+    bp = 3106;
+    mp = 1211.4;
+}
+public class Arsenic(Element):{
+    number = 33;
+    mass = 74.92160;
+    name = 'Arsenic';
+    symbol = 'As';
+    group = 15;
+    density = 5.776;
+    radius = 114;
+    electronegativity = 2.18;
+    oxidation = None;
+    charge = 0;
+    heat = 0.329;
+    bp = 887;
+    mp = 1090;
+}
+public class Selenium(Element):{
+    number = 34;
+    mass = 78.96;
+    name = 'Selenium';
+    symbol = 'Se';
+    group = 16;
+    density = 4.809;
+    radius = 103;
+    electronegativity = 2.55;
+    oxidation = None;
+    charge = 0;
+    heat = 0.321;
+    bp = 958;
+    mp = 453;
+}
+public class Bromine(Element):{
+    number = 35;
+    mass = 79.9049;
+    name = 'Bromine';
+    symbol = 'Br';
+    group = 17;
+    density = 3.122;
+    radius = 94;
+    electronegativity = 2.96;
+    oxidation = None;
+    charge = 0;
+    heat = 0.474;
+    bp = 332;
+    mp = 265.8;
+}
+public class Krypton(Element):{
+    number = 36;
+    mass = 83.798;
+    name = 'Krypton';
+    symbol = 'Kr';
+    group = 18;
+    density = 0.003733;
+    radius = 88;
+    electronegativity = 3;
+    oxidation = None;
+    charge = 0;
+    heat = 0.248;
+    bp = 119.93;
+    mp = 115.79;
+}
+public class Rubidium(Element):{
+    number = 37;
+    mass = 85.4678;
+    name = 'Rubidium';
+    symbol = 'Rb';
+    group = 1;
+    density = 1.532;
+    radius = 265;
+    electronegativity = 0.82;
+    oxidation = None;
+    charge = 0;
+    heat = 0.363;
+    bp = 961;
+    mp = 312.46;
+}
+public class Strontium(Element):{
+    number = 38;
+    mass = 87.62;
+    name = 'Strontium';
+    symbol = 'Sr';
+    group = 2;
+    density = 2.64;
+    radius = 219;
+    electronegativity = 0.95;
+    oxidation = None;
+    charge = 0;
+    heat = 0.301;
+    bp = 1655;
+    mp = 1050;
+}
+public class Yttrium(Element):{
+    number = 39;
+    mass = 88.90585;
+    name = 'Yttrium';
+    symbol = 'Y';
+    group = 3;
+    density = 4.469;
+    radius = 212;
+    electronegativity = 1.22;
+    oxidation = None;
+    charge = 0;
+    heat = 0.298;
+    bp = 3609;
+    mp = 1799;
+}
+public class Zirconium(Element):{
+    number = 40;
+    mass = 91.224;
+    name = 'Zirconium';
+    symbol = 'Zr';
+    group = 4;
+    density = 6.506;
+    radius = 206;
+    electronegativity = 1.33;
+    oxidation = None;
+    charge = 0;
+    heat = 0.278;
+    bp = 4682;
+    mp = 2128;
+}
+public class Niobium(Element):{
+    number = 41;
+    mass = 92.90638;
+    name = 'Niobium';
+    symbol = 'Nb';
+    group = 5;
+    density = 8.57;
+    radius = 198;
+    electronegativity = 1.6;
+    oxidation = None;
+    charge = 0;
+    heat = 0.265;
+    bp = 5017;
+    mp = 2750;
+}
+public class Molybdenum(Element):{
+    number = 42;
+    mass = 95.96;
+    name = 'Molybdenum';
+    symbol = 'Mo';
+    group = 6;
+    density = 10.22;
+    radius = 190;
+    electronegativity = 2.16;
+    oxidation = None;
+    charge = 0;
+    heat = 0.251;
+    bp = 4912;
+    mp = 2896;
+}
+public class Technetium(Element):{
+    number = 43;
+    mass = 98];
+    name = 'Technetium';
+    symbol = 'Tc';
+    group = 7;
+    density = 11.5;
+    radius = 183;
+    electronegativity = 1.9;
+    oxidation = None;
+    charge = 0;
+    heat = 'No_Data';
+    bp = 4538;
+    mp = 2430;
+}
+public class Ruthenium(Element):{
+    number = 44;
+    mass = 101.07;
+    name = 'Ruthenium';
+    symbol = 'Ru';
+    group = 8;
+    density = 12.37;
+    radius = 178;
+    electronegativity = 2.2;
+    oxidation = None;
+    charge = 0;
+    heat = 0.238;
+    bp = 4423;
+    mp = 2607;
+}
+public class Rhodium(Element):{
+    number = 45;
+    mass = 102.90550;
+    name = 'Rhodium';
+    symbol = 'Rh';
+    group = 9;
+    density = 12.41;
+    radius = 173;
+    electronegativity = 2.28;
+    oxidation = None;
+    charge = 0;
+    heat = 0.243;
+    bp = 3968;
+    mp = 2237;
+}
+public class Palladium(Element):{
+    number = 46;
+    mass = 106.42;
+    name = 'Palladium';
+    symbol = 'Pd';
+    group = 10;
+    density = 12.02;
+    radius = 169;
+    electronegativity = 2.2;
+    oxidation = None;
+    charge = 0;
+    heat = 0.244;
+    bp = 3236;
+    mp = 1828.05;
+}
+public class Silver(Element):{
+    number = 47;
+    mass = 107.8682;
+    name = 'Silver';
+    symbol = 'Ag';
+    group = 11;
+    density = 10.501;
+    radius = 165;
+    electronegativity = 1.93;
+    oxidation = None;
+    charge = 0;
+    heat = 0.235;
+    bp = 2435;
+    mp = 1234.93;
+}
+public class Cadmium(Element):{
+    number = 48;
+    mass = 112.411;
+    name = 'Cadmium';
+    symbol = 'Cd';
+    group = 12;
+    density = 8.69;
+    radius = 161;
+    electronegativity = 1.69;
+    oxidation = None;
+    charge = 0;
+    heat = 0.232;
+    bp = 1040;
+    mp = 594.22;
+}
+public class Indium(Element):{
+    number = 49;
+    mass = 114.818;
+    name = 'Indium';
+    symbol = 'In';
+    group = 13;
+    density = 7.31;
+    radius = 156;
+    electronegativity = 1.78;
+    oxidation = None;
+    charge = 0;
+    heat = 0.233;
+    bp = 2345;
+    mp = 429.75;
+}
+public class Tin(Element):{
+    number = 50;
+    mass = 118.710;
+    name = 'Tin';
+    symbol = 'Sn';
+    group = 14;
+    density = 7.287;
+    radius = 145;
+    electronegativity = 1.96;
+    oxidation = None;
+    charge = 0;
+    heat = 0.228;
+    bp = 2875;
+    mp = 505.08;
+}
+public class Antimony(Element):{
+    number = 51;
+    mass = 121.760;
+    name = 'Antimony';
+    symbol = 'Sb';
+    group = 15;
+    density = 6.685;
+    radius = 133;
+    electronegativity = 2.05;
+    oxidation = None;
+    charge = 0;
+    heat = 0.207;
+    bp = 1860;
+    mp = 903.78;
+}
+public class Tellurium(Element):{
+    number = 52;
+    mass = 127.60;
+    name = 'Tellurium';
+    symbol = 'Te';
+    group = 16;
+    density = 6.232;
+    radius = 123;
+    electronegativity = 2.1;
+    oxidation = None;
+    charge = 0;
+    heat = 0.202;
+    bp = 1261;
+    mp = 722.66;
+}
+public class Iodine(Element):{
+    number = 53;
+    mass = 126.90447;
+    name = 'Iodine';
+    symbol = 'I';
+    group = 17;
+    density = 4.93;
+    radius = 115;
+    electronegativity = 2.66;
+    oxidation = None;
+    charge = 0;
+    heat = 0.214;
+    bp = 457.4;
+    mp = 386.85;
+}
+public class Xenon(Element):{
+    number = 54;
+    mass = 131.293;
+    name = 'Xenon';
+    symbol = 'Xe';
+    group = 18;
+    density = 0.005887;
+    radius = 108;
+    electronegativity = 2.6;
+    oxidation = None;
+    charge = 0;
+    heat = 0.158;
+    bp = 165.03;
+    mp = 161.4;
+}
+public class Caesium(Element):{
+    number = 55;
+    mass = 132.9054519;
+    name = 'Caesium';
+    symbol = 'Cs';
+    group = 1;
+    density = 1.873;
+    radius = 298;
+    electronegativity = 0.79;
+    oxidation = None;
+    charge = 0;
+    heat = 0.242;
+    bp = 944;
+    mp = 301.59;
+}
+public class Barium(Element):{
+    number = 56;
+    mass = 137.327;
+    name = 'Barium';
+    symbol = 'Ba';
+    group = 2;
+    density = 3.594;
+    radius = 253;
+    electronegativity = 0.89;
+    oxidation = None;
+    charge = 0;
+    heat = 0.204;
+    bp = 2170;
+    mp = 1000;
+}
+public class Lanthanum(Element):{
+    number = 57;
+    mass = 138.90547;
+    name = 'Lanthanum';
+    symbol = 'La';
+    group = 0;
+    density = 6.145;
+    radius = 'No_Data';
+    electronegativity = 1.1;
+    oxidation = None;
+    charge = 0;
+    heat = 0.195;
+    bp = 3737;
+    mp = 1193;
+}
+public class Cerium(Element):{
+    number = 58;
+    mass = 140.116;
+    name = 'Cerium';
+    symbol = 'Ce';
+    group = 0;
+    density = 6.77;
+    radius = 'No_Data';
+    electronegativity = 1.12;
+    oxidation = None;
+    charge = 0;
+    heat = 0.192;
+    bp = 3716;
+    mp = 1068;
+}
+public class Praseodymium(Element):{
+    number = 59;
+    mass = 140.90765;
+    name = 'Praseodymium';
+    symbol = 'Pr';
+    group = 0;
+    density = 6.773;
+    radius = 247;
+    electronegativity = 1.13;
+    oxidation = None;
+    charge = 0;
+    heat = 0.193;
+    bp = 3793;
+    mp = 1208;
+}
+public class Neodymium(Element):{
+    number = 60;
+    mass = 144.242;
+    name = 'Neodymium';
+    symbol = 'Nd';
+    group = 0;
+    density = 7.007;
+    radius = 206;
+    electronegativity = 1.14;
+    oxidation = None;
+    charge = 0;
+    heat = 0.19;
+    bp = 3347;
+    mp = 1297;
+}
+public class Promethium(Element):{
+    number = 61;
+    mass = 145;
+    name = 'Promethium';
+    symbol = 'Pm';
+    group = 0;
+    density = 7.26;
+    radius = 205;
+    electronegativity = 1.13;
+    oxidation = None;
+    charge = 0;
+    heat = 'No_Data';
+    bp = 3273;
+    mp = 1315;
+}
+public class Samarium(Element):{
+    number = 62;
+    mass = 150.36;
+    name = 'Samarium';
+    symbol = 'Sm';
+    group = 0;
+    density = 7.52;
+    radius = 238;
+    electronegativity = 1.17;
+    oxidation = None;
+    charge = 0;
+    heat = 0.197;
+    bp = 2067;
+    mp = 1345;
+}
+public class Europium(Element):{
+    number = 63;
+    mass = 151.964;
+    name = 'Europium';
+    symbol = 'Eu';
+    group = 0;
+    density = 5.243;
+    radius = 231;
+    electronegativity = 1.2;
+    oxidation = None;
+    charge = 0;
+    heat = 0.182;
+    bp = 1802;
+    mp = 1099;
+}
+public class Gadolinium(Element):{
+    number = 64;
+    mass = 157.25;
+    name = 'Gadolinium';
+    symbol = 'Gd';
+    group = 0;
+    density = 7.895;
+    radius = 233;
+    electronegativity = 1.2;
+    oxidation = None;
+    charge = 0;
+    heat = 0.236;
+    bp = 3546;
+    mp = 1585;
+}
+public class Terbium(Element):{
+    number = 65;
+    mass = 158.92535;
+    name = 'Terbium';
+    symbol = 'Tb';
+    group = 0;
+    density = 8.229;
+    radius = 225;
+    electronegativity = 1.2;
+    oxidation = None;
+    charge = 0;
+    heat = 0.182;
+    bp = 3503;
+    mp = 1629;
+}
+public class Dysprosium(Element):{
+    number = 66;
+    mass = 162.500;
+    name = 'Dysprosium';
+    symbol = 'Dy';
+    group = 0;
+    density = 8.55;
+    radius = 228;
+    electronegativity = 1.22;
+    oxidation = None;
+    charge = 0;
+    heat = 0.17;
+    bp = 2840;
+    mp = 1680;
+}
+public class Holmium(Element):{
+    number = 67;
+    mass = 164.93032;
+    name = 'Holmium';
+    symbol = 'Ho';
+    group = 0;
+    density = 8.795;
+    radius = 'No_Data';
+    electronegativity = 1.23;
+    oxidation = None;
+    charge = 0;
+    heat = 0.165;
+    bp = 2993;
+    mp = 1734;
+}
+public class Erbium(Element):{
+    number = 68;
+    mass = 167.259;
+    name = 'Erbium';
+    symbol = 'Er';
+    group = 0;
+    density = 9.066;
+    radius = 226;
+    electronegativity = 1.24;
+    oxidation = None;
+    charge = 0;
+    heat = 0.168;
+    bp = 3141;
+    mp = 1802;
+}
+public class Thulium(Element):{
+    number = 69;
+    mass = 168.93421;
+    name = 'Thulium';
+    symbol = 'Tm';
+    group = 0;
+    density = 9.321;
+    radius = 222;
+    electronegativity = 1.25;
+    oxidation = None;
+    charge = 0;
+    heat = 0.16;
+    bp = 2223;
+    mp = 1818;
+}
+public class Ytterbium(Element):{
+    number = 70;
+    mass = 173.054;
+    name = 'Ytterbium';
+    symbol = 'Yb';
+    group = 0;
+    density = 6.965;
+    radius = 222;
+    electronegativity = 1.1;
+    oxidation = None;
+    charge = 0;
+    heat = 0.155;
+    bp = 1469;
+    mp = 1097;
+}
+public class Lutetium(Element):{
+    number = 71;
+    mass = 174.9668;
+    name = 'Lutetium';
+    symbol = 'Lu';
+    group = 3;
+    density = 9.84;
+    radius = 217;
+    electronegativity = 1.27;
+    oxidation = None;
+    charge = 0;
+    heat = 0.154;
+    bp = 3675;
+    mp = 1925;
+}
+public class Hafnium(Element):{
+    number = 72;
+    mass = 178.49;
+    name = 'Hafnium';
+    symbol = 'Hf';
+    group = 4;
+    density = 13.31;
+    radius = 208;
+    electronegativity = 1.3;
+    oxidation = None;
+    charge = 0;
+    heat = 0.144;
+    bp = 4876;
+    mp = 2506;
+}
+public class Tantalum(Element):{
+    number = 73;
+    mass = 180.94788;
+    name = 'Tantalum';
+    symbol = 'Ta';
+    group = 5;
+    density = 16.654;
+    radius = 200;
+    electronegativity = 1.5;
+    oxidation = None;
+    charge = 0;
+    heat = 0.14;
+    bp = 5731;
+    mp = 3290;
+}
+public class Tungsten(Element):{
+    number = 74;
+    mass = 183.84;
+    name = 'Tungsten';
+    symbol = 'W';
+    group = 6;
+    density = 19.25;
+    radius = 193;
+    electronegativity = 2.36;
+    oxidation = None;
+    charge = 0;
+    heat = 0.132;
+    bp = 5828;
+    mp = 3695;
+}
+public class Rhenium(Element):{
+    number = 75;
+    mass = 186.207;
+    name = 'Rhenium';
+    symbol = 'Re';
+    group = 7;
+    density = 21.02;
+    radius = 188;
+    electronegativity = 1.9;
+    oxidation = None;
+    charge = 0;
+    heat = 0.137;
+    bp = 5869;
+    mp = 3459;
+}
+public class Osmium(Element):{
+    number = 76;
+    mass = 190.23;
+    name = 'Osmium';
+    symbol = 'Os';
+    group = 8;
+    density = 22.61;
+    radius = 185;
+    electronegativity = 2.2;
+    oxidation = None;
+    charge = 0;
+    heat = 0.13;
+    bp = 5285;
+    mp = 3306;
+}
+public class Iridium(Element):{
+    number = 77;
+    mass = 192.217;
+    name = 'Iridium';
+    symbol = 'Ir';
+    group = 9;
+    density = 22.56;
+    radius = 180;
+    electronegativity = 2.2;
+    oxidation = None;
+    charge = 0;
+    heat = 0.131;
+    bp = 4701;
+    mp = 2719;
+}
+public class Platinum(Element):{
+    number = 78;
+    mass = 195.084;
+    name = 'Platinum';
+    symbol = 'Pt';
+    group = 10;
+    density = 21.46;
+    radius = 177;
+    electronegativity = 2.28;
+    oxidation = None;
+    charge = 0;
+    heat = 0.133;
+    bp = 4098;
+    mp = 2041.4;
+}
+public class Gold(Element):{
+    number = 79;
+    mass = 196.966569;
+    name = 'Gold';
+    symbol = 'Au';
+    group = 11;
+    density = 19.282;
+    radius = 174;
+    electronegativity = 2.54;
+    oxidation = None;
+    charge = 0;
+    heat = 0.129;
+    bp = 3129;
+    mp = 1337.33;
+}
+public class Mercury(Element):{
+    number = 80;
+    mass = 200.592;
+    name = 'Mercury';
+    symbol = 'Hg';
+    group = 12;
+    density = 13.5336;
+    radius = 171;
+    electronegativity = 2;
+    oxidation = None;
+    charge = 0;
+    heat = 0.14;
+    bp = 629.88;
+    mp = 234.43;
+}
+public class Thallium(Element):{
+    number = 81;
+    mass = 204.389;
+    name = 'Thallium';
+    symbol = 'Tl';
+    group = 13;
+    density = 11.85;
+    radius = 156;
+    electronegativity = 1.62;
+    oxidation = None;
+    charge = 0;
+    heat = 0.129;
+    bp = 1746;
+    mp = 577;
+}
+public class Lead(Element):{
+    number = 82;
+    mass = 207.2;
+    name = 'Lead';
+    symbol = 'Pb';
+    group = 14;
+    density = 11.342;
+    radius = 154;
+    electronegativity = 1.87;
+    oxidation = None;
+    charge = 0;
+    heat = 0.129;
+    bp = 2022;
+    mp = 600.61;
+}
+public class Bismuth(Element):{
+    number = 83;
+    mass = 208.98040;
+    name = 'Bismuth';
+    symbol = 'Bi';
+    group = 15;
+    density = 9.807;
+    radius = 143;
+    electronegativity = 2.02;
+    oxidation = None;
+    charge = 0;
+    heat = 0.122;
+    bp = 1837;
+    mp = 544.7;
+}
+public class Polonium(Element):{
+    number = 84;
+    mass = 209;
+    name = 'Polonium';
+    symbol = 'Po';
+    group = 16;
+    density = 9.32;
+    radius = 135;
+    electronegativity = 2;
+    oxidation = None;
+    charge = 0;
+    heat = 'No_Data';
+    bp = 1235;
+    mp = 527;
+}
+public class Astatine(Element):{
+    number = 85;
+    mass = 210;
+    name = 'Astatine';
+    symbol = 'At';
+    group = 17;
+    density = 7;
+    radius = 'No_Data';
+    electronegativity = 2.2;
+    oxidation = None;
+    charge = 0;
+    heat = 'No_Data';
+    bp = 610;
+    mp = 575;
+}
+public class Radon(Element):{
+    number = 86;
+    mass = 222;
+    name = 'Radon';
+    symbol = 'Rn';
+    group = 18;
+    density = 0.00973;
+    radius = 120;
+    electronegativity = 2.2;
+    oxidation = None;
+    charge = 0;
+    heat = 0.094;
+    bp = 211.3;
+    mp = 202;
+}
+public class Francium(Element):{
+    number = 87;
+    mass = 223;
+    name = 'Francium';
+    symbol = 'Fr';
+    group = 1;
+    density = 1.87;
+    radius = 'No_Data';
+    electronegativity = 0.7;
+    oxidation = None;
+    charge = 0;
+    heat = 'No_Data';
+    bp = 950;
+    mp = 300;
+}
+public class Radium(Element):{
+    number = 88;
+    mass = 226;
+    name = 'Radium';
+    symbol = 'Ra';
+    group = 2;
+    density = 5.5;
+    radius = 'No_Data';
+    electronegativity = 0.9;
+    oxidation = None;
+    charge = 0;
+    heat = 0.094;
+    bp = 2010;
+    mp = 973;
+}
+public class Actinium(Element):{
+    number = 89;
+    mass = 227;
+    name = 'Actinium';
+    symbol = 'Ac';
+    group = 0;
+    density = 10.07;
+    radius = 'No_Data';
+    electronegativity = 1.1;
+    oxidation = None;
+    charge = 0;
+    heat = 0.12;
+    bp = 3471;
+    mp = 1323;
+}
+public class Thorium(Element):{
+    number = 90;
+    mass = 232.03806;
+    name = 'Thorium';
+    symbol = 'Th';
+    group = 0;
+    density = 11.72;
+    radius = 'No_Data';
+    electronegativity = 1.3;
+    oxidation = None;
+    charge = 0;
+    heat = 0.113;
+    bp = 5061;
+    mp = 2115;
+}
+public class Protactinium(Element):{
+    number = 91;
+    mass = 231.03588;
+    name = 'Protactinium';
+    symbol = 'Pa';
+    group = 0;
+    density = 15.37;
+    radius = 'No_Data';
+    electronegativity = 1.5;
+    oxidation = None;
+    charge = 0;
+    heat = 'No_Data';
+    bp = 4300;
+    mp = 1841;
+}
+public class Uranium(Element):{
+    number = 92;
+    mass = 238.02891;
+    name = 'Uranium';
+    symbol = 'U';
+    group = 0;
+    density = 18.95;
+    radius = 'No_Data';
+    electronegativity = 1.38;
+    oxidation = None;
+    charge = 0;
+    heat = 0.116;
+    bp = 4404;
+    mp = 1405.3;
+}
+public class Neptunium(Element):{
+    number = 93;
+    mass = 237;
+    name = 'Neptunium';
+    symbol = 'Np';
+    group = 0;
+    density = 20.45;
+    radius = 'No_Data';
+    electronegativity = 1.36;
+    oxidation = None;
+    charge = 0;
+    heat = 'No_Data';
+    bp = 4273;
+    mp = 917;
+}
+public class Plutonium(Element):{
+    number = 94;
+    mass = 244;
+    name = 'Plutonium';
+    symbol = 'Pu';
+    group = 0;
+    density = 19.84;
+    radius = 'No_Data';
+    electronegativity = 1.28;
+    oxidation = None;
+    charge = 0;
+    heat = 'No_Data';
+    bp = 3501;
+    mp = 912.5;
+}
+public class Americium(Element):{
+    number = 95;
+    mass = 243;
+    name = 'Americium';
+    symbol = 'Am';
+    group = 0;
+    density = 13.69;
+    radius = 'No_Data';
+    electronegativity = 1.13;
+    oxidation = None;
+    charge = 0;
+    heat = 'No_Data';
+    bp = 2880;
+    mp = 1449;
+}
+public class Curium(Element):{
+    number = 96;
+    mass = 247;
+    name = 'Curium';
+    symbol = 'Cm';
+    group = 0;
+    density = 13.51;
+    radius = 'No_Data';
+    electronegativity = 1.28;
+    oxidation = None;
+    charge = 0;
+    heat = 'No_Data';
+    bp = 3383;
+    mp = 1613;
+}
+public class Berkelium(Element):{
+    number = 97;
+    mass = 247;
+    name = 'Berkelium';
+    symbol = 'Bk';
+    group = 0;
+    density = 14.79;
+    radius = 'No_Data';
+    electronegativity = 1.3;
+    oxidation = None;
+    charge = 0;
+    heat = 'No_Data';
+    bp = 2900;
+    mp = 1259;
+}
+public class Californium(Element):{
+    number = 98;
+    mass = 251;
+    name = 'Californium';
+    symbol = 'Cf';
+    group = 0;
+    density = 15.1;
+    radius = 'No_Data';
+    electronegativity = 1.3;
+    oxidation = None;
+    charge = 0;
+    heat = 'No_Data';
+    bp = 1743;
+    mp = 1173;
+}
+public class Einsteinium(Element):{
+    number = 99;
+    mass = 252;
+    name = 'Einsteinium';
+    symbol = 'Es';
+    group = 0;
+    density = 8.84;
+    radius = 'No_Data';
+    electronegativity = 1.3;
+    oxidation = None;
+    charge = 0;
+    heat = 'No_Data';
+    bp = 1269;
+    mp = 1133;
+}
+public class Fermium(Element):{
+    number = 100;
+    mass = 257;
+    name = 'Fermium';
+    symbol = 'Fm';
+    group = 0;
+    density = 'No_Data';
+    radius = 'No_Data';
+    electronegativity = 1.3;
+    oxidation = None;
+    charge = 0;
+    heat = 'No_Data';
+    bp = 'No_Data';
+    mp = 1125;
+}
+public class Mendelevium(Element):{
+    number = 101;
+    mass = 258;
+    name = 'Mendelevium';
+    symbol = 'Md';
+    group = 0;
+    density = 'No_Data';
+    radius = 'No_Data';
+    electronegativity = 1.3;
+    oxidation = None;
+    charge = 0;
+    heat = 'No_Data';
+    bp = 'No_Data';
+    mp = 1100;
+}
+public class Nobelium(Element):{
+    number = 102;
+    mass = 259;
+    name = 'Nobelium';
+    symbol = 'No';
+    group = 0;
+    density = 'No_Data';
+    radius = 'No_Data';
+    electronegativity = 1.3;
+    oxidation = None;
+    charge = 0;
+    heat = 'No_Data';
+    bp = 'No_Data';
+    mp = 1100;
+}
+public class Lawrencium(Element):{
+    number = 103;
+    mass = 262;
+    name = 'Lawrencium';
+    symbol = 'Lr';
+    group = 3;
+    density = 'No_Data';
+    radius = 'No_Data';
+    electronegativity = 1.3;
+    oxidation = None;
+    charge = 0;
+    heat = 'No_Data';
+    bp = 'No_Data';
+    mp = 1900;
+}
+public class Rutherfordium(Element):{
+    number = 104;
+    mass = 267;
+    name = 'Rutherfordium';
+    symbol = 'Rf';
+    group = 4;
+    density = 23.2;
+    radius = 'No_Data';
+    electronegativity = 'No_Data';
+    oxidation = None;
+    charge = 0;
+    heat = 'No_Data';
+    bp = 5800;
+    mp = 2400;
+}
+public class Dubnium(Element):{
+    number = 105;
+    mass = 268;
+    name = 'Dubnium';
+    symbol = 'Db';
+    group = 5;
+    density = 29.3;
+    radius = 'No_Data';
+    electronegativity = 'No_Data';
+    oxidation = None;
+    charge = 0;
+    heat = 'No_Data';
+    bp = 'No_Data';
+    mp = 'No_Data';
+}
+public class Seaborgium(Element):{
+    number = 106;
+    mass = 269;
+    name = 'Seaborgium';
+    symbol = 'Sg';
+    group = 6;
+    density = 35.0;
+    radius = 'No_Data';
+    electronegativity = 'No_Data';
+    oxidation = None;
+    charge = 0;
+    heat = 'No_Data';
+    bp = 'No_Data';
+    mp = 'No_Data';
+}
+public class Bohrium(Element):{
+    number = 107;
+    mass = 270;
+    name = 'Bohrium';
+    symbol = 'Bh';
+    group = 7;
+    density = 37.1;
+    radius = 'No_Data';
+    electronegativity = 'No_Data';
+    oxidation = None;
+    charge = 0;
+    heat = 'No_Data';
+    bp = 'No_Data';
+    mp = 'No_Data';
+}
+public class Hassium(Element):{
+    number = 108;
+    mass = 269;
+    name = 'Hassium';
+    symbol = 'Hs';
+    group = 8;
+    density = 40.7;
+    radius = 'No_Data';
+    electronegativity = 'No_Data';
+    oxidation = None;
+    charge = 0;
+    heat = 'No_Data';
+    bp = 'No_Data';
+    mp = 'No_Data';
+}
+public class Meitnerium(Element):{
+    number = 109;
+    mass = 278;
+    name = 'Meitnerium';
+    symbol = 'Mt';
+    group = 9;
+    density = 37.4;
+    radius = 'No_Data';
+    electronegativity = 'No_Data';
+    oxidation = None;
+    charge = 0;
+    heat = 'No_Data';
+    bp = 'No_Data';
+    mp = 'No_Data';
+}
+public class Darmstadtium(Element):{
+    number = 110;
+    mass = 281;
+    name = 'Darmstadtium';
+    symbol = 'Ds';
+    group = 10;
+    density = 34.8;
+    radius = 'No_Data';
+    electronegativity = 'No_Data';
+    oxidation = None;
+    charge = 0;
+    heat = 'No_Data';
+    bp = 'No_Data';
+    mp = 'No_Data';
+}
+public class Roentgenium(Element):{
+    number = 111;
+    mass = 281;
+    name = 'Roentgenium';
+    symbol = 'Rg';
+    group = 11;
+    density = 28.7;
+    radius = 'No_Data';
+    electronegativity = 'No_Data';
+    oxidation = None;
+    charge = 0;
+    heat = 'No_Data';
+    bp = 'No_Data';
+    mp = 'No_Data';
+}
+public class Copernicium(Element):{
+    number = 112;
+    mass = 285;
+    name = 'Copernicium';
+    symbol = 'Cn';
+    group = 12;
+    density = 23.7;
+    radius = 'No_Data';
+    electronegativity = 'No_Data';
+    oxidation = None;
+    charge = 0;
+    heat = 'No_Data';
+    bp = 357;
+    mp = 'No_Data';
+}
+public class Ununtrium(Element):{
+    number = 113;
+    mass = 286;
+    name = 'Ununtrium';
+    symbol = 'Uut';
+    group = 13;
+    density = 16;
+    radius = 'No_Data';
+    electronegativity = 'No_Data';
+    oxidation = None;
+    charge = 0;
+    heat = 'No_Data';
+    bp = 1400;
+    mp = 700;
+}
+public class Flerovium(Element):{
+    number = 114;
+    mass = 289;
+    name = 'Flerovium';
+    symbol = 'Fl';
+    group = 14;
+    density = 14;
+    radius = 'No_Data';
+    electronegativity = 'No_Data';
+    oxidation = None;
+    charge = 0;
+    heat = 'No_Data';
+    bp = 420;
+    mp = 340;
+}
+public class Ununpentium(Element):{
+    number = 115;
+    mass = 288;
+    name = 'Ununpentium';
+    symbol = 'Uup';
+    group = 15;
+    density = 13.5;
+    radius = 'No_Data';
+    electronegativity = 'No_Data';
+    oxidation = None;
+    charge = 0;
+    heat = 'No_Data';
+    bp = 1400;
+    mp = 700;
+}
+public class Livermorium(Element):{
+    number = 116;
+    mass = 293;
+    name = 'Livermorium';
+    symbol = 'Lv';
+    group = 16;
+    density = 12.9;
+    radius = 'No_Data';
+    electronegativity = 'No_Data';
+    oxidation = None;
+    charge = 0;
+    heat = 'No_Data';
+    bp = 1085;
+    mp = 708.5;
+}
+public class Ununseptium(Element):{
+    number = 117;
+    mass = 294;
+    name = 'Ununseptium';
+    symbol = 'Uus';
+    group = 17;
+    density = 7.2;
+    radius = 'No_Data';
+    electronegativity = 'No_Data';
+    oxidation = None;
+    charge = 0;
+    heat = 'No_Data';
+    bp = 823;
+    mp = 673;
+}
+public class Ununoctium(Element):{
+    number = 118;
+    mass = 294;
+    name = 'Ununoctium';
+    symbol = 'Uuo';
+    group = 18;
+    density = 5.0;
+    radius = 'No_Data';
+    electronegativity = 'No_Data';
+    oxidation = None;
+    charge = 0;
+    heat = 'No_Data';
+    bp = 263;
+    mp = 258;}
