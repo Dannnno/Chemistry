@@ -328,6 +328,6 @@ class Compound(Chemistry):
         """the string representation of a compound object"""
         return str(self.formula)          
 
-a = Compound("C((C((H)3))3) C((+O)1(H)1)")
+#a = Compound("C((C((H)3))3) C((H)3)")
 #b = Compound('C((!@((C((H)2))5(C((H)1(!)1))1))1(H)2) C((C((H)3))3)')
-print a
+#print a

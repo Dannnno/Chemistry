@@ -1,4 +1,4 @@
-###Changelog - updated 1/30/2014 11:37:48 AM 
+###Changelog - updated 2/1/2014 6:08:42 PM 
 ---
 Current stage of development: Pre-Alpha  
 Current program version: NA
@@ -201,3 +201,13 @@ Current program version: NA
 **1/30/2014**
 
 - concluded that `enaml` is not going to work for my purposes. Investigating Java as an alternative   
+- wrote `tojava.py` to create all the Element subclasses in Java terms - needs reworking based on data types
+
+**1/31/2014**
+
+- began looking into `Jython`
+- began writing code for reactions - starting with Acid-Base reactions
+- considering rewriting the method of compound creation (think functional groups)
+	- massive rework of both elements and compounds
+	- need to have a way to hybridize elements, base bonding on valence/oxidation
+	- need to have 'default' lone pair support 

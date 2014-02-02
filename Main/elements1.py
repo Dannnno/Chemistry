@@ -1,4 +1,4 @@
-class Chemistry():pass 
+class Chemistry():pass
 
 class Element(Chemistry):
     def __init__(self):pass
@@ -21,6 +21,17 @@ class Element(Chemistry):
     def getHeat(self):return self.heat
     def getBoil(self):return self.bp
     def getMelt(self):return self.mp
+    def formalCharge(self):
+        if self.group in [1,2,13,14,15,16,17]:
+            if self.group > 10:
+                valence = self.group - 10
+            else:
+                valence = self.group
+            nBonds = len(self.bondList)
+            nLPE = self.LPE
+            FC = valence - nBonds - nLPE
+            return FC
+    def __str__(self):return self.name
 
 class Hydrogen(Element):
     def __init__(self):
