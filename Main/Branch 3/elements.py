@@ -26,8 +26,8 @@ class Element(Chemistry):
         return self.bondList
     def addBond(self,aBond):
         self.bondList.append(aBond)
-    def breakBond(self,aBond):
-        try:del self.bondList[self.bondList.find(aBond)]
+    def breakBond(self,index):
+        try:del self.bondList[index]
         except:print 'No bond at this location'
     def changeBond(self,newBond,index):
         try:self.bondList[index] = newBond

@@ -1,10 +1,5 @@
-import numpy as np
-
 aFile = open('C://Users/Dan/Documents/GitHub/Chemistry/Info/ab.txt','r')
-
-aString = ''
 aList = []
-
 for line in aFile:
     if 'Num' not in line:
         aList.append(line.split())
@@ -37,8 +32,8 @@ startString += "\n    def getBonds(self):"
 startString += "\n        return self.bondList"
 startString += "\n    def addBond(self,aBond):"
 startString += "\n        self.bondList.append(aBond)"
-startString += "\n    def breakBond(self,index):"
-startString += "\n        try:del self.bondList[index]"
+startString += "\n    def breakBond(self,aBond):"
+startString += "\n        try:del self.bondList[self.bondList.find(aBond)]"
 startString += "\n        except:print 'No bond at this location'"
 startString += "\n    def changeBond(self,newBond,index):"
 startString += "\n        try:self.bondList[index] = newBond"
@@ -63,7 +58,6 @@ startString += "\n    def __str__(self):"
 startString += "\n        return self.name\n"
 
 mainString = '\n'
-
 for i in range(len(aList)):
     mainString += "class " + aList[i][2] + "(Element):"
     mainString += "\n    def __init__(self):"
@@ -81,7 +75,7 @@ for i in range(len(aList)):
     mainString += "\n        self.oxidation = " + aList[i][11]
     mainString += "\n        self.charge = 0"
     mainString += "\n        self.bondList = []"
-    if i != 118:
+    if i != 117:
         mainString += '\n\n'
     
 elementString = startString + mainString

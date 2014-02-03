@@ -1,4 +1,4 @@
-###Changelog - updated 2/1/2014 6:08:42 PM 
+###Changelog - updated 2/3/2014 1:20:14 AM  
 ---
 Current stage of development: Pre-Alpha  
 Current program version: NA
@@ -211,3 +211,12 @@ Current program version: NA
 	- massive rework of both elements and compounds
 	- need to have a way to hybridize elements, base bonding on valence/oxidation
 	- need to have 'default' lone pair support 
+
+**2/2/2014**
+
+- cleaned up `Chemistry\*`and reorganized things
+- began new vision of the project, functional groups!
+	- new version is named `func.py`
+	- has `errors.py`, `element.py`, `reactions.py`, `compound.py` 
+- fixed the creation of `elements.py`
+- added particle support, orbital support, initial hybridization support, initial resonance support, initial compound/functional groups support

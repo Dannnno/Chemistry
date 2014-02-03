@@ -1,7 +1,8 @@
 #How to use this folder
 ---
-Updated 2/2/2014 9:33:47 PM 
+Updated 2/2/2014 10:00:54 PM 
 
+##For adding data to the element objects
 1. Open `elements.xlsx`
 2. Add new data into this file, on the 2nd group (to the right)
 	* Make sure that the left group is updated, I like the cleaner look to it
@@ -15,3 +16,7 @@ Updated 2/2/2014 9:33:47 PM
 	* `self.XXX` declarations in the unique classes
 7. Run `formatEPY.py` and make sure `elements.py` is properly formatted
 8. Copy/paste `elements.py` to your working directory (once you have code that supports it)
+
+##Other
+- `CHANGELOG.md` lists the changes that have been made to the program/repositry
+- `TODO.md` lists the things I still need to do, but is not often updated
