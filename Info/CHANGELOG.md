@@ -1,4 +1,4 @@
-###Changelog - updated 2/3/2014 1:20:14 AM  
+###Changelog - updated 2/4/2014 1:04:11 AM 
 ---
 Current stage of development: Pre-Alpha  
 Current program version: NA
@@ -220,3 +220,7 @@ Current program version: NA
 	- has `errors.py`, `element.py`, `reactions.py`, `compound.py` 
 - fixed the creation of `elements.py`
 - added particle support, orbital support, initial hybridization support, initial resonance support, initial compound/functional groups support
+
+**2/3/2014**
+
+-- Added initial support for Alkanes, Alkenes, Alkynes and Alcohols, as well as transformers for the first three

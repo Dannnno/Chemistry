@@ -47,7 +47,7 @@ class LPE(Electron):
         self.electrons = [Electron(),Electron()]
         
 class Bond(Electron):
-    def __init__(self, start, end, order, direction='in_plane'):
+    def __init__(self, start, end, order, direction='-'):
         self.start = start
         self.end = end
         self.order = order
