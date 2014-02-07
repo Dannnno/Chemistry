@@ -45,7 +45,8 @@ class InvalidLocationException(Exception):
         self.funcGroup = funcGroup
         if self.funcGroup[0] == 'Alcohol':
             self.loc = self.funcGroup[1]
-            self.code = "Alcohol can not be at location " + self.loc
+            self.code = "Alcohol can not be at location "
+            self.code += str(self.loc)
             
     def __str__(self):
         return repr(self.code)

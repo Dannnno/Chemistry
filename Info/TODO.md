@@ -1,4 +1,4 @@
-###TODO List - updated 1/28/2014 2:10:28 PM 
+###TODO List - updated 2/4/2014 2:53:11 PM 
 ---
 GitHub:
 
@@ -73,8 +73,9 @@ Long term: **Not started**
 Programming languages: **Not started**
 
 - Java
+	- **Jython** 
 - C and C based languages
-	- Objective C! 
+	- **Objective C** 
 
 Readability: **meh**
 
@@ -85,3 +86,5 @@ Readability: **meh**
 - Commenting: **barely started**
 	- In line/block comments
 	- Docstrings
+- **Pythonic ways of doing things**
+	- Getters/Setters with `@property`  

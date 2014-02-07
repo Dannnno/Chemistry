@@ -182,52 +182,59 @@ class Alcohol(Compound):
         self.structure = np.empty((5,5), dtype=object)
         self.structure[2][2] = Carbon()
         
-        if self.stereo not in ['-','/','V']: raise InvalidStereoException('Alcohol', stereoInfo)
+        if self.stereo not in ['-','/','V']: raise InvalidStereoException(['Alcohol', stereoInfo])
             
         ## Puts the Alcohol in the proper orientation
+        if self.Loc not in range(1,5): raise InvalidLocationException(['Alcohol',self.Loc])
         
-        if self.Loc not in range(1,5): raise InvalidLocationException('Alcohol',self.Loc)
+        self.structure[0][2] = Oxygen()
+        self.structure[0][0] = Hydrogen()
+        self.structure[0][1] = Bond(self.structure[0][2], self.structure[0][0], 1)            
+        self.structure[1][2] = Bond(self.structure[2][2], self.structure[0][2], 1, self.stereo)
         
-        if self.Loc != 1:
-            self.structure[0][2] = Hydrogen()
-            self.structure[1][2] = Bond(self.structure[2][2], self.structure[0][2], 1)
+        self.structure[2][0] = Hydrogen()
+        self.structure[2][1] = Bond(self.structure[2][2], self.structure[2][0], 1)       
+        self.structure[4][2] = Hydrogen()
+        self.structure[3][2] = Bond(self.structure[2][2], self.structure[4][2], 1)
+        self.structure[2][4] = Hydrogen()
+        self.structure[2][3] = Bond(self.structure[2][2], self.structure[2][4], 1)   
+        self.orient()
         
-        else:
-            self.structure[0][2] = Oxygen()
-            self.structure[0][0] = Hydrogen()
-            self.structure[0][1] = Bond(self.structure[0][2], self.structure[0][0], 1)            
-            self.structure[1][2] = Bond(self.structure[2][2], self.structure[0][2], 1, self.stereo)
-            
-        if self.Loc != 2:
-            self.structure[2][0] = Hydrogen()
-            self.structure[2][1] = Bond(self.structure[2][2], self.structure[2][0], 1)
-
-        else:
-            self.structure[2][0] = Oxygen()
-            self.structure[4][0] = Hydrogen()
-            self.structure[3][0] = Bond(self.structure[2][0], self.structure[4][0], 1)
-            self.structure[2][1] = Bond(self.structure[2][2], self.structure[2][0], 1, self.stereo)          
-                                    
-        if self.Loc != 3:
-            self.structure[4][2] = Hydrogen()
-            self.structure[3][2] = Bond(self.structure[2][2], self.structure[4][2], 1)
+    def orient(self,n=1):
+        """"""
+        if n == 1:
+            if self.Loc == 2:
+                self.structure = np.rot90(self.structure,1)
+            elif self.Loc == 3:
+                self.structure = np.rot90(self.structure,2)
+            elif self.Loc == 4:
+                self.structure = np.rot90(self.structure,3)
+        elif n == 2:
+            if self.Loc == 3:
+                self.structure = np.rot90(self.structure,1)
+            elif self.Loc == 4:
+                self.structure = np.rot90(self.structure,2)
+            elif self.Loc == 1:
+                self.structure = np.rot90(self.structure,3)        
+        elif n == 3:
+            if self.Loc == 4:
+                self.structure = np.rot90(self.structure,1)
+            elif self.Loc == 1:
+                self.structure = np.rot90(self.structure,2)
+            elif self.Loc == 2:
+                self.structure = np.rot90(self.structure,3)
+        elif n == 4:
+            if self.Loc == 1:
+                self.structure = np.rot90(self.structure,1)
+            elif self.Loc == 2:
+                self.structure = np.rot90(self.structure,2)
+            elif self.Loc == 3:
+                self.structure = np.rot90(self.structure,3)   
+                     
+        else: raise InvalidLocationException(['Alcohol',n])
         
-        else:
-            self.structure[4][2] = Oxygen()
-            self.structure[4][4] = Hydrogen()
-            self.structure[4][2] = Bond(self.structure[4][2], self.structure[4][3], 1)
-            self.structure[3][2] = Bond(self.structure[2][2], self.structure[4][2], 1, self.stereo)           
+        print stringify(self.structure)
         
-        if self.Loc != 4:
-            self.structure
-        
-        else:
-            self.structure[2][4] = Oxygen()
-            self.structure[0][4] = Hydrogen()
-            self.structure[1][4] = Bond(self.structure[0][2], self.structure[0][4], 1)
-            self.structure[2][3] = Bond(self.structure[2][2], self.structure[2][4], 1, self.stereo)   
-
-    
     def __str__(self):
         if self.stereo == None:
             t = '-'
@@ -256,3 +263,7 @@ class Nitrile(Compound):pass
 #Alkene()
 #Alkyne()
 #toAlkane(Alkyne())
+Alcohol(1)
+Alcohol(2)
+Alcohol(3)
+Alcohol(4)
