@@ -1,31 +1,34 @@
 import pyparsing as pyp
 import numpy as np
 
-numList = ['1','2','3','4','5','6','7','8','9']
-atomicFamilies = {1:"Alkali Metals",
-                  2:"Alkaline Earth Metals",
-                  3:"Transition Metals",
-                  4:"Transition Metals",
-                  5:"Transition Metals",
-                  6:"Transition Metals",
-                  7:"Transition Metals",
-                  8:"Transition Metals",
-                  9:"Transition Metals",
-                  10:"Transition Metals",
-                  11:"Transition Metals",
-                  12:"Transition Metals",
-                  13:"13",
-                  14:"14",
-                  15:"15",
-                  16:"16",
-                  17:"Halogens",
-                  18:"Noble Gases",
-                  19:"Lanthanoids",
-                  20:"Actinoids"}
+numList = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
+atomicFamilies = {1: "Alkali Metals",
+                  2: "Alkaline Earth Metals",
+                  3: "Transition Metals",
+                  4: "Transition Metals",
+                  5: "Transition Metals",
+                  6: "Transition Metals",
+                  7: "Transition Metals",
+                  8: "Transition Metals",
+                  9: "Transition Metals",
+                  10: "Transition Metals",
+                  11: "Transition Metals",
+                  12: "Transition Metals",
+                  13: "13",
+                  14: "14",
+                  15: "15",
+                  16: "16",
+                  17: "Halogens",
+                  18: "Noble Gases",
+                  19: "Lanthanoids",
+                  20: "Actinoids"}
 
+				  
 class Chemistry: pass
 
+
 class Reactions(Chemistry): pass
+
 
 class Element(Chemistry):
         
@@ -37,9 +40,10 @@ class Element(Chemistry):
                  electronegativity,
                  family,
                  aNum):
-        """Creates an element object using the atomic mass, number, symbol, name, electronegativity and atomic family"""
-        #!!Needs octet rule support!!
-        #!!Needs valence support!!
+        """Creates an element object using the atomic mass, 
+		number, symbol, name, electronegativity and atomic family"""
+        # !!Needs octet rule support!!
+        # !!Needs valence support!!
         
         self.atomicMass = mass
         self.atomicNumber = number
@@ -141,7 +145,7 @@ class Mendeleev(Chemistry):
         for rows in self.finalTable:
             for columns in self.finalTable:
                 for atom in columns:
-                    if atom != None:
+                    if atom is not None:
                         if symbol == atom[2]:
                             self.inc+=1
                             return Element(atom[0],atom[1],atom[2],atom[3],atom[4],atom[5],self.inc)
@@ -205,18 +209,18 @@ class Bond(Chemistry):
 
 def toElement(anObject):
     """"""
-    if type(anObject) == type([]) or type(anObject) == type(np.zeros(1)):
+    if isinstance(anObject, list) or isinstance(anObject, ndarray):
         for i in range(len(anObject)):
             anObject[i] = toElement(anObject[i])
         return anObject
     
-    if type(anObject) == type(''):
+    if if isinstance(anObject, basestring):
         for part in anObject:
             if part in ['+','*','@','!']:
                 return anObject
         return theTable.getElement(anObject)
         
-    if type(anObject) == type(Element(1,2,3,4,5,6,7)):
+    if isinstance(anObject, Element):
         return anObject
         
 def populate(anObject): 
