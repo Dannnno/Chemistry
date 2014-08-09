@@ -1,15 +1,14 @@
-##ReadMe for OChem Rxn Sim
-Updated: 1/15/2014   
+##Read Me for OChem Rxn Sim
+Updated: 8/3/2014   
 
 Program written by:  
 Dan Obermiller  
-Computational Neuroscience Major  
 Claremont McKenna College  
 Class of 2016
+dannnno16@gmail.com
 
-The purpose of this repository is to organize the (currently untitled) program.  The (eventual) goal of this program is to create a Java based GUI
-interface that will rely on a Python background, allowing intro level Organic Chemistry students to construct simple (and hopefully complex) molecules
-and predict their interactions.  
+The purpose of this repository is to organize the (currently untitled) program.  The (eventual) goal of this program is to create an application that uses
+Python to allow intro level Organic Chemistry students to construct simple (and hopefully complex) molecules and predict their interactions.  
 
 Goals of this program:
 
@@ -24,4 +23,4 @@ Goals of this program:
     
 Current stage of development: Pre-Alpha  
 Current version: NA  
-Currently projected date of Alpha release: late 2014-early 2015
+Currently projected date of Alpha release: In a long time

@@ -1,13 +1,10 @@
 import kivy
 kivy.require('1.8.0')
 
-from kivy.uix.label import Label
 from kivy.uix.widget import Widget
-from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.app import App
-from kivy.lang import Builder
-from kivy.properties import ObjectProperty, StringProperty
+from kivy.properties import StringProperty
 from kivy.event import EventDispatcher
 
 import sys
@@ -17,10 +14,10 @@ class outputLabel(EventDispatcher):
 
 	def __init__(self, **kwargs):
 		super(outputLabel, self).__init__(**kwargs)
-		self.text = "Hi"
+		self.text = StringProperty("Hi")
 
 	def write(self, text):
-		self.text = text
+		self.text = StringProperty(text)
 		
 out = outputLabel
 sys.stdout = out
