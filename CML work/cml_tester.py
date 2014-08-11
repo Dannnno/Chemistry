@@ -2,12 +2,18 @@
 
 """
 
-from cml import CMLParser as CMLP, CMLException
+from CheML import CMLParser as CMLP, CMLException
 import os
-import cml
-print cml
-print type(cml)
-#a = cml.insert_attributes
+import CheML
+
+a = CheML.insert_attribs("molecule", 
+                       ["convention", "title", "type", "id"],
+                       ["some", "Water", "", "m1"])
+   
+with open("C:/Users/Dan/Desktop/Programming/1 - GitHub/Chemistry/CML work/CML_3.cml", "w") as f:
+    f.write(a[0])
+    f.write(a[1])
+
 
 def clean_print_molecule(adict):
     

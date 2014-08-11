@@ -5,13 +5,28 @@ tags and structure of the CML language.
 # Needs work improving run time for larger molecules
 # Need to consider the iterparse option
 # Consider other support
-import os
 
 try:
     import xml.etree.cElementTree as ET
 except ImportError:
     import xml.etree.ElementTree as ET
-    
+       
+tags = ["atomArray", 
+        "molecule", 
+        "atom", 
+        "bond", 
+        "bondArray", 
+        "string"]
+        
+attributes = ["builtin=", 
+              "convention=", 
+              "title=", 
+              "id=", 
+              "type="]
+
+builtin = ["atomRef", 
+           "order", 
+           "elementType"]      
 
 class CMLException(Exception):
     """The base CML Exception class"""
@@ -91,27 +106,10 @@ class CMLParser(object):
             # print "Molecule ", self.molecules    
 
         finally:
-            self.CML.close()
-            
-tags = ["atomArray", 
-        "molecule", 
-        "atom", 
-        "bond", 
-        "bondArray", 
-        "string"]
-        
-attributes = ["builtin=", 
-              "convention=", 
-              "title=", 
-              "id=", 
-              "type="]
-
-builtin = ["atomRef", 
-           "order", 
-           "elementType"]        
+            self.CML.close()      
 
 
-def insert_attributes(tag, attributes, values): 
+def insert_attribs(tag, attributes, values): 
     """Takes a desired tag, attribute to add and the value of that attribute.
     Returns a tuple of form ("<tag attribute=value ...>", r"<\tag>").  
     Attribute and value are both lists (of equal length) that will be
@@ -164,14 +162,6 @@ def insert_attributes(tag, attributes, values):
         
         
 def insert_text(): pass
-       
-a = insert_attributes("molecule", 
-                         ["convention", "title", "type", "id"],
-                         ["some", "Water", "", "m1"])
-   
-with open("C:/Users/Dan/Desktop/CML_3.cml", "w") as f:
-    f.write(a[0])
-    f.write(a[1])
                                                                
 class CMLBuilder(object):  
     """A CML constructor object"""
