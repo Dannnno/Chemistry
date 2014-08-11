@@ -2,18 +2,7 @@
 
 """
 
-from CheML import CMLParser as CMLP, CMLException
-import os
 import CheML
-
-a = CheML.insert_attribs("molecule", 
-                       ["convention", "title", "type", "id"],
-                       ["some", "Water", "", "m1"])
-   
-with open("C:/Users/Dan/Desktop/Programming/1 - GitHub/Chemistry/CML work/CML_3.cml", "w") as f:
-    f.write(a[0])
-    f.write(a[1])
-
 
 def clean_print_molecule(adict):
     
@@ -42,18 +31,20 @@ molecules = {}
 try:
     broken_files = []
     for i, afile in enumerate(filepaths):
-        if os.path.exists(afile):
-            a_molecule = CMLP(afile)
+        #if os.path.exists(afile):
+            a_molecule = CheML.CMLParser(afile)
             molecules[''.join(["m", str(i+1)])] = a_molecule.molecule
-        else:
-            broken_files.append(afile)
+        #else:
+        #    broken_files.append(afile)
     if broken_files:
-        raise CMLException("Broken File(s) at:\n " + "\n ".join(broken_files))
+        raise CheML.CMLException("Broken File(s) at:\n " + "\n ".join(broken_files))
 
-except CMLException as e:
+except CheML.CMLException as e:
     print e
     
 print "\nMolecules parsed:\n"
-clean_print_molecule(molecules)
+#clean_print_molecule(molecules)
 for mol_id in molecules:
     print mol_id, molecules[mol_id]
+
+CheML.CMLBuilder(molecules, "CML_3.cml")

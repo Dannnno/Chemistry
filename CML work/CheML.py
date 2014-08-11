@@ -84,8 +84,6 @@ class CMLParser(object):
                         for sub in subs:
                             self.atoms[sub_element.attrib['id']] = sub.text
             
-                # print "Atoms in molecule ", self.atoms
-                
                 elements = self.tree.findall("bondArray")
                 if elements == []: raise CMLException("No bondArray in the molecule")
                 for element in elements:
@@ -97,13 +95,9 @@ class CMLParser(object):
                         if subs == []: raise CMLException("Bond has no information")
                         for sub in subs:
                             self.bonds[sub_element.attrib['id']] += (sub.text,)
-                
-                # print "Bonds in molecule ", self.bonds       
-  
+
             except CMLException as e:
                 print "Aborting:", e
-            
-            # print "Molecule ", self.molecules    
 
         finally:
             self.CML.close()      
@@ -122,46 +116,21 @@ def insert_attribs(tag, attributes, values):
                     % len(attributes), len(values))
             raise CMLException("Attributes and Values do not match")
             
-        while tag not in tags:
-            tag_in = False
-            print ("Tag %s is not in the list of expected tags " % tag, tags)
-            print "Would you like to use a different tag?"
-            while True:
-                yes = raw_input("Please indicate yes/no ")
-                if yes == "yes":
-                    print "Okay, lets pick a different tag"
-                    tag = raw_input("Please enter the tag you would like to use: ")
-                    break
-                else:
-                    print "Okay, we'll use that tag"
-                    tag_in = True
-                    break
-                    
         end_tag = "".join(["</", tag, ">"])
         start_tag = ''.join(["<", tag])
         for attribute, value in zip(attributes, values):
             if "=" not in attribute:
                 attribute += "="
-            while attribute == "builtin=" and value not in builtin:
-                print "Value %s is not in the expected values for builtin: " % value, builtin
-                go = raw_input("Would you like to use that value anyway (yes/no)? ")
-                if go == yes:
-                    break
-                else:
-                    value = raw_input("Please enter the value you would like to use instead")
-            
             start_tag = ''.join([start_tag, " %s\"%s\"" % (attribute, value)])
             if attribute != attributes[-1]:
                 "".join([start_tag, " "])
+                
         start_tag += ">"
         return start_tag, end_tag
         
     except CMLException as e:
         print e
         return
-        
-        
-def insert_text(): pass
                                                                
 class CMLBuilder(object):  
     """A CML constructor object"""
@@ -173,13 +142,37 @@ class CMLBuilder(object):
         
         self.molecule = molecule
         self.filename = filename
-        
-        if os.path.exists(filename):
-            print "Path %s exists - continue?" % filename
-            while True:
-                go = raw_input("Please enter one of the following: Yes, yes, Y or y if you would like to continue")
-                if go in ["Yes", "yes", "Y", "y"]: break
-                else: return
+        self.depth = 0
+        self.indent = "    "
         
         with open(filename, "w") as f: 
-            base = self.molecule.keys()[0]            
+            mol_id = self.molecule.keys()[0]   
+            opener, closer = insert_attribs("molecule", ["convention=", "title=", "id=", "type="], ["None", "Unknown", mol_id, ""])
+            f.write(opener + "\n")
+            bonds = self.molecule[mol_id]["bonds"]
+            bkeys = sorted(bonds.keys())
+            atoms = self.molecule[mol_id]["atoms"]
+            akeys = sorted(atoms.keys())
+            aaopen, aaclose = insert_attribs("atomArray", [], [])
+            f.write(self.indent + aaopen + "\n")
+            bbopen, bbclose = insert_attribs("bondArray", [], [])
+
+            for key in akeys:
+                atopen, atclose = insert_attribs("atom", ["id"], [key])
+                stropen, strclose = insert_attribs("string", ["builtin"], ["elementType"])
+                f.write(self.indent*2 + atopen + "\n" + self.indent*3 + stropen + atoms[key] + strclose + "\n" + self.indent*2 + atclose + "\n")
+            f.write(self.indent + aaclose + "\n" 
+                  + self.indent + bbopen + "\n")
+            
+            for key in bkeys:
+                bopen, bclose = insert_attribs("bond", ["id"], [key])
+                stropen1, strclose1 = insert_attribs("string", ["builtin"], ["atomRef"])
+                stropen2, strclose2 = insert_attribs("string", ["builtin"], ["atomRef"])
+                stropen3, strclose3 = insert_attribs("string", ["builtin"], ["order"])
+                f.write(self.indent*2 + bopen + "\n" 
+                      + self.indent*3 + stropen1 + bonds[key][0] + strclose1 + "\n"
+                      + self.indent*3 + stropen2 + bonds[key][1] + strclose2 + "\n"
+                      + self.indent*3 + stropen3 + bonds[key][2] + strclose3 + "\n"
+                      + self.indent*2 + bclose + "\n")
+            f.write(self.indent + bbclose + "\n"
+                  + closer)
