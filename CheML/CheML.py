@@ -88,12 +88,12 @@ class CMLParser(object):
                     sub_elements = element.findall("bond")
                     if sub_elements == []: raise CMLException("No bonds in the bondArray")                            
                     for sub_element in sub_elements:
-                        self.bonds[sub_element.attrib['id']] = ()
+                        self.bonds[sub_element.attrib['id']] = []
                         subs = sub_element.findall("string")
                         if subs == []: raise CMLException("Bond has no information")
                         for sub in subs:
                             self.bonds[sub_element.attrib['id']] += (sub.text,)
-
+                
             except CMLException as e:
                 print "Aborting:", e
 

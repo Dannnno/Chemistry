@@ -24,7 +24,7 @@ def clean_print_molecule(adict):
     
                             
 os.chdir("C:/Users/Dan/Desktop/Programming/1 - GitHub/Chemistry/CheML/molecules")
-filepaths = os.listdir(os.getcwd())
+filepaths = sorted(os.listdir(os.getcwd()))[:2]
 
 molecules = {}
 try:
