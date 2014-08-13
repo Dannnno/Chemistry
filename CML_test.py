@@ -16,7 +16,7 @@ class TestCMLParser(unittest.TestCase):
         self.test_molecules = {'Water': {'bonds': {'b1': ('a1', 'a3', '1'), 'b2': ('a2', 'a3', '1')}, 'atoms': {'a1': 'H', 'a3': 'O', 'a2': 'H'}}, 'Salt': {'bonds': {'b1': ('a1', 'a2', '1')}, 'atoms': {'a1': 'Na', 'a2': 'Cl'}}}
     
     def test_parse(self):
-        self.parsed_molecules = {CheML.CMLParser(afile).id:CheML.CMLParser(afile).molecule for i, afile in enumerate(self.testfiles)}    
+        self.parsed_molecules = {parsed_cml.id:parsed_cml.molecule for parsed_cml in map(CheML.CMLParser, self.testfiles)}    
         self.assertDictEqual(self.test_molecules, self.parsed_molecules)
 
     def test_build(self):
