@@ -1,4 +1,4 @@
-<molecule convention="None" title="Unknown" id="m1" type="">
+<molecule id="water">
     <atomArray>
         <atom id="a1">
             <string builtin="elementType">H</string>

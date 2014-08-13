@@ -47,6 +47,7 @@ class CMLParser(object):
         """CML should be an (open) file object or a string filepath"""
         
         self.molecule = {}
+        self.id = ""
         self.atoms = {}
         self.bonds = {}
         self.CML = CML
@@ -71,6 +72,10 @@ class CMLParser(object):
         else:
             self.tree = ET.parse(self.CML)
             try:
+                try:
+                    self.id = self.tree.getroot().attrib['id']
+                except Exception:
+                    raise CMLException("Couldn't find a molecule root object")
                 elements = self.tree.findall("atomArray")
                 if elements == []: raise CMLException("No atomArray in the molecule")
                 for element in elements:
@@ -88,7 +93,7 @@ class CMLParser(object):
                     sub_elements = element.findall("bond")
                     if sub_elements == []: raise CMLException("No bonds in the bondArray")                            
                     for sub_element in sub_elements:
-                        self.bonds[sub_element.attrib['id']] = []
+                        self.bonds[sub_element.attrib['id']] = ()
                         subs = sub_element.findall("string")
                         if subs == []: raise CMLException("Bond has no information")
                         for sub in subs:
@@ -146,8 +151,8 @@ class CMLBuilder(object):
         with open(filename, "w") as f: 
             mol_id = self.molecule.keys()[0]   
             opener, closer = insert_attribs("molecule", 
-                                            ["convention=", "title=", "id=", "type="], 
-                                            ["None", "Unknown", mol_id, ""])
+                                            ["id="], 
+                                            [mol_id])
             f.write(opener + "\n")
             
             bonds = self.molecule[mol_id]["bonds"]

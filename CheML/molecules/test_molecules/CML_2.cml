@@ -1,4 +1,4 @@
-<molecule convention="some" id="Table Salt" title="Second CML" type="">
+<molecule id="Salt">
     <atomArray>
         <atom id="a1">
             <string builtin="elementType">Na</string>

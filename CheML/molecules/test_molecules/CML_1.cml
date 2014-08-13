@@ -1,4 +1,4 @@
-<molecule convention="some" id="Water" title="First CML" type="">
+<molecule id="Water">
     <atomArray>
         <atom id="a1">
             <string builtin="elementType">H</string>
