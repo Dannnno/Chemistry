@@ -1,0 +1,7 @@
+<periodictable id="Periodic Table">
+    <atomArray>
+        <atom id=1>
+            <string builtin="elementType">H</string>
+        </atom>
+    <atomArray>
+</periodicTable>

@@ -43,7 +43,7 @@ class TestCMLParser(unittest.TestCase):
             self.assertEqual(1, 2) 
             
         except OSError as e:
-            print "Path %s does not exist" %e.strerror
+            print "Path %s does not exist" % e.strerror
             self.assertEqual(1, 2) 
             
 suite = unittest.TestLoader().loadTestsFromTestCase(TestCMLParser)
