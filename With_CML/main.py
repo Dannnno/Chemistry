@@ -1,11 +1,38 @@
 import csv
-from collections import deque # look into this for tree walking
-import networkx # look into this for a graph approach
+# import os
+# from collections import deque # look into this for tree walking
+# import networkx # look into this for a graph approach
+# os.chdir("C:/Users/Dan/Desktop/Programming/1 - GitHub/Chemistry")
+# print os.listdir(os.getcwd())
+# from CheML import CMLParser
+
+
+hydronium = {"atoms" : { 
+                        "a1" : "H",
+                        "a2" : "H",
+                        "a3" : "H",
+                        "a4" : "O" 
+                       },
+             "bonds" : {
+                        "b1" : ("a1", "a4", 1),
+                        "b2" : ("a2", "a4", 1),
+                        "b3" : ("a3", "a4", 1)
+                       }
+             }
+                
+hydroxide = {"atoms" : { 
+                        "a1" : "H",
+                        "a2" : "O" 
+                       },
+             "bonds" : {
+                        "b1" : ("a1", "a2", 1)
+                       }
+            }       
 
 
 def read_periodic_table(): 
     per_table = {}
-    with open("element_list.txt", "r") as f:
+    with open("element_list.csv", "r") as f:
         my_reader = csv.reader(f)
         my_reader.next()
         try:
@@ -41,7 +68,7 @@ class Element(object):
         self.symbol = symbol
         self.number = periodic_table[symbol][0]
         self.name = periodic_table[symbol][2]
-        self.group = periodic_table[symbol][3]
+        self.group = periodic_table[symbol][3] # Find a better way to do this
         self.weight = periodic_table[symbol][4]
         self.density = periodic_table[symbol][5]
         self.mp = periodic_table[symbol][6]
@@ -50,6 +77,7 @@ class Element(object):
         self.radius = periodic_table[symbol][10]
         self.oxid = periodic_table[symbol][11]
         self.bonds = []
+        self.ismetal = False # Work out a way to do this
         #Element.count[number] += 1
 
     def add_bond(self, other, bond_info):
@@ -104,8 +132,22 @@ class Bond(object):
         self.type = self.eval_bond()
 
     def eval_bond(self):
-        """This method will (eventually) determine covalent/ionic bond"""
-        return "Unknown type"
+        """This method will determine covalent/ionic bond
+        Uses http://www.chemteam.info/Bonding/Electroneg-Bond-Polarity.html
+        for the boundaries between types
+        """
+        
+        delta = abs(self.first.eneg - self.second.eneg)
+        if delta <= 0.5:
+            return "Non-polar covalent"
+        elif delta <= 1.6 or (delta <= 2 and not (self.first.ismetal or 
+                                                   self.second.ismetal)):
+            return "Polar-covalent"
+        elif delta > 2 or (delta <= 2 and (self.first.ismetal or 
+                                            self.second.ismetal)):
+            return "Ionic"
+        else:
+            return "Unknown type"
         
         
     def __str__(self):
@@ -135,17 +177,25 @@ class Compound(object):
                                 self.bonds[bond][2])
             self.bonds[bond] = Bond(*self.bonds[bond])
             
-    def __str__(self):
-        return str(self.atoms) + str(self.bonds)
-        
-    def __repr__(self):
-        return repr(self.atoms) + repr(self.bonds)
+        self.pka = self.getPKa()
+            
         
     def walk(self, start=None, parameters=None): 
         if parameters is None:
             raise ReactionException("No search parameters defined")
         if start is None:
             start = sorted(self.atoms.keys)[0]
+
+    
+    def getPKa(self): return 0
+    
+    
+    def __str__(self):
+        return str(self.atoms) + str(self.bonds)
+        
+
+    def __repr__(self):
+        return repr(self.atoms) + repr(self.bonds)
 
 
 class BondingException(Exception):
@@ -172,12 +222,39 @@ class ReactionException(Exception):
         return self.err_message
 
 
+def acid_base_rxn(acid=hydronium, base=hydroxide, aqueous=True, **kwargs): 
+    """Used to simulate acid-base reactions.  Assumes an aqueous environment
+    unless otherwise indicated.  If not reacting in water additional keyword
+    arguments should be provided
+    """
+    
+    for k,v in kwargs.iteritems():
+        print k, v
+        
+    if not kwargs:
+        a_pka = acid.pka
+        b_pka = base.pka
+        if a_pka > b_pka:
+            a_pka, b_pka, acid, base = b_pka, a_pka, base, acid
+        remove_proton(acid)
+        add_proton(base)
+        a_pka = acid.pka
+        b_pka = base.pka
+        
+        if b_pka - a_pka < 1:
+            acid_base_rxn(acid, base, aqueous, **kwargs)
+            
+def remove_proton(acid): pass
+def add_proton(base): pass
+
 if __name__ == "__main__":
     periodic_table = read_periodic_table()
     ad = {"a1" : "H", "a2" : "H", "a3" : "O"}
     bd = {"b1" : ("a1", "a3", 1), "b2" : ("a2", "a3", 1)}
     md = {"atoms" : ad, "bonds" : bd}
-    ac = Compound(md)
+    ac = Compound(md) 
+                
+    acid_base_rxn(acid=hydronium, base=hydroxide, a=ad, b=bd, c=md)                            
     
     """
     #print Element.count[12]
