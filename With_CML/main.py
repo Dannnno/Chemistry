@@ -1,4 +1,5 @@
 import csv
+from copy import deepcopy
 # import os
 # from collections import deque # look into this for tree walking
 # import networkx # look into this for a graph approach
@@ -28,6 +29,17 @@ hydroxide = {"atoms" : {
                         "b1" : ("a1", "a2", 1)
                        }
             }       
+
+water = {"atoms" : { 
+                    "a1" : "H",
+                    "a2" : "H",
+                    "a3" : "O" 
+                   },
+         "bonds" : {
+                    "b1" : ("a1", "a3", 1),
+                    "b2" : ("a2", "a3", 1)
+                   }
+        }
 
 
 def read_periodic_table(): 
@@ -121,12 +133,10 @@ class Element(object):
 
 class Bond(object):
 
-    def __init__(self, first_element, first_ref, second_element, 
-                 second_ref, order=1, chirality="flat"):
+    def __init__(self, first_element, second_element, 
+                 order=1, chirality="flat"):
         self.first = first_element
-        self.fref = first_ref
         self.second = second_element
-        self.sref = second_ref
         self.order = order
         self.chirality = chirality
         self.type = self.eval_bond()
@@ -155,7 +165,7 @@ class Bond(object):
 
         
     def __repr__(self):
-        return "%s bond between %s and %s of order %d and chirality %s)" \
+        return "%s bond between %s and %s of order %d with %s chirality" \
                 % (self.type, self.first.name, self.second.name, 
                    self.order, self.chirality)
 
@@ -163,21 +173,23 @@ class Bond(object):
 class Compound(object):
     
     def __init__(self, mole_dict):
-        self.atoms = mole_dict["atoms"] # Consider making a new copy with dict()
-        self.bonds = mole_dict["bonds"]
+        self.atoms = deepcopy(mole_dict["atoms"])
+        self.bonds = deepcopy(mole_dict["bonds"])
         
-        for atom in self.atoms:
-            self.atoms[atom] = Element(self.atoms[atom])
-          
-        for bond in self.bonds:
-            self.bonds[bond] = (self.atoms[self.bonds[bond][0]],
-                                self.bonds[bond][0],
-                                self.atoms[self.bonds[bond][1]],
-                                self.bonds[bond][1],
-                                self.bonds[bond][2])
-            self.bonds[bond] = Bond(*self.bonds[bond])
+        for key, atom in self.atoms.iteritems():
+            self.atoms[key] = Element(atom)
+        
+        for key, bond_info in self.bonds.items():
+            atom1 = bond_info[0]
+            atom2 = bond_info[1]
+            order = bond_info[2]
             
-        self.pka = self.getPKa()
+            self.bonds[(atom1, atom2)] = Bond(self.atoms[atom1], 
+                                              self.atoms[atom2],
+                                              order)
+            del self.bonds[key]
+            
+        self.pka = self.getPKa() # getPKa(self) ?
             
         
     def walk(self, start=None, parameters=None): 
@@ -222,15 +234,15 @@ class ReactionException(Exception):
         return self.err_message
 
 
+def getPKa(a_compound): pass
+
+
 def acid_base_rxn(acid=hydronium, base=hydroxide, aqueous=True, **kwargs): 
     """Used to simulate acid-base reactions.  Assumes an aqueous environment
     unless otherwise indicated.  If not reacting in water additional keyword
     arguments should be provided
     """
     
-    for k,v in kwargs.iteritems():
-        print k, v
-        
     if not kwargs:
         a_pka = acid.pka
         b_pka = base.pka
