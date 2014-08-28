@@ -1,11 +1,7 @@
 import csv
 from copy import deepcopy
-# import os
-# from collections import deque # look into this for tree walking
-# import networkx # look into this for a graph approach
-# os.chdir("C:/Users/Dan/Desktop/Programming/1 - GitHub/Chemistry")
-# print os.listdir(os.getcwd())
-# from CheML import CMLParser
+from collections import deque # look into this for tree walking
+import networkx # look into this for a graph approach
 
 
 hydronium = {"atoms" : { 
@@ -74,8 +70,7 @@ def str_to_list(a_stringy_list):
 
 
 class Element(object):
-    #count = [0]*118
-
+    
     def __init__(self, symbol='C'):
         self.symbol = symbol
         self.number = periodic_table[symbol][0]
@@ -90,7 +85,7 @@ class Element(object):
         self.oxid = periodic_table[symbol][11]
         self.bonds = []
         self.ismetal = False # Work out a way to do this
-        #Element.count[number] += 1
+
 
     def add_bond(self, other, bond_info):
         try:
@@ -108,6 +103,7 @@ class Element(object):
             print BE
             return
 
+
     def remove_bond(self, bond):
         try:
             if bond in self.bonds:
@@ -119,16 +115,14 @@ class Element(object):
         except BondingException as BE:
             print BE
             return
-            
+         
+               
     def __str__(self):
         return self.name
         
+        
     def __repr__(self):
         return "Element %s bonded to " % self.name + str(self.bonds)
-
-    def __del__(self):
-        #Element.count[self.number] += -1
-        pass
 
 
 class Bond(object):
@@ -140,6 +134,7 @@ class Bond(object):
         self.order = order
         self.chirality = chirality
         self.type = self.eval_bond()
+
 
     def eval_bond(self):
         """This method will determine covalent/ionic bond
@@ -196,10 +191,19 @@ class Compound(object):
         if parameters is None:
             raise ReactionException("No search parameters defined")
         if start is None:
-            start = sorted(self.atoms.keys)[0]
+            start = self.getRoot()
+        elif start in self.atoms.keys():
+            pass
+        else:
+            raise ReactionException("Starting location not present in molecule")
 
     
-    def getPKa(self): return 0
+    def getPKa(self): 
+        return 0
+        
+    
+    def getRoot(self): 
+        return sorted(self.atoms.keys)[0]
     
     
     def __str__(self):
@@ -215,8 +219,10 @@ class BondingException(Exception):
     def __init__(self, err_message="Bonding Error"):
         self.err_message = err_message
 
+
     def __str__(self):
         return self.err_message
+
 
     def __repr__(self):
         return self.err_message
@@ -226,15 +232,18 @@ class ReactionException(Exception):
     
     def __init__(self, err_message="Reaction Error"):
         self.err_message = err_message
-        
+
+                
     def __str__(self):
         return self.err_message
+
 
     def __repr__(self):
         return self.err_message
 
 
-def getPKa(a_compound): pass
+def getPKa(a_compound): 
+    data = a_compound.walk()
 
 
 def acid_base_rxn(acid=hydronium, base=hydroxide, aqueous=True, **kwargs): 
@@ -255,9 +264,15 @@ def acid_base_rxn(acid=hydronium, base=hydroxide, aqueous=True, **kwargs):
         
         if b_pka - a_pka < 1:
             acid_base_rxn(acid, base, aqueous, **kwargs)
-            
-def remove_proton(acid): pass
-def add_proton(base): pass
+
+                        
+def remove_proton(acid): 
+    pass
+    
+    
+def add_proton(base): 
+    pass
+
 
 if __name__ == "__main__":
     periodic_table = read_periodic_table()
@@ -267,18 +282,3 @@ if __name__ == "__main__":
     ac = Compound(md) 
                 
     acid_base_rxn(acid=hydronium, base=hydroxide, a=ad, b=bd, c=md)                            
-    
-    """
-    #print Element.count[12]
-    a = Element("C")
-    print a
-    #print Element.count[12]
-    b = Element()
-    print b
-    #print Element.count[12]
-    del a
-    #print Element.count[12]
-    del b
-    #print Element.count[12]
-    """
-    
