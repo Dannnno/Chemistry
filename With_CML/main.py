@@ -159,7 +159,7 @@ class Element(object):
 
 
     def __repr__(self):
-        return "Element %s bonded to " % self.name + str(self.bonds)
+        return "Element %s bonded to " % self.name + ret_str_list([bond.get_other(self) for bond in self.bonds])
 
 
 class Bond(object):
@@ -232,25 +232,9 @@ class Compound(object):
         self.pka = self.getPKa() # getPKa(self) ?
 
         self.walkable = OrderedDict()
+        self.walkable["root"] = [self.atoms[self.getRoot()]]
         self.build_walkable()
         str_print_dict(self.walkable)
-        """ Current output:
-        {
-         root: [Hydrogen],
-         Hydrogen: [Oxygen],
-         Hydrogen: [Oxygen],
-         Oxygen: [],
-        }
-
-        Desired output:
-        Consider using collections.deque() to get the proper output?
-        {
-         root: [Hydrogen],
-         Hydrogen: [Oxygen],
-         Oxygen: [Hydrogen],
-         Hydrogen: [],
-        }
-        """
 
 
     def build_walkable(self):
@@ -258,21 +242,32 @@ class Compound(object):
         Compound.walk() method
         """
         
-        atom_keys= sorted(self.atoms.keys())
-        self.walkable["root"] = [self.atoms[self.getRoot()]]
-        atoms = [self.atoms[key] for key in atom_keys]
+        visited = set()
+        to_crawl = deque(["root"])
+        atoms = [self.atoms[key] for key in sorted(self.atoms.keys())]
         
-        for atom in atoms:
-            if atom not in self.walkable.keys():
-                self.walkable[atom] = [bond.get_other(atom)
-                                        for bond in atom.bonds
-                                         if
-                                          (bond.get_other(atom) not in
-                                           self.walkable.keys())
-                                         and
-                                          (bond.get_other(atom) !=
-                                           self.walkable["root"][0])
-                                      ]
+        while to_crawl:
+            current = to_crawl.popleft()
+            
+            if current in visited:
+                continue
+                
+            if current in self.walkable.keys():
+                pass
+            else:
+                self.walkable[current] = [bond.get_other(current)
+                                          for bond in current.bonds
+                                           if
+                                            (bond.get_other(current) not in
+                                             self.walkable.keys())
+                                           and
+                                            (bond.get_other(current) !=
+                                             self.walkable["root"][0])
+                                         ]
+
+            visited.add(current)
+            node_children = set(self.walkable[current])
+            to_crawl.extend(node_children - visited)
                                       
     
     def walk(self, start=None):
@@ -309,12 +304,23 @@ class Compound(object):
 
     def getRoot(self):
         most = 0
-        stored = sorted(self.atoms.keys())[0]
+        stored = [sorted(self.atoms.keys())[0]]
         for key, value in self.atoms.items():
             if len(value.bonds) > most:
                 most = len(value.bonds)
-                stored = key
-        return stored
+                stored = [key]
+            elif len(value.bonds) == most:
+                stored.append(key)
+                    
+        most = self.atoms[stored[0]].eneg
+        estored = stored[0]
+        
+        for key in stored:
+            if self.atoms[key].eneg > most:
+                most = self.atoms[key].eneg
+                estored = key
+        
+        return estored
 
 
     def __str__(self):
@@ -388,10 +394,9 @@ def add_proton(base):
 
 if __name__ == "__main__":
     periodic_table = read_periodic_table()
-    ad = {"a1": "H", "a2": "H", "a3": "O"}
-    bd = {"b1": ("a1", "a3", 1), "b2": ("a2", "a3", 1)}
-    md = {"atoms": ad, "bonds": bd}
-    ac = Compound(md)
-    str_print_list(ac.walk())
+    water_comp = Compound(water)
+    hydroxide_comp = Compound(hydroxide)
+    hydronium_comp = Compound(hydronium)
+    #str_print_list(ac.walk())
 
-    acid_base_rxn(acid=hydronium, base=hydroxide, a=ad, b=bd, c=md)
+    #acid_base_rxn(acid=hydronium, base=hydroxide, a=ad, b=bd, c=md)
