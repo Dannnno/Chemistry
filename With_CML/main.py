@@ -170,6 +170,7 @@ class Compound(object):
     def __init__(self, mole_dict):
         self.atoms = deepcopy(mole_dict["atoms"])
         self.bonds = deepcopy(mole_dict["bonds"])
+        self.walkable = {}
         
         for key, atom in self.atoms.iteritems():
             self.atoms[key] = Element(atom)
@@ -178,15 +179,34 @@ class Compound(object):
             atom1 = bond_info[0]
             atom2 = bond_info[1]
             order = bond_info[2]
+            self.atoms[atom1].add_bond(self.atoms[atom2], (order,))
             
             self.bonds[(atom1, atom2)] = Bond(self.atoms[atom1], 
                                               self.atoms[atom2],
                                               order)
+
             del self.bonds[key]
             
         self.pka = self.getPKa() # getPKa(self) ?
-            
         
+        self.walkable = self.build_walkable()
+        print self.walkable
+     
+        
+    def build_walkable(self):
+        atom_keys= sorted(self.atoms.keys())
+        self.walkable["root"] = [self.atoms[atom_keys[0]]]
+        atoms = [self.atoms[key] for key in atom_keys]
+        for atom in atoms:
+            if atom not in self.walkable.keys():
+                self.walkable[atom] = [bonded_to 
+                                       for bonded_to in atom.bonds 
+                                       if 
+                                        (bonded_to not in self.walkable.keys()) 
+                                        and 
+                                         (bonded_to != self.walkable["root"][0])
+                                      ]
+              
     def walk(self, start=None): 
         """Credit for the majority of this function goes to
         http://kmkeen.com/python-trees/2009-05-30-22-46-46-011.html
@@ -194,7 +214,7 @@ class Compound(object):
         
         if start is None:
             start = self.getRoot()
-        elif start in self.atoms.keys():
+        elif start in self.walkable:
             pass
         else:
             raise ReactionException("Starting location not present in molecule")
@@ -207,7 +227,7 @@ class Compound(object):
             if current in visited:
                 continue
             visited.add(current)
-            node_children = set(self.atoms[current])
+            node_children = set(self.walkable[current])
             to_crawl.extend(node_children - visited)
         
         return list(visited)
@@ -218,7 +238,7 @@ class Compound(object):
         
     
     def getRoot(self): 
-        return sorted(self.atoms.keys())[0]
+        return sorted(self.walkable["root"])
     
     
     def __str__(self):
