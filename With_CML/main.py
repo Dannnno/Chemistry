@@ -187,15 +187,30 @@ class Compound(object):
         self.pka = self.getPKa() # getPKa(self) ?
             
         
-    def walk(self, start=None, parameters=None): 
-        if parameters is None:
-            raise ReactionException("No search parameters defined")
+    def walk(self, start=None): 
+        """Credit for the majority of this function goes to
+        http://kmkeen.com/python-trees/2009-05-30-22-46-46-011.html
+        """
+        
         if start is None:
             start = self.getRoot()
         elif start in self.atoms.keys():
             pass
         else:
             raise ReactionException("Starting location not present in molecule")
+            
+        visited = set()
+        to_crawl = deque([start])
+            
+        while to_crawl:
+            current = to_crawl.popleft()
+            if current in visited:
+                continue
+            visited.add(current)
+            node_children = set(self.atoms[current])
+            to_crawl.extend(node_children - visited)
+        
+        return list(visited)
 
     
     def getPKa(self): 
@@ -203,7 +218,7 @@ class Compound(object):
         
     
     def getRoot(self): 
-        return sorted(self.atoms.keys)[0]
+        return sorted(self.atoms.keys())[0]
     
     
     def __str__(self):
@@ -280,5 +295,6 @@ if __name__ == "__main__":
     bd = {"b1" : ("a1", "a3", 1), "b2" : ("a2", "a3", 1)}
     md = {"atoms" : ad, "bonds" : bd}
     ac = Compound(md) 
+    print ac.walk()
                 
     acid_base_rxn(acid=hydronium, base=hydroxide, a=ad, b=bd, c=md)                            
