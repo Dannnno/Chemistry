@@ -67,7 +67,25 @@ def convert_type(cell, typ):
 
 def str_to_list(a_stringy_list):
     a_stringy_list[1:-1].split(",")
-
+    
+    
+def str_print_list(alist):
+    print "["+", ".join(map(str, alist))+"]"
+    
+    
+def ret_str_list(alist):
+    return "["+", ".join(map(str, alist))+"]"
+    
+    
+def str_print_dict(adict):
+    print "{"
+    for key, value in adict.items():
+        if isinstance(value, list):
+            print " %s : %s," % (key, ret_str_list(value))
+        else:
+            print " %s : %s," % (key, value)
+    print "}"
+    
 
 class Element(object):
     
@@ -135,6 +153,14 @@ class Bond(object):
         self.chirality = chirality
         self.type = self.eval_bond()
 
+    def get_other(self, atom):
+        if self.first == atom:
+            return self.second
+        elif self.second == atom:
+            return self.first
+        else:
+            raise BondingException("Provided atom %s was not in the bond" %
+                                    str(atom))
 
     def eval_bond(self):
         """This method will determine covalent/ionic bond
@@ -181,16 +207,33 @@ class Compound(object):
             order = bond_info[2]
             self.atoms[atom1].add_bond(self.atoms[atom2], (order,))
             
-            self.bonds[(atom1, atom2)] = Bond(self.atoms[atom1], 
-                                              self.atoms[atom2],
-                                              order)
+            self.bonds[(atom1, atom2)] = self.atoms[atom1].bonds[-1]
 
             del self.bonds[key]
             
         self.pka = self.getPKa() # getPKa(self) ?
         
-        self.walkable = self.build_walkable()
-        print self.walkable
+        self.walkable = {}
+        self.build_walkable()
+        str_print_dict(self.walkable)
+        """ Current output:
+        {
+         Hydrogen : [Oxygen],
+         Hydrogen : [Oxygen],
+         root : [Hydrogen],
+         Oxygen: [],
+        }
+        
+        Desired output (sorted for cleanliness, hashing doesn't matter):
+        Consider using collections.OrderedDict() to preserve order?
+        Consider using collections.deque() to get the proper output?
+        {
+         root : [Hydrogen],
+         Hydrogen : [Oxygen],
+         Oxygen : [Hydrogen],
+         Hydrogen : [],
+        }
+        """
      
         
     def build_walkable(self):
@@ -199,13 +242,16 @@ class Compound(object):
         atoms = [self.atoms[key] for key in atom_keys]
         for atom in atoms:
             if atom not in self.walkable.keys():
-                self.walkable[atom] = [bonded_to 
-                                       for bonded_to in atom.bonds 
+                self.walkable[atom] = [bond.get_other(atom) 
+                                       for bond in atom.bonds 
                                        if 
-                                        (bonded_to not in self.walkable.keys()) 
+                                        (bond.get_other(atom) not in 
+                                         self.walkable.keys()) 
                                         and 
-                                         (bonded_to != self.walkable["root"][0])
+                                         (bond.get_other(atom) != 
+                                          self.walkable["root"][0])
                                       ]
+                                      
               
     def walk(self, start=None): 
         """Credit for the majority of this function goes to
@@ -238,7 +284,7 @@ class Compound(object):
         
     
     def getRoot(self): 
-        return sorted(self.walkable["root"])
+        return self.walkable["root"]
     
     
     def __str__(self):
@@ -315,6 +361,6 @@ if __name__ == "__main__":
     bd = {"b1" : ("a1", "a3", 1), "b2" : ("a2", "a3", 1)}
     md = {"atoms" : ad, "bonds" : bd}
     ac = Compound(md) 
-    print ac.walk()
+    #print ac.walk()
                 
     acid_base_rxn(acid=hydronium, base=hydroxide, a=ad, b=bd, c=md)                            
