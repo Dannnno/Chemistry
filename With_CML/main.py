@@ -114,7 +114,6 @@ class Element(object):
         self.bonds = []
         self.ismetal = False # Work out a way to do this
 
-
     def add_bond(self, other, bond_info):
         try:
             if isinstance(other, Element):
@@ -130,7 +129,6 @@ class Element(object):
         except BondingException as BE:
             print BE
             return
-
 
     def remove_bond(self, bond):
         try:
@@ -153,10 +151,8 @@ class Element(object):
             print BE
             return
 
-
     def __str__(self):
         return self.name
-
 
     def __repr__(self):
         return "Element %s bonded to " % self.name + ret_str_list([bond.get_other(self) for bond in self.bonds])
@@ -171,7 +167,6 @@ class Bond(object):
         self.order = order
         self.chirality = chirality
         self.type = self.eval_bond()
-
 
     def get_other(self, atom):
         if self.first == atom:
@@ -200,10 +195,8 @@ class Bond(object):
         else:
             return "Unknown type"
 
-
     def __str__(self):
         return "Bond between %s and %s" % (self.first.name, self.second.name)
-
 
     def __repr__(self):
         return "%s bond between %s and %s of order %d with %s chirality" \
@@ -230,31 +223,27 @@ class Compound(object):
             del self.bonds[key]
 
         self.pka = self.getPKa() # getPKa(self) ?
-
-        self.walkable = OrderedDict()
-        self.walkable["root"] = [self.atoms[self.getRoot()]]
         self.build_walkable()
         str_print_dict(self.walkable)
 
-
     def build_walkable(self):
-        """Builds a version of self.atoms that can be traversed by the 
+        """Builds a version of self.atoms that can be traversed by the
         Compound.walk() method
         """
-        
+
+        self.walkable = OrderedDict()
+        self.walkable["root"] = [self.atoms[self.getRoot()]]
+
         visited = set()
         to_crawl = deque(["root"])
-        atoms = [self.atoms[key] for key in sorted(self.atoms.keys())]
-        
+
         while to_crawl:
             current = to_crawl.popleft()
-            
+
             if current in visited:
                 continue
-                
-            if current in self.walkable.keys():
-                pass
-            else:
+
+            if current not in self.walkable.keys():
                 self.walkable[current] = [bond.get_other(current)
                                           for bond in current.bonds
                                            if
@@ -268,8 +257,7 @@ class Compound(object):
             visited.add(current)
             node_children = set(self.walkable[current])
             to_crawl.extend(node_children - visited)
-                                      
-    
+
     def walk(self, start=None):
         """Credit for the majority of this function goes to
         http://kmkeen.com/python-trees/2009-05-30-22-46-46-011.html
@@ -297,10 +285,8 @@ class Compound(object):
         visited.insert(0, start)
         return visited
 
-
     def getPKa(self):
         return 0
-
 
     def getRoot(self):
         most = 0
@@ -311,21 +297,19 @@ class Compound(object):
                 stored = [key]
             elif len(value.bonds) == most:
                 stored.append(key)
-                    
+
         most = self.atoms[stored[0]].eneg
         estored = stored[0]
-        
+
         for key in stored:
             if self.atoms[key].eneg > most:
                 most = self.atoms[key].eneg
                 estored = key
-        
-        return estored
 
+        return estored
 
     def __str__(self):
         return str(self.atoms) + str(self.bonds)
-
 
     def __repr__(self):
         return repr(self.atoms) + repr(self.bonds)
@@ -336,10 +320,8 @@ class BondingException(Exception):
     def __init__(self, err_message="Bonding Error"):
         self.err_message = err_message
 
-
     def __str__(self):
         return self.err_message
-
 
     def __repr__(self):
         return self.err_message
@@ -350,10 +332,8 @@ class ReactionException(Exception):
     def __init__(self, err_message="Reaction Error"):
         self.err_message = err_message
 
-
     def __str__(self):
         return self.err_message
-
 
     def __repr__(self):
         return self.err_message
@@ -385,10 +365,12 @@ def acid_base_rxn(acid=hydronium, base=hydroxide, aqueous=True, **kwargs):
 
 
 def remove_proton(acid):
+
     acid.pka = acid.getPKa()  # Has to be reset after the changes occur
 
 
 def add_proton(base):
+
     base.pka = base.getPKa()
 
 
@@ -397,6 +379,6 @@ if __name__ == "__main__":
     water_comp = Compound(water)
     hydroxide_comp = Compound(hydroxide)
     hydronium_comp = Compound(hydronium)
-    #str_print_list(ac.walk())
+    # str_print_list(ac.walk())
 
-    #acid_base_rxn(acid=hydronium, base=hydroxide, a=ad, b=bd, c=md)
+    # acid_base_rxn(acid=hydronium, base=hydroxide, a=ad, b=bd, c=md)
