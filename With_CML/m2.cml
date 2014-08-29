@@ -1,0 +1,25 @@
+<molecule id="m2">
+    <atomArray>
+        <atom id="a1">
+            <string builtin="elementType">H</string>
+        </atom>
+        <atom id="a2">
+            <string builtin="elementType">H</string>
+        </atom>
+        <atom id="a3">
+            <string builtin="elementType">O</string>
+        </atom>
+    </atomArray>
+    <bondArray>
+        <bond id="b1">
+            <string builtin="atomRef">a1</string>
+            <string builtin="atomRef">a3</string>
+            <string builtin="order">1</string>
+        </bond>
+        <bond id="b2">
+            <string builtin="atomRef">a2</string>
+            <string builtin="atomRef">a3</string>
+            <string builtin="order">1</string>
+        </bond>
+    </bondArray>
+</molecule>

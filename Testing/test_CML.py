@@ -20,14 +20,14 @@ class TestCMLParser(unittest.TestCase):
         self.assertDictEqual(self.test_molecules, self.parsed_molecules)
 
     def test_build(self):
-        for cmlfile, molecule in zip(self.test_write_files, self.test_molecules):
-            CheML.CMLBuilder({molecule:self.test_molecules[molecule]}, cmlfile)
+        for cmlfile, mol_id in zip(self.test_write_files, self.test_molecules.keys()):
+            CheML.CMLBuilder(self.test_molecules[mol_id], mol_id, cmlfile)
             
         try:
             with open(self.test_write_files[0], 'r') as a, \
-                open(self.test_write_files[1], 'r') as b, \
-                open(self.testfiles[0], 'r') as c, \
-                open(self.testfiles[1], 'r') as d:
+                 open(self.test_write_files[1], 'r') as b, \
+                 open(self.testfiles[0], 'r') as c, \
+                 open(self.testfiles[1], 'r') as d:
               
                 self.assertEqual(*map(os.path.getsize, [self.test_write_files[0], self.testfiles[0]]))
                 self.assertEqual(*map(os.path.getsize, [self.test_write_files[1], self.testfiles[1]]))

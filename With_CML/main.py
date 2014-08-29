@@ -2,37 +2,41 @@ import csv
 from copy import deepcopy
 from collections import deque
 from collections import OrderedDict
+import sys
+sys.path.insert(0, "C:/Users/Dan/Desktop/Programming/1 - GitHub/Chemistry")
+from CheML import CheML
+
 
 hydronium = {"atoms": {
-                        "a1": "H",
-                        "a2": "H",
-                        "a3": "H",
-                        "a4": "O"
+                       "a1": "H",
+                       "a2": "H",
+                       "a3": "H",
+                       "a4": "O"
                       },
              "bonds": {
-                        "b1": ("a1", "a4", 1),
-                        "b2": ("a2", "a4", 1),
-                        "b3": ("a3", "a4", 1)
+                       "b1": ("a1", "a4", 1),
+                       "b2": ("a2", "a4", 1),
+                       "b3": ("a3", "a4", 1)
                       }
-             }
-
+            }
+    
 hydroxide = {"atoms": {
-                        "a1": "H",
-                        "a2": "O"
+                       "a1": "H",
+                       "a2": "O"
                       },
              "bonds": {
-                        "b1": ("a1", "a2", 1)
+                       "b1": ("a1", "a2", 1)
                       }
             }
 
 water = {"atoms": {
-                    "a1": "H",
-                    "a2": "H",
-                    "a3": "O"
+                   "a1": "H",
+                   "a2": "H",
+                   "a3": "O"
                   },
          "bonds": {
-                    "b1": ("a1", "a3", 1),
-                    "b2": ("a2", "a3", 1)
+                   "b1": ("a1", "a3", 1),
+                   "b2": ("a2", "a3", 1)
                   }
         }
 
@@ -52,8 +56,7 @@ def read_periodic_table():
                 col_types = [int, str, str, int, float, float, float,
                              float, float, float, float, str_to_list]
                 new_row = tuple(convert_type(cell, typ)
-                                for cell, typ
-                                in zip(tl, col_types))
+                                for cell, typ in zip(tl, col_types))
                 per_table[tl[1]] = new_row
 
         except StopIteration:
@@ -76,7 +79,7 @@ def convert_type(cell, typ):
 
 
 def str_to_list(a_stringy_list):
-    a_stringy_list[1:-1].split(",")
+    return a_stringy_list[1:-1].split(",")
 
 
 def str_print_list(alist):
@@ -374,11 +377,21 @@ def add_proton(base):
     base.pka = base.getPKa()
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":    
+    molecules = {''.join(['m', str(i)]): molecule for i, molecule in enumerate([hydronium, hydroxide, water])}
+    
+    for key in molecules.keys():
+        CheML.CMLBuilder(molecules[key], key, ''.join([key, ".cml"]))
+        
+    molecules = OrderedDict()
+    for filename in [''.join(['m', str(i), ".cml"]) for i in range(3)]:
+        mole = CheML.CMLParser(filename)
+        molecules[mole.id] = mole.molecule
     periodic_table = read_periodic_table()
-    water_comp = Compound(water)
-    hydroxide_comp = Compound(hydroxide)
-    hydronium_comp = Compound(hydronium)
+    compounds = map(Compound, molecules.values())
+    # water_comp = Compound(water)
+    # hydroxide_comp = Compound(hydroxide)
+    # hydronium_comp = Compound(hydronium)
     # str_print_list(ac.walk())
 
     # acid_base_rxn(acid=hydronium, base=hydroxide, a=ad, b=bd, c=md)

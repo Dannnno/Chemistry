@@ -76,26 +76,45 @@ class CMLParser(object):
                     self.id = self.tree.getroot().attrib['id']
                 except Exception:
                     raise CMLException("Couldn't find a molecule root object")
+                    
                 elements = self.tree.findall("atomArray")
-                if elements == []: raise CMLException("No atomArray in the molecule")
+                
+                if elements == []: 
+                    raise CMLException("No atomArray in the molecule")
+                    
                 for element in elements:
                     sub_elements = element.findall("atom")
-                    if sub_elements == []: raise CMLException("No atoms in the atomArray")
+                    
+                    if sub_elements == []: 
+                        raise CMLException("No atoms in the atomArray")
+                        
                     for sub_element in sub_elements:
                         subs = sub_element.findall("string")
-                        if subs == []: raise CMLException("Atom has no information")                
+
+                        if subs == []: 
+                            raise CMLException("Atom has no information") 
+               
                         for sub in subs:
                             self.atoms[sub_element.attrib['id']] = sub.text
             
                 elements = self.tree.findall("bondArray")
-                if elements == []: raise CMLException("No bondArray in the molecule")
+
+                if elements == []: 
+                    raise CMLException("No bondArray in the molecule")
+
                 for element in elements:
                     sub_elements = element.findall("bond")
-                    if sub_elements == []: raise CMLException("No bonds in the bondArray")                            
+
+                    if sub_elements == []: 
+                        raise CMLException("No bonds in the bondArray")  
+                          
                     for sub_element in sub_elements:
                         self.bonds[sub_element.attrib['id']] = ()
                         subs = sub_element.findall("string")
-                        if subs == []: raise CMLException("Bond has no information")
+
+                        if subs == []: 
+                            raise CMLException("Bond has no information")
+
                         for sub in subs:
                             self.bonds[sub_element.attrib['id']] += (sub.text,)
                 
@@ -138,9 +157,9 @@ def insert_attribs(tag, attributes, values):
 class CMLBuilder(object):  
     """A CML constructor object"""
     
-    def __init__(self, molecule, filename):
+    def __init__(self, molecule, mol_id, filename):
         """Takes a molecule dictionary (same format as would be produced by
-        cml.CMLParser().molecule and a filename to write the molecule to
+        CheML.CMLParser().molecule and a filename to write the molecule to
         """        
         
         self.molecule = molecule
@@ -149,19 +168,19 @@ class CMLBuilder(object):
         self.indent = "    "
         
         with open(filename, "w") as f: 
-            mol_id = self.molecule.keys()[0]   
+            self.mol_id = mol_id   
             opener, closer = insert_attribs("molecule", 
                                             ["id="], 
                                             [mol_id])
             f.write(opener + "\n")
             
-            bonds = self.molecule[mol_id]["bonds"]
+            bonds = self.molecule["bonds"]
             bkeys = sorted(bonds.keys())
-            atoms = self.molecule[mol_id]["atoms"]
+            atoms = self.molecule["atoms"]
             akeys = sorted(atoms.keys())            
             aaopen, aaclose = insert_attribs("atomArray", [], [])
             bbopen, bbclose = insert_attribs("bondArray", [], [])
-            f.write(self.indent + aaopen + "\n")
+            f.write(''.join([self.indent, aaopen, "\n"]))
             
             for key in akeys:
                 atopen, atclose = insert_attribs("atom", 
@@ -170,12 +189,13 @@ class CMLBuilder(object):
                 stropen, strclose = insert_attribs("string", 
                                                    ["builtin"], 
                                                    ["elementType"])
-                f.write(self.indent*2 + atopen + "\n" 
-                      + self.indent*3 + stropen + atoms[key] + strclose + "\n" 
-                      + self.indent*2 + atclose + "\n")
+                f.write(''.join([self.indent*2, atopen, "\n",
+                                 self.indent*3, stropen, atoms[key],
+                                 strclose, "\n", self.indent*2, atclose,
+                                 "\n"]))
                       
-            f.write(self.indent + aaclose + "\n" 
-                  + self.indent + bbopen + "\n")
+            f.write(''.join([self.indent, aaclose, "\n",
+                             self.indent, bbopen, "\n"]))
             
             for key in bkeys:
                 bopen, bclose = insert_attribs("bond", 
@@ -190,11 +210,13 @@ class CMLBuilder(object):
                 stropen3, strclose3 = insert_attribs("string", 
                                                      ["builtin"], 
                                                      ["order"])
-                f.write(self.indent*2 + bopen + "\n" 
-                      + self.indent*3 + stropen1 + bonds[key][0] + strclose1 + "\n"
-                      + self.indent*3 + stropen2 + bonds[key][1] + strclose2 + "\n"
-                      + self.indent*3 + stropen3 + bonds[key][2] + strclose3 + "\n"
-                      + self.indent*2 + bclose + "\n")
+                f.write(''.join(map(str, list([self.indent*2, bopen, "\n",
+                                               self.indent*3, stropen1,
+                                               bonds[key][0], strclose1,
+                                               "\n", self.indent*3, stropen2,
+                                               bonds[key][1], strclose2, "\n",
+                                               self.indent*3, stropen3,
+                                               bonds[key][2], strclose3, "\n",
+                                               self.indent*2, bclose, "\n"]))))
 
-            f.write(self.indent + bbclose + "\n"
-                  + closer)
+            f.write(''.join([self.indent, bbclose, "\n", closer]))
