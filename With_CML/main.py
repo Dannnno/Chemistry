@@ -1,3 +1,25 @@
+"""from __future__ import print_function
+
+class foo(): 
+    def __str__(self):
+        return "String"
+    def __repr__(self):
+        return "Repr"
+
+print([foo()])
+
+def my_decorator(func):
+    def inner(alist):
+        if isinstance(alist, list):
+            return func("["+", ".join(map(str, alist))+"]")
+        else:
+            return func(alist)
+    return inner
+
+print = my_decorator(print)
+print([foo()])
+"""
+
 import csv
 from copy import deepcopy
 from collections import deque
@@ -81,6 +103,20 @@ def convert_type(cell, typ):
 def str_to_list(a_stringy_list):
     return a_stringy_list[1:-1].split(",")
 
+
+class MyStdOut(object):
+    
+    def __init__(self, term=sys.stdout):
+        self.term = term
+        
+    def write(self, text):
+        if isinstance(text, list):
+            self.term.write("Its a list!")
+        else:
+            self.term.write("Its not a list!")
+            
+sys.stdout = MyStdOut()
+print ["Hello World"]
 
 def str_print_list(alist):
     print "["+", ".join(map(str, alist))+"]"
@@ -227,7 +263,7 @@ class Compound(object):
 
         self.pka = self.getPKa() # getPKa(self) ?
         self.build_walkable()
-        str_print_dict(self.walkable)
+        #str_print_dict(self.walkable)
 
     def build_walkable(self):
         """Builds a version of self.atoms that can be traversed by the
