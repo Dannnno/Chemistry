@@ -1,6 +1,6 @@
 """from __future__ import print_function
 
-class foo(): 
+class foo():
     def __str__(self):
         return "String"
     def __repr__(self):
@@ -41,7 +41,7 @@ hydronium = {"atoms": {
                        "b3": ("a3", "a4", 1)
                       }
             }
-    
+
 hydroxide = {"atoms": {
                        "a1": "H",
                        "a2": "O"
@@ -104,19 +104,30 @@ def str_to_list(a_stringy_list):
     return a_stringy_list[1:-1].split(",")
 
 
-class MyStdOut(object):
-    
+"""class MyStdOut(object):
+
     def __init__(self, term=sys.stdout):
-        self.term = term
-        
+        self.out = term
+
     def write(self, text):
-        if isinstance(text, list):
-            self.term.write("Its a list!")
-        else:
-            self.term.write("Its not a list!")
-            
+        try:
+            a = text.split()
+            if a[0] == "Element":
+                self.out.write(a[1])
+            elif a[0] == "Bond":
+                self.out.write(text)
+            elif a[1] == "bond":
+                self.out.write("Bond between %s and %s" % (a[3], a[5]))
+            else:
+                self.out.write(text)
+        except IndexError:
+            self.out.write(text)
+        #self.out.write("String\n" + str(text) +
+        #               "\nRepr\n" + repr(text) +
+        #               "\nDefault\n" + text + "\n")
+
 sys.stdout = MyStdOut()
-print ["Hello World"]
+"""
 
 def str_print_list(alist):
     print "["+", ".join(map(str, alist))+"]"
@@ -263,7 +274,8 @@ class Compound(object):
 
         self.pka = self.getPKa() # getPKa(self) ?
         self.build_walkable()
-        #str_print_dict(self.walkable)
+        str_print_dict(self.walkable)
+        # print self.walkable
 
     def build_walkable(self):
         """Builds a version of self.atoms that can be traversed by the
@@ -413,21 +425,18 @@ def add_proton(base):
     base.pka = base.getPKa()
 
 
-if __name__ == "__main__":    
+if __name__ == "__main__":
     molecules = {''.join(['m', str(i)]): molecule for i, molecule in enumerate([hydronium, hydroxide, water])}
-    
+
     for key in molecules.keys():
         CheML.CMLBuilder(molecules[key], key, ''.join([key, ".cml"]))
-        
+
     molecules = OrderedDict()
     for filename in [''.join(['m', str(i), ".cml"]) for i in range(3)]:
         mole = CheML.CMLParser(filename)
         molecules[mole.id] = mole.molecule
     periodic_table = read_periodic_table()
     compounds = map(Compound, molecules.values())
-    # water_comp = Compound(water)
-    # hydroxide_comp = Compound(hydroxide)
-    # hydronium_comp = Compound(hydronium)
     # str_print_list(ac.walk())
 
     # acid_base_rxn(acid=hydronium, base=hydroxide, a=ad, b=bd, c=md)
