@@ -61,7 +61,32 @@ water = {"atoms": {
                    "b2": ("a2", "a3", 1)
                   }
         }
+        
+carb_acid = {"atoms": {
+                       "a1": "H",
+                       "a2": "O",
+                       "a3": "C",
+                       "a4": "O",
+                       "a5": "H"
+                      },
+             "bonds": {
+                       "b1": ("a1", "a2", 1),
+                       "b2": ("a2", "a3", 1),
+                       "b3": ("a3", "a4", 2),
+                       "b4": ("a3", "a5", 1)
+                      }
+            }                      
 
+# This variable is used for the Compound.getPKa() method.  It uses some common
+# PKa patterns to assign approximate PKas to various molecules.  There will also 
+# be program logic to work on an unknown compound, eventually
+pka_patterns = OrderedDict()
+pka_patterns["Alkane"] = ("RCH3", 50)
+pka_patterns["Alkene"] = ("")
+pka_patterns = {"Alcohol": ("RCOH", 0),
+                "Carboxylic Acid": ("RCOOH", 0),
+                
+               }
 
 def read_periodic_table():
     """Reads a csv file that represents all elements and pertinant data regarding
@@ -272,9 +297,9 @@ class Compound(object):
             self.bonds[(atom1, atom2)] = self.atoms[atom1].bonds[-1]
             del self.bonds[key]
 
-        self.pka = self.getPKa() # getPKa(self) ?
         self.build_walkable()
         str_print_dict(self.walkable)
+        self.pka = self.getPKa() # getPKa(self) ?
         # print self.walkable
 
     def build_walkable(self):
@@ -337,6 +362,16 @@ class Compound(object):
         return visited
 
     def getPKa(self):
+        hydrogens = [hyd 
+                     for hyd in self.walkable.keys() 
+                      if (isinstance(hyd, Element) and 
+                          hyd.name == "Hydrogen")
+                    ]
+        str_print_list(hydrogens)
+        for hyd in hydrogens:
+            print repr(hyd)
+        for name, pattern in pka_patterns.items():
+            print name, pattern
         return 0
 
     def getRoot(self):
@@ -390,11 +425,6 @@ class ReactionException(Exception):
         return self.err_message
 
 
-def getPKa(a_compound):
-    """Incomplete"""
-    data = a_compound.walk()
-
-
 def acid_base_rxn(acid=hydronium, base=hydroxide, aqueous=True, **kwargs):
     """Used to simulate acid-base reactions.  Assumes an aqueous environment
     unless otherwise indicated.  If not reacting in water additional keyword
@@ -426,17 +456,19 @@ def add_proton(base):
 
 
 if __name__ == "__main__":
-    molecules = {''.join(['m', str(i)]): molecule for i, molecule in enumerate([hydronium, hydroxide, water])}
+    molecules = {''.join(['m', str(i)]): molecule for i, molecule in enumerate([hydronium, hydroxide, water, carb_acid])}
+    length = len(molecules)
 
     for key in molecules.keys():
         CheML.CMLBuilder(molecules[key], key, ''.join([key, ".cml"]))
 
     molecules = OrderedDict()
-    for filename in [''.join(['m', str(i), ".cml"]) for i in range(3)]:
+    for filename in [''.join(['m', str(i), ".cml"]) for i in range(length)]:
         mole = CheML.CMLParser(filename)
         molecules[mole.id] = mole.molecule
     periodic_table = read_periodic_table()
-    compounds = map(Compound, molecules.values())
+    # compounds = map(Compound, molecules.values())
+    comp = Compound(molecules["m3"])
     # str_print_list(ac.walk())
 
     # acid_base_rxn(acid=hydronium, base=hydroxide, a=ad, b=bd, c=md)
