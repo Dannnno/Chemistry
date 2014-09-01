@@ -1,30 +1,9 @@
-"""from __future__ import print_function
-
-class foo():
-    def __str__(self):
-        return "String"
-    def __repr__(self):
-        return "Repr"
-
-print([foo()])
-
-def my_decorator(func):
-    def inner(alist):
-        if isinstance(alist, list):
-            return func("["+", ".join(map(str, alist))+"]")
-        else:
-            return func(alist)
-    return inner
-
-print = my_decorator(print)
-print([foo()])
-"""
-
 import csv
 from copy import deepcopy
 from collections import deque
 from collections import OrderedDict
 import sys
+import pka
 sys.path.insert(0, "C:/Users/Dan/Desktop/Programming/1 - GitHub/Chemistry")
 from CheML import CheML
 
@@ -80,13 +59,7 @@ carb_acid = {"atoms": {
 # This variable is used for the Compound.getPKa() method.  It uses some common
 # PKa patterns to assign approximate PKas to various molecules.  There will also 
 # be program logic to work on an unknown compound, eventually
-pka_patterns = OrderedDict()
-pka_patterns["Alkane"] = ("RCH3", 50)
-pka_patterns["Alkene"] = ("")
-pka_patterns = {"Alcohol": ("RCOH", 0),
-                "Carboxylic Acid": ("RCOOH", 0),
-                
-               }
+pka_patterns = pka.pka_patterns
 
 def read_periodic_table():
     """Reads a csv file that represents all elements and pertinant data regarding
@@ -128,31 +101,6 @@ def convert_type(cell, typ):
 def str_to_list(a_stringy_list):
     return a_stringy_list[1:-1].split(",")
 
-
-"""class MyStdOut(object):
-
-    def __init__(self, term=sys.stdout):
-        self.out = term
-
-    def write(self, text):
-        try:
-            a = text.split()
-            if a[0] == "Element":
-                self.out.write(a[1])
-            elif a[0] == "Bond":
-                self.out.write(text)
-            elif a[1] == "bond":
-                self.out.write("Bond between %s and %s" % (a[3], a[5]))
-            else:
-                self.out.write(text)
-        except IndexError:
-            self.out.write(text)
-        #self.out.write("String\n" + str(text) +
-        #               "\nRepr\n" + repr(text) +
-        #               "\nDefault\n" + text + "\n")
-
-sys.stdout = MyStdOut()
-"""
 
 def str_print_list(alist):
     print "["+", ".join(map(str, alist))+"]"
@@ -367,12 +315,26 @@ class Compound(object):
                       if (isinstance(hyd, Element) and 
                           hyd.name == "Hydrogen")
                     ]
-        str_print_list(hydrogens)
+        #str_print_list(hydrogens)
+        pka = 1000
+        h_id = self.getID(hydrogens[0])
+        threshold = 0
         for hyd in hydrogens:
-            print repr(hyd)
-        for name, pattern in pka_patterns.items():
-            print name, pattern
-        return 0
+            for name, pattern in pka_patterns.items():
+                comparison = fuzzy_comparison(self, hyd, pattern)
+                if comparison[0] > threshold:
+                    if comparison[0] == 1:
+                        return (comparison[1], self.getID(hyd))
+                    pka = comparison[1]
+                    h_id = self.getID(hyd)
+                    threshold = comparison[0]
+        return (pka, h_id)
+
+    def getID(self, element):
+        for key, value in self.atoms.iteritems():
+            if element == value:
+                return key
+        raise AttributeError("No such element in the compound")
 
     def getRoot(self):
         most = 0
@@ -453,6 +415,10 @@ def remove_proton(acid):
 def add_proton(base):
 
     base.pka = base.getPKa()
+    
+    
+def fuzzy_comparison(compound, hydrogen, pattern):
+    return (0, 1000)
 
 
 if __name__ == "__main__":
@@ -467,6 +433,11 @@ if __name__ == "__main__":
         mole = CheML.CMLParser(filename)
         molecules[mole.id] = mole.molecule
     periodic_table = read_periodic_table()
+    
+    for molecule in pka_patterns.values():
+        pattern = Compound(molecule[1])
+        pattern.pka = (molecule[0], "a1")
+        
     # compounds = map(Compound, molecules.values())
     comp = Compound(molecules["m3"])
     # str_print_list(ac.walk())
