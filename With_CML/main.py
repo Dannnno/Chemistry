@@ -43,16 +43,22 @@ water = {"atoms": {
         
 carb_acid = {"atoms": {
                        "a1": "H",
-                       "a2": "O",
-                       "a3": "C",
-                       "a4": "O",
-                       "a5": "H"
+                       "a2": "H",
+                       "a3": "H",
+                       "a4": "H",
+                       "a5": "C",
+                       "a6": "C",
+                       "a7": "O",
+                       "a8": "O"
                       },
              "bonds": {
-                       "b1": ("a1", "a2", 1),
-                       "b2": ("a2", "a3", 1),
-                       "b3": ("a3", "a4", 2),
-                       "b4": ("a3", "a5", 1)
+                       "b1": ("a1", "a5", 1),
+                       "b2": ("a2", "a5", 1),
+                       "b3": ("a3", "a5", 1),
+                       "b4": ("a5", "a6", 1),
+                       "b5": ("a6", "a7", 1),
+                       "b6": ("a4", "a7", 1),
+                       "b7": ("a6", "a8", 2),
                       }
             }                      
 
@@ -136,6 +142,8 @@ class Element(object):
         self.oxid = periodic_table[symbol][11]
         self.bonds = []
         self.ismetal = False # Work out a way to do this
+        self.root = 0
+        self.check_root()
 
     def add_bond(self, other, bond_info):
         try:
@@ -152,6 +160,9 @@ class Element(object):
         except BondingException as BE:
             print BE
             return
+        
+        else:
+            self.check_root()
 
     def remove_bond(self, bond):
         try:
@@ -173,6 +184,14 @@ class Element(object):
         except BondingException as BE:
             print BE
             return
+            
+        else:
+            self.check_root()
+            
+    def check_root(self):
+        self.root = 0
+        for bond in self.bonds:
+            self.root += int(bond.order)
 
     def __str__(self):
         return self.name
@@ -246,8 +265,8 @@ class Compound(object):
             del self.bonds[key]
 
         self.build_walkable()
-        str_print_dict(self.walkable)
-        self.pka = self.getPKa() # getPKa(self) ?
+        #str_print_dict(self.walkable)
+        self.pka = 100 # self.getPKa() # getPKa(self) ?
         # print self.walkable
 
     def build_walkable(self):
@@ -319,15 +338,14 @@ class Compound(object):
         pka = 1000
         h_id = self.getID(hydrogens[0])
         threshold = 0
-        for hyd in hydrogens:
-            for name, pattern in pka_patterns.items():
-                comparison = fuzzy_comparison(self, hyd, pattern)
-                if comparison[0] > threshold:
-                    if comparison[0] == 1:
-                        return (comparison[1], self.getID(hyd))
-                    pka = comparison[1]
-                    h_id = self.getID(hyd)
-                    threshold = comparison[0]
+        for name, pattern in pka_patterns.items():
+            comparison = fuzzy_comparison(self.walkable, hydrogens, pattern)
+            if comparison[0] > threshold:
+                if comparison[0] == 1:
+                    return (comparison[1], self.getID(hyd))
+                pka = comparison[1]
+                h_id = self.getID(hyd)
+                threshold = comparison[0]
         return (pka, h_id)
 
     def getID(self, element):
@@ -340,10 +358,10 @@ class Compound(object):
         most = 0
         stored = [sorted(self.atoms.keys())[0]]
         for key, value in self.atoms.items():
-            if len(value.bonds) > most:
-                most = len(value.bonds)
+            if value.root > most:
+                most = value.root
                 stored = [key]
-            elif len(value.bonds) == most:
+            elif value.root == most:
                 stored.append(key)
 
         most = self.atoms[stored[0]].eneg
@@ -417,9 +435,44 @@ def add_proton(base):
     base.pka = base.getPKa()
     
     
-def fuzzy_comparison(compound, hydrogen, pattern):
+def fuzzy_comparison(walkable, hydrogens, pattern):
+    #str_print_dict(walkable)
+    elbaklaw = walk_reverse(walkable, hydrogens)
+    str_print_dict(elbaklaw)
+    for key, connected_to in walkable.iteritems(): 
+        pass
     return (0, 1000)
 
+
+def walk_reverse(walkable, hydrogens):
+    reverse_walkable = OrderedDict()
+    
+    reverse_walkable["root"] = [hydrogens[0]]
+    visited = set()
+    to_crawl = deque(["root"] + hydrogens)
+    #to_crawl.extend(hydrogens)
+
+    while to_crawl:
+        current = to_crawl.popleft()
+        
+        if current in visited:
+            continue
+
+        if current not in reverse_walkable:
+            reverse_walkable[current] = [bond.get_other(current)
+                                      for bond in current.bonds
+                                       if
+                                        (bond.get_other(current) not in
+                                         reverse_walkable.keys())
+                                       and
+                                        (bond.get_other(current) !=
+                                         reverse_walkable["root"][0])
+                                     ]
+        visited.add(current)
+        node_children = set(reverse_walkable[current])
+        to_crawl.extend(node_children - visited)
+    
+    return reverse_walkable
 
 if __name__ == "__main__":
     molecules = {''.join(['m', str(i)]): molecule for i, molecule in enumerate([hydronium, hydroxide, water, carb_acid])}
@@ -440,6 +493,7 @@ if __name__ == "__main__":
         
     # compounds = map(Compound, molecules.values())
     comp = Compound(molecules["m3"])
+    comp.getPKa()
     # str_print_list(ac.walk())
 
     # acid_base_rxn(acid=hydronium, base=hydroxide, a=ad, b=bd, c=md)
