@@ -165,7 +165,7 @@ def ret_str_list(alist):
 def str_print_dict(adict):
     print "{"
     for key, value in adict.items():
-        if isinstance(value, list):
+        if isinstance(value, list) or isinstance(value, tuple):
             print " %s: %s," % (key, ret_str_list(value))
         else:
             print " %s: %s," % (key, value)
