@@ -1,4 +1,4 @@
-###TODO List - updated 2/4/2014 2:53:11 PM 
+###TODO List - updated 9/1/2014 10:30:11 AM 
 ---
 GitHub:
 
@@ -14,9 +14,8 @@ MarkDown: **Completed**
 * Learn about markdown and convert README.txt to README.md
 * Potentially convert other *.txt files to *.md files
     
-GUI:  **started, on hold**
+GUI:  **on hold**
 
-- **Consider Java, or `enable`/`enaml` Python packages**
 - Create Main Window
 - Create Menu options (File, Edit, Options, Help, etc)   
 	- Compound creation support
@@ -44,38 +43,13 @@ GUI:  **started, on hold**
 - `PublishMolecule` should save the molecule's information somewhere
 - Should be a way to save current work without publishing molecule
     
-Classes:
-
-- Chemistry 
-    - Element - **completed**
-    - Compound - **in progress, 50% done**
-        - add functionality for adjusting the size of `self.structure`
-        - fix sizing of `self.structure`
-        - add support for a string without parentheses to get them added in the appropriate locations
-    - Resonance  - **not started**
-    - Bonds - **completed**
-    - Lone pairs - **not started**
-    - IUPAC - **not started**
-    - Reactions - **0.1% done**
-        - Acid
-        - Base
-        - More to come
-- More to come
-    
 Long term: **Not started**
 
-   - Name project
+- Name project
 - Create .exe
 - Port to mobile devices
 	- iOS
 	- Android
-
-Programming languages: **Not started**
-
-- Java
-	- **Jython** 
-- C and C based languages
-	- **Objective C** 
 
 Readability: **meh**
 
