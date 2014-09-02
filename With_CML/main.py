@@ -266,7 +266,7 @@ class Compound(object):
 
         self.build_walkable()
         #str_print_dict(self.walkable)
-        self.pka = 100 # self.getPKa() # getPKa(self) ?
+        self.pka = (100, "") # self.getPKa() # getPKa(self) ?
         # print self.walkable
 
     def build_walkable(self):
@@ -447,11 +447,9 @@ def fuzzy_comparison(walkable, hydrogens, pattern):
 def walk_reverse(walkable, hydrogens):
     reverse_walkable = OrderedDict()
     
-    reverse_walkable["root"] = [hydrogens[0]]
     visited = set()
-    to_crawl = deque(["root"] + hydrogens)
-    #to_crawl.extend(hydrogens)
-
+    to_crawl = deque(hydrogens)
+    
     while to_crawl:
         current = to_crawl.popleft()
         
@@ -460,14 +458,11 @@ def walk_reverse(walkable, hydrogens):
 
         if current not in reverse_walkable:
             reverse_walkable[current] = [bond.get_other(current)
-                                      for bond in current.bonds
-                                       if
-                                        (bond.get_other(current) not in
+                                         for bond in current.bonds
+                                         if
+                                         (bond.get_other(current) not in
                                          reverse_walkable.keys())
-                                       and
-                                        (bond.get_other(current) !=
-                                         reverse_walkable["root"][0])
-                                     ]
+                                        ]
         visited.add(current)
         node_children = set(reverse_walkable[current])
         to_crawl.extend(node_children - visited)
