@@ -4,7 +4,7 @@ from collections import deque
 from collections import OrderedDict
 import sys
 import pka
-sys.path.insert(0, "C:/Users/Dan/Desktop/Programming/1 - GitHub/Chemistry")
+sys.path.insert(0, "C:/Users/Dan/Desktop/Programming/GitHub/Chemistry")
 from CheML import CheML
 
 
@@ -489,6 +489,7 @@ if __name__ == "__main__":
     # compounds = map(Compound, molecules.values())
     comp = Compound(molecules["m3"])
     comp.getPKa()
+    str_print_dict(comp.walkable)
     # str_print_list(ac.walk())
 
     # acid_base_rxn(acid=hydronium, base=hydroxide, a=ad, b=bd, c=md)
