@@ -24,7 +24,7 @@ pka_patterns["Alkane"] = (50, {"atoms": {
                                           "b5": ("a6", "a8", 1),
                                           "b6": ("a7", "a8", 1)
                                         }
-                              }
+                              }, "a1"
                          )
 
 pka_patterns["Alkene"] = (43, {"atoms": {
@@ -42,7 +42,7 @@ pka_patterns["Alkene"] = (43, {"atoms": {
                                           "b3": ("a4", "a6", 1),
                                           "b4": ("a5", "a6", 2)
                                         }
-                              }
+                              }, "a1"
                          )
 
 pka_patterns["Hydrogen"] = (42, {"atoms": {
@@ -52,7 +52,7 @@ pka_patterns["Hydrogen"] = (42, {"atoms": {
                                  "bonds": {
                                             "b0": ("a1", "a2", 1)
                                           }
-                                }
+                                }, "a1"
                            )
 
 pka_patterns["Amine"] = (35, {"atoms": {
@@ -66,7 +66,7 @@ pka_patterns["Amine"] = (35, {"atoms": {
                                          "b1": ("a2", "a4", 1),
                                          "b2": ("a3", "a4", 1)
                                        }
-                             }
+                             }, "a1"
                         )
 
 pka_patterns["Sulfoxide"] = (31, {"atoms": {
@@ -92,7 +92,7 @@ pka_patterns["Sulfoxide"] = (31, {"atoms": {
                                              "b7": ("a8", "a9", 1),
                                              "b8": ("a9", "a10", 2)
                                            }
-                                 }
+                                 }, "a1"
                             )
 
 pka_patterns["Alkyne"] = (25, {"atoms": {
@@ -106,7 +106,7 @@ pka_patterns["Alkyne"] = (25, {"atoms": {
                                           "b1": ("a2", "a4", 1),
                                           "b2": ("a3", "a4", 1)
                                         }
-                              }
+                              }, "a1"
                          )
 
 pka_patterns["Ester"] = (25, {"atoms": {
@@ -134,7 +134,7 @@ pka_patterns["Ester"] = (25, {"atoms": {
                                          "b8": ("a6", "a9", 1),
                                          "b9": ("a8", "a11", 1)
                                        }
-                             }
+                             }, "a4"
                         )
 
 pka_patterns["Nitrile"] = (25, {"atoms": {
@@ -152,7 +152,7 @@ pka_patterns["Nitrile"] = (25, {"atoms": {
                                            "b3": ("a4", "a5", 1),
                                            "b4": ("a5", "a6", 3)
                                          }
-                               }
+                               }, "a1"
                           )
 
 pka_patterns["Ketone"] = (20, {"atoms": {
@@ -178,7 +178,7 @@ pka_patterns["Ketone"] = (20, {"atoms": {
                                           "b7": ("a9", "a8", 1),
                                           "b8": ("a9", "a10", 2)
                                         }
-                              }
+                              }, "a1"
                          )
 
 pka_patterns["Aldehyde"] = (19, {"atoms": {
@@ -198,7 +198,7 @@ pka_patterns["Aldehyde"] = (19, {"atoms": {
                                             "b4": ("a5", "a6", 1),
                                             "b5": ("a6", "a7", 2)
                                           }
-                                }
+                                }, "a4"
                            )
 
 pka_patterns["Alcohol"] = (17, {"atoms": {
@@ -216,7 +216,7 @@ pka_patterns["Alcohol"] = (17, {"atoms": {
                                            "b3": ("a4", "a6", 1),
                                            "b4": ("a5", "a6", 1)
                                          }
-                               }
+                               }, "a4"
                           )
 
 pka_patterns["Water"] = (16, {"atoms": {
@@ -228,7 +228,7 @@ pka_patterns["Water"] = (16, {"atoms": {
                                          "b0": ("a1", "a3", 1),
                                          "b1": ("a2", "a3", 1)
                                        }
-                             }
+                             }, "a1"
                         )
 
 pka_patterns["Malonates"] = (13, {"atoms": {
@@ -268,7 +268,7 @@ pka_patterns["Malonates"] = (13, {"atoms": {
                                              "b14": ("a10", "a16", 2),
                                              "b15": ("a12", "a17", 2)
                                            }
-                                 }
+                                 }, "a4"
                             )
 
 pka_patterns["Thiols"] = (13, {"atoms": {
@@ -286,7 +286,7 @@ pka_patterns["Thiols"] = (13, {"atoms": {
                                           "b3": ("a4", "a6", 1),
                                           "b4": ("a5", "a6", 1)
                                         }
-                              }
+                              }, "a4"
                          )
 
 pka_patterns["Protonated amines"] = (10, {"atoms": {
@@ -302,7 +302,7 @@ pka_patterns["Protonated amines"] = (10, {"atoms": {
                                                      "b2": ("a3", "a5", 1),
                                                      "b3": ("a4", "a5", 1)
                                                    }
-                                         }
+                                         }, "a1"
                                     )
 
 pka_patterns["Carboxylic acids"] = (04, {"atoms": {
@@ -324,7 +324,7 @@ pka_patterns["Carboxylic acids"] = (04, {"atoms": {
                                                     "b5": ("a6", "a7", 1),
                                                     "b6": ("a6", "a8", 2)
                                                   }
-                                        }
+                                        }, "a4"
                                    )
 
 pka_patterns["Hydrofluoric acid"] = (3.2, {"atoms": {
@@ -334,7 +334,7 @@ pka_patterns["Hydrofluoric acid"] = (3.2, {"atoms": {
                                           "bonds": {
                                                      "b0": ("a1", "a2", 1)
                                                    }
-                                         }
+                                         }, "a1"
                                     )
 
 pka_patterns["Hydronium ion"] = (-1.7, {"atoms": {
@@ -348,7 +348,7 @@ pka_patterns["Hydronium ion"] = (-1.7, {"atoms": {
                                                  "b1": ("a2", "a4", 1),
                                                  "b2": ("a3", "a4", 1)
                                                }
-                                     }
+                                     }, "a1"
                                 )
 
 pka_patterns["Sulfuric acid"] = (-3, {"atoms": {
@@ -368,7 +368,7 @@ pka_patterns["Sulfuric acid"] = (-3, {"atoms": {
                                                  "b4": ("a3", "a7", 1),
                                                  "b5": ("a2", "a7", 1)
                                                }
-                                     }
+                                     }, "a1"
                                 )
 
 pka_patterns["Hydrochloric acid"] = (-6, {"atoms": {
@@ -378,7 +378,7 @@ pka_patterns["Hydrochloric acid"] = (-6, {"atoms": {
                                           "bonds": {
                                                      "b0": ("a1", "a2", 1)
                                                    }
-                                         }
+                                         }, "a1"
                                     )
 
 pka_patterns["Hydrobromic acid"] = (-9, {"atoms": {
@@ -388,7 +388,7 @@ pka_patterns["Hydrobromic acid"] = (-9, {"atoms": {
                                          "bonds": {
                                                     "b0": ("a1", "a2", 1)
                                                   }
-                                        }
+                                        }, "a1"
                                    )
 
 pka_patterns["Hydroiodic acid"] = (-10, {"atoms": {
@@ -398,5 +398,5 @@ pka_patterns["Hydroiodic acid"] = (-10, {"atoms": {
                                         "bonds": {
                                                    "b0": ("a1", "a2", 1)
                                                  }
-                                       }
+                                       }, "a1"
                                   )

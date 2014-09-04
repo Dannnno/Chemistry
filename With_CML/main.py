@@ -591,9 +591,9 @@ if __name__ == "__main__":
         molecules[mole.id] = mole.molecule
     
     # Setting the pka values for my predetermined values
-    for mol_pka, molecule in pka_patterns.values(): 
+    for mol_pka, molecule, h_id in pka_patterns.values(): 
         molecule = Compound(molecule)
-        mol_pka = (molecule.pka, "a1")
+        mol_pka = (molecule.pka, h_id)
         
     ## compounds = map(Compound, molecules.values())
     comp = Compound(molecules["m3"]) # Just using one of them for now
