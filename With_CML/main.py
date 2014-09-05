@@ -67,33 +67,6 @@ carb_acid = {"atoms": {
 # be program logic to work on an unknown compound, eventually
 pka_patterns = pka.pka_patterns
 
-def read_periodic_table():
-    """Reads a csv file that represents all elements and pertinant data regarding
-    them and then returns them as an OrderedDict
-    """
-
-    per_table = OrderedDict()
-    with open("element_list.csv", "r") as f:
-        my_reader = csv.reader(f)
-        my_reader.next() # skips the header
-        try:
-            while True:
-                tl = my_reader.next()
-                # maps the desired types to the string counterparts
-                col_types = [int, str, str, int, float, float, float,
-                             float, float, float, float, str_to_list]
-                new_row = tuple(convert_type(cell, typ)
-                                for cell, typ in zip(tl, col_types))
-                per_table[tl[1]] = new_row
-
-        except StopIteration: # In case for some reason I need more elements..
-            return per_table
-
-
-periodic_table = read_periodic_table() # Populates a 'periodic table' 
-                                       # that contains all the pertinent 
-                                       # data for creating elements
-
 
 def convert_type(cell, typ):
     """Credit to SO user Marius for (most of) this function
@@ -138,6 +111,46 @@ def str_print_dict(adict):
         else:
             print " %s: %s," % (key, value)
     print "}"
+    
+    
+def read_periodic_table():
+    """Reads a csv file that represents all elements and pertinant data regarding
+    them and then returns them as an OrderedDict
+    """
+
+    per_table = OrderedDict()
+    with open("element_list.csv", "r") as f:
+        my_reader = csv.reader(f)
+        my_reader.next() # skips the header
+        try:
+            while True:
+                tl = my_reader.next()
+                # maps the desired types to the string counterparts
+                col_types = [int, str, str, int, float, float, float,
+                             float, float, float, float, str_to_list]
+                new_row = tuple(convert_type(cell, typ)
+                                for cell, typ in zip(tl, col_types))
+                per_table[tl[1]] = new_row
+
+        except StopIteration: # In case for some reason I need more elements..
+            return per_table
+
+
+periodic_table = read_periodic_table() # Populates a 'periodic table' 
+                                       # that contains all the pertinent 
+                                       # data for creating elements
+
+
+class Memoize:
+    """Taken from http://stackoverflow.com/a/1988826/3076272"""
+    
+    def __init__(self, f):
+        self.f = f
+        self.memo = {}
+    def __call__(self, *args):
+        if not str(args) in self.memo:
+            self.memo[str(args)] = self.f(*args)
+        return self.memo[str(args)]
 
 
 class Element(object):
@@ -229,7 +242,27 @@ class Element(object):
         return ''.join(["Element %s bonded to " % self.name,
                          ret_str_list([bond.get_other(self)
                                        for bond in self.bonds])])
-
+                                       
+"""    def __eq__(self, other):
+        Maybe I'm misreading this... but I think I just made a very recursive
+        definition of this...
+        
+        
+        if isinstance(other, Element):
+            if other.name == self.name:
+                if sorted(lambda x: x.getOther(), self.bonds) == \
+                    sorted(lambda x: x.getOther(), other.bonds):
+                    return True
+        
+        return False
+        
+        
+        if isinstance(other, Element):
+            if other.name == self.name:
+                return True
+        
+        return False        
+"""
 
 class Bond(object):
 
@@ -295,6 +328,7 @@ class Compound(object):
         self.bonds = deepcopy(mole_dict["bonds"])
         self.walkable = OrderedDict() # A more crawler friendly structure
                                       # Look into a better way to do this
+        self.depth = 0
 
         for key, atom in self.atoms.iteritems(): # iterator uses less memory
             self.atoms[key] = Element(atom)
@@ -308,22 +342,24 @@ class Compound(object):
             self.bonds[(atom1, atom2)] = self.atoms[atom1].bonds[-1]
             del self.bonds[key] # Removing the old bond
 
-        self.build_walkable() # Some semi complex logic, cleaner to create in
-                              # a method
-                              
-        ## str_print_dict(self.walkable)
-        ## print self.walkable
-
+        # Some more complex logic, decided it makes more sense to do methods
+        self.root = self.get_root()
+        self.build_walkable()
+        self.depth = self.get_depth()
         self.pka = (100, "") 
-        ## self.getPKa()     # getPKa(self) ?
+        ## self.getPKa()
 
     def build_walkable(self):
         """Builds a version of self.atoms that can be traversed by the
         Compound.walk() method
+        
+        Doesn't handle cycles or rings
         """
-
-        self.walkable["root"] = [self.atoms[self.getRoot()]]
-
+        
+        self.walkable = walk_compound(self.atoms[self.root], root=True)
+        """        self.walkable = OrderedDict()
+        self.walkable["root"] = [self.atoms[self.get_root()]]
+        
         visited = set()
         to_crawl = deque(["root"])
 
@@ -351,7 +387,23 @@ class Compound(object):
             visited.add(current)
             node_children = set(self.walkable[current])
             to_crawl.extend(node_children - visited) # rappends new options
-
+        """
+        str_print_dict(self.walkable)
+        self.depth = self.get_depth()
+        
+    def get_depth(self, key=None, depth=1):
+        """Gets the depth of the walkable dictionary"""
+        self.depth = 0
+        
+        if key is None:
+            return self.get_depth(key=self.walkable["root"][0])
+        else:
+            try:
+                return max(self.get_depth(key=element, depth=depth+1) for element in self.walkable[key])
+            except ValueError:
+                return depth
+            
+        
     def walk(self, start=None):
         """Credit for the majority of this function goes to
         http://kmkeen.com/python-trees/2009-05-30-22-46-46-011.html
@@ -415,14 +467,14 @@ class Compound(object):
                 return key
         raise AttributeError("No such element in the compound")
 
-    def getRoot(self):
+    def get_root(self):
         """Determines the most appropriate 'root' molecule based on the number
         and order of their bonds, and secondly by their electronegativities in 
         the case of a tie
         """
         
         # Just assumes the first one is a good choice
-        most = sorted(self.atoms.keys())[0].root
+        most = self.atoms[sorted(self.atoms.keys())[0]].root
         stored = [sorted(self.atoms.keys())[0]]
         for key, value in self.atoms.items():
             if value.root > most:
@@ -433,13 +485,13 @@ class Compound(object):
 
         most = self.atoms[stored[0]].eneg
         if isinstance(most, basestring):
-            most = 0
+            most = 0      # This only happens if there is "No_Data"
         estored = stored[0]
 
         # Checks for electronegativity
         for key in stored:
             if isinstance(self.atoms[key].eneg, basestring):
-                continue # This only happens if there is "No_Data"
+                continue       # This only happens if there is "No_Data"
             if self.atoms[key].eneg > most:
                 most = self.atoms[key].eneg
                 estored = key
@@ -524,47 +576,52 @@ def fuzzy_comparison(walkable, hydrogens, pattern):
     """This method takes a walkable compound dictionary, a dictionary of
     available hydrogens, and a pka_pattern to compare to.  Runs a fuzzy comparison
     based on some constants that are tbd
+    
+    No idea how I'm doing this at the moment
     """
     
     ## str_print_dict(walkable)
     # heh.  Gives me a hydrogen first look
-    elbaklaw = walk_reverse(walkable, hydrogens) 
-    str_print_dict(elbaklaw) 
+    elbaklaw = walk_compound(hydrogens) 
+    ## str_print_dict(elbaklaw) 
     for key, connected_to in walkable.iteritems(): 
         pass # Doesn't do anything yet~
     return (0, 1000) # Just some nonsense values
 
 
-def walk_reverse(walkable, hydrogens):
-    """This method takes a walkable dictionary and a list of hydrogens, and then
-    reverse the orientation of the walkable dictionary such that hydrogens
-    are first
-    """
+fuzzy_comparison = Memoize(fuzzy_comparison)
 
-    # Logic is basically the same as Compound.build_walkable()    
-    reverse_walkable = OrderedDict()
+
+def walk_compound(start, root=False):
+    walkable = {}
     
     visited = set()
-    to_crawl = deque(hydrogens)
-    
+    if isinstance(start, list):
+        to_crawl = deque(start)
+    elif not root:
+        to_crawl = deque([start])
+    else:
+        to_crawl = deque([start])
+        walkable["root"] = [start]
+        
     while to_crawl:
         current = to_crawl.popleft()
         
         if current in visited:
             continue
-
-        if current not in reverse_walkable:
-            reverse_walkable[current] = [bond.get_other(current)
-                                         for bond in current.bonds
-                                         if
-                                         (bond.get_other(current) not in
-                                         reverse_walkable.keys())
-                                        ]
+        if current not in walkable:
+            walkable[current] = [bond.get_other(current)
+                                 for bond in current.bonds
+                                 if (bond.get_other(current) not in 
+                                 walkable.keys())
+                                ]    
+        
         visited.add(current)
-        node_children = set(reverse_walkable[current])
+        node_children = set(walkable[current])
         to_crawl.extend(node_children - visited)
     
-    return reverse_walkable
+    return walkable
+
 
 if __name__ == "__main__":
     """Main body of the program.  Creates some of the molecules and pka patterns
@@ -598,7 +655,5 @@ if __name__ == "__main__":
     ## compounds = map(Compound, molecules.values())
     comp = Compound(molecules["m3"]) # Just using one of them for now
     comp.getPKa() # Testing my pka stuff
-    ## str_print_dict(comp.walkable)
-    ## str_print_list(ac.walk())
-
-    ## acid_base_rxn(acid=hydronium, base=hydroxide, a=ad, b=bd, c=md)
+    str_print_dict(comp.walkable)
+    
