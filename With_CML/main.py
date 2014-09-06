@@ -105,12 +105,23 @@ def ret_str_list(alist):
 def str_print_dict(adict):
     """Prints a dictionary using str() instead of repr()"""
     print "{"
-    for key, value in adict.items():
-        if isinstance(value, list) or isinstance(value, tuple):
-            print " %s: %s," % (key, ret_str_list(value))
-        else:
-            print " %s: %s," % (key, value)
+    if "root" in adict:
+        print "root: %s" % ret_str_list(adict["root"])
+        s_keys = sorted(adict.keys(), key=lambda x: x.root if not x == "root" else "root")
+        print s_keys
+        for item in s_keys:
+            if item != "root":
+                print "%s: %s" % (item.name, ret_str_list(adict[item]))
+    else:
+        for key, value in adict.items():
+            if isinstance(value, list) or isinstance(value, tuple):
+                print " %s: %s," % (key, ret_str_list(value))
+            else:
+                print " %s: %s," % (key, value)
     print "}"
+    
+    
+
     
     
 def read_periodic_table():
@@ -357,38 +368,6 @@ class Compound(object):
         """
         
         self.walkable = walk_compound(self.atoms[self.root], root=True)
-        """        self.walkable = OrderedDict()
-        self.walkable["root"] = [self.atoms[self.get_root()]]
-        
-        visited = set()
-        to_crawl = deque(["root"])
-
-        while to_crawl: # while there are still things to crawl
-            current = to_crawl.popleft() # take the oldest
-
-            if current in visited: # no cycle
-                continue
-
-            if current not in self.walkable.keys(): # Adds it if:
-                                                     # 1. Other node is not in
-                                                     #    the current nodes
-                                                     # 2. It isn't the root 
-                                                     #  ... I think I can get rid of that part
-                self.walkable[current] = [bond.get_other(current)
-                                          for bond in current.bonds
-                                           if
-                                            (bond.get_other(current) not in
-                                             self.walkable.keys())
-                                           and
-                                            (bond.get_other(current) !=
-                                             self.walkable["root"][0])
-                                         ]
-
-            visited.add(current)
-            node_children = set(self.walkable[current])
-            to_crawl.extend(node_children - visited) # rappends new options
-        """
-        str_print_dict(self.walkable)
         self.depth = self.get_depth()
         
     def get_depth(self, key=None, depth=1):
@@ -611,9 +590,9 @@ def walk_compound(start, root=False):
             continue
         if current not in walkable:
             walkable[current] = [bond.get_other(current)
-                                 for bond in current.bonds
-                                 if (bond.get_other(current) not in 
-                                 walkable.keys())
+                                  for bond in current.bonds
+                                   if (bond.get_other(current) not in 
+                                   walkable.keys())
                                 ]    
         
         visited.add(current)
