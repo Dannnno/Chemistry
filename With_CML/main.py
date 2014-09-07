@@ -40,7 +40,7 @@ water = {"atoms": {
                    "b2": ("a2", "a3", 1)
                   }
         }
-        
+
 carb_acid = {"atoms": {
                        "a1": "H",
                        "a2": "H",
@@ -60,10 +60,10 @@ carb_acid = {"atoms": {
                        "b6": ("a4", "a7", 1),
                        "b7": ("a6", "a8", 2),
                       }
-            }                      
+            }
 
 # This variable is used for the Compound.getPKa() method.  It uses some common
-# PKa patterns to assign approximate PKas to various molecules.  There will also 
+# PKa patterns to assign approximate PKas to various molecules.  There will also
 # be program logic to work on an unknown compound, eventually
 pka_patterns = pka.pka_patterns
 
@@ -78,18 +78,27 @@ def convert_type(cell, typ):
     """
 
     try:
+        if typ == str_to_list:
+            return typ(cell, mapped=int)
         return typ(cell)
     except (TypeError, ValueError):
         return "No_Data" # The nomiker I have chosen for missing data
 
 
-def str_to_list(a_stringy_list):
+def str_to_list(a_stringy_list, mapped=None):
     """Takes a string that looks like a list and makes it a list
     Usage:
-        >>>str_to_list("[1, 2, 3]") -> ["1", "2", "3"]
+        >>> str_to_list("[1, 2, 3]")
+        ["1", "2", "3"]
+    If mapped is provided a function it will map that function to the list
     """
-    
-    return a_stringy_list[1:-1].split(",")
+    the_list = a_stringy_list[1:-1].split(",")
+    try:
+        # Fun fact, mapping 'None' to a list just returns the list
+        return map(mapped, the_list)
+    except ValueError: #Exception:
+        print "Function %s couldn't be mapped to list " % str(mapped), the_list
+        return the_list
 
 
 def str_print_list(alist):
@@ -119,11 +128,8 @@ def str_print_dict(adict):
             else:
                 print " %s: %s," % (key, value)
     print "}"
-    
-    
 
-    
-    
+
 def read_periodic_table():
     """Reads a csv file that represents all elements and pertinant data regarding
     them and then returns them as an OrderedDict
@@ -147,14 +153,14 @@ def read_periodic_table():
             return per_table
 
 
-periodic_table = read_periodic_table() # Populates a 'periodic table' 
-                                       # that contains all the pertinent 
+periodic_table = read_periodic_table() # Populates a 'periodic table'
+                                       # that contains all the pertinent
                                        # data for creating elements
 
 
 class Memoize:
     """Taken from http://stackoverflow.com/a/1988826/3076272"""
-    
+
     def __init__(self, f):
         self.f = f
         self.memo = {}
@@ -185,7 +191,7 @@ class Element(object):
             self.ismetal = False # Work out a way to do this
             self.root = 0
             self.check_root()
-            
+
         except KeyError as e:
             print e
 
@@ -193,7 +199,7 @@ class Element(object):
         """Adds a bond to self and then to the other node"""
         try:
             if isinstance(other, Element):
-                # bond_info is a tuple of varying size, depending on the 
+                # bond_info is a tuple of varying size, depending on the
                 # specificity of bond object.  Contains a number of kwargs
                 temp_bond = Bond(self, other, *bond_info)
                 self.bonds.append(temp_bond)
@@ -207,7 +213,7 @@ class Element(object):
         except BondingException as BE:
             print BE
             return
-        
+
         else:
             self.check_root() # Revalues the element's value as a 'root' node
 
@@ -232,10 +238,10 @@ class Element(object):
         except BondingException as BE:
             print BE
             return
-            
+
         else:
             self.check_root() # Revalues the element's value as a 'root' node
-            
+
     def check_root(self):
         """Function that determines how many 'children' the node (element) can
         have.  Double/Triple bonds are considered as well.  Electronegativity is
@@ -253,26 +259,26 @@ class Element(object):
         return ''.join(["Element %s bonded to " % self.name,
                          ret_str_list([bond.get_other(self)
                                        for bond in self.bonds])])
-                                       
+
 """    def __eq__(self, other):
         Maybe I'm misreading this... but I think I just made a very recursive
         definition of this...
-        
-        
+
+
         if isinstance(other, Element):
             if other.name == self.name:
                 if sorted(lambda x: x.getOther(), self.bonds) == \
                     sorted(lambda x: x.getOther(), other.bonds):
                     return True
-        
+
         return False
-        
-        
+
+
         if isinstance(other, Element):
             if other.name == self.name:
                 return True
-        
-        return False        
+
+        return False
 """
 
 class Bond(object):
@@ -289,7 +295,7 @@ class Bond(object):
         self.type = self.eval_bond() # Cleaner to do it this way imo
 
     def get_other(self, atom):
-        """Method that determines the second node in a bond after being provided 
+        """Method that determines the second node in a bond after being provided
         with the other
         """
         if self.first == atom:
@@ -333,7 +339,7 @@ class Compound(object):
         """Creates a molecule representation based on the input structured
         based on CheML.CMLParser()'s output
         """
-        # I create deep copies because I'm not sure if I want to be able to 
+        # I create deep copies because I'm not sure if I want to be able to
         # safely mutate the originals or not
         self.atoms = deepcopy(mole_dict["atoms"])
         self.bonds = deepcopy(mole_dict["bonds"])
@@ -357,23 +363,23 @@ class Compound(object):
         self.root = self.get_root()
         self.build_walkable()
         self.depth = self.get_depth()
-        self.pka = (100, "") 
+        self.pka = (100, "")
         ## self.getPKa()
 
     def build_walkable(self):
         """Builds a version of self.atoms that can be traversed by the
         Compound.walk() method
-        
+
         Doesn't handle cycles or rings
         """
-        
+
         self.walkable = walk_compound(self.atoms[self.root], root=True)
         self.depth = self.get_depth()
-        
+
     def get_depth(self, key=None, depth=1):
         """Gets the depth of the walkable dictionary"""
         self.depth = 0
-        
+
         if key is None:
             return self.get_depth(key=self.walkable["root"][0])
         else:
@@ -381,46 +387,16 @@ class Compound(object):
                 return max(self.get_depth(key=element, depth=depth+1) for element in self.walkable[key])
             except ValueError:
                 return depth
-            
-        
-    def walk(self, start=None):
-        """Credit for the majority of this function goes to
-        http://kmkeen.com/python-trees/2009-05-30-22-46-46-011.html
-        """
-
-        # logic is largely the same as self.build_walkable()
-        
-        if start is None:
-            start = self.walkable["root"]
-        elif start in self.walkable.keys():
-            pass
-        else:
-            raise ReactionException("Starting location not present in molecule")
-
-        visited = set()
-        to_crawl = deque([start])
-
-        while to_crawl:
-            current = to_crawl.popleft()
-            if current in visited:
-                continue
-            visited.add(current)
-            node_children = set(self.walkable[current])
-            to_crawl.extend(node_children - visited)
-
-        visited = list(visited)
-        visited.insert(0, start)
-        return visited
 
     def getPKa(self):
-        """Determines the approximate PKa of the most acidic hydrogen in the 
+        """Determines the approximate PKa of the most acidic hydrogen in the
         molecule.  Returns a tuple of form (pka_value, atom_id).  Relies on some
         fuzzy comparisons and will need constants tweaked
         """
-        
-        hydrogens = [hyd 
-                     for hyd in self.walkable.keys() 
-                      if (isinstance(hyd, Element) and 
+
+        hydrogens = [hyd
+                     for hyd in self.walkable.keys()
+                      if (isinstance(hyd, Element) and
                           hyd.name == "Hydrogen")
                     ]
         ## str_print_list(hydrogens)
@@ -448,10 +424,10 @@ class Compound(object):
 
     def get_root(self):
         """Determines the most appropriate 'root' molecule based on the number
-        and order of their bonds, and secondly by their electronegativities in 
+        and order of their bonds, and secondly by their electronegativities in
         the case of a tie
         """
-        
+
         # Just assumes the first one is a good choice
         most = self.atoms[sorted(self.atoms.keys())[0]].root
         stored = [sorted(self.atoms.keys())[0]]
@@ -487,7 +463,7 @@ class Compound(object):
 class BondingException(Exception):
 
     def __init__(self, err_message="Bonding Error"):
-        """An exception to be used when a bonding error occurs.  A more 
+        """An exception to be used when a bonding error occurs.  A more
         descriptive error message is encouraged
         """
         self.err_message = err_message
@@ -502,7 +478,7 @@ class BondingException(Exception):
 class ReactionException(Exception):
 
     def __init__(self, err_message="Reaction Error"):
-        """An exception to be used when a reaction error occurs.  A more 
+        """An exception to be used when a reaction error occurs.  A more
         descriptive error message is encouraged
         """
         self.err_message = err_message
@@ -539,31 +515,31 @@ def acid_base_rxn(acid=hydronium, base=hydroxide, aqueous=True, **kwargs):
 
 def remove_proton(acid):
     """Removes a proton from a compound (acid) and then recalculates its pka"""
-    
+
     # This will eventually have stuff that actually removes a proton
     acid.pka = acid.getPKa()  # Has to be reset after the changes occur
 
 
 def add_proton(base):
     """Adds a proton to a compound (base) and then recalculates its pka"""
-    
+
     # This will eventually have stuff that actually adds a proton
     base.pka = base.getPKa()
-    
-    
+
+
 def fuzzy_comparison(walkable, hydrogens, pattern):
     """This method takes a walkable compound dictionary, a dictionary of
     available hydrogens, and a pka_pattern to compare to.  Runs a fuzzy comparison
     based on some constants that are tbd
-    
+
     No idea how I'm doing this at the moment
     """
-    
+
     ## str_print_dict(walkable)
     # heh.  Gives me a hydrogen first look
-    elbaklaw = walk_compound(hydrogens) 
-    ## str_print_dict(elbaklaw) 
-    for key, connected_to in walkable.iteritems(): 
+    elbaklaw = walk_compound(hydrogens)
+    ## str_print_dict(elbaklaw)
+    for key, connected_to in walkable.iteritems():
         pass # Doesn't do anything yet~
     return (0, 1000) # Just some nonsense values
 
@@ -573,7 +549,7 @@ fuzzy_comparison = Memoize(fuzzy_comparison)
 
 def walk_compound(start, root=False):
     walkable = {}
-    
+
     visited = set()
     if isinstance(start, list):
         to_crawl = deque(start)
@@ -582,42 +558,42 @@ def walk_compound(start, root=False):
     else:
         to_crawl = deque([start])
         walkable["root"] = [start]
-        
+
     while to_crawl:
         current = to_crawl.popleft()
-        
+
         if current in visited:
             continue
         if current not in walkable:
             walkable[current] = [bond.get_other(current)
                                   for bond in current.bonds
-                                   if (bond.get_other(current) not in 
+                                   if (bond.get_other(current) not in
                                    walkable.keys())
-                                ]    
-        
+                                ]
+
         visited.add(current)
         node_children = set(walkable[current])
         to_crawl.extend(node_children - visited)
-    
+
     return walkable
 
 
 if __name__ == "__main__":
     """Main body of the program.  Creates some of the molecules and pka patterns
-    and gets everything set up to actually react some stuff.  Full of testing 
+    and gets everything set up to actually react some stuff.  Full of testing
     stuff, will be cleaner and probably in a function, eventually
     """
-    
-    molecules = {''.join(['m', str(i)]): molecule 
-                 for i, molecule in 
+
+    molecules = {''.join(['m', str(i)]): molecule
+                 for i, molecule in
                  enumerate([hydronium, hydroxide, water, carb_acid])
                 } # Just the molecules I have ready for testing purposes
-                
+
     length = len(molecules)
 
     # Making some cml files for funsies.  Will be
     # removed when I'm sure the CML stuff won't change
-    for key in molecules.keys(): 
+    for key in molecules.keys():
         CheML.CMLBuilder(molecules[key], key, ''.join([key, ".cml"]))
 
     molecules = OrderedDict() # Reassings this name! But its okay, it'll use
@@ -625,14 +601,13 @@ if __name__ == "__main__":
     for filename in [''.join(['m', str(i), ".cml"]) for i in range(length)]:
         mole = CheML.CMLParser(filename) # Parsing those files I made above
         molecules[mole.id] = mole.molecule
-    
+
     # Setting the pka values for my predetermined values
-    for mol_pka, molecule, h_id in pka_patterns.values(): 
+    for mol_pka, molecule, h_id in pka_patterns.values():
         molecule = Compound(molecule)
         mol_pka = (molecule.pka, h_id)
-        
+
     ## compounds = map(Compound, molecules.values())
     comp = Compound(molecules["m3"]) # Just using one of them for now
     comp.getPKa() # Testing my pka stuff
     str_print_dict(comp.walkable)
-    
