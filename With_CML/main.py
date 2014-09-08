@@ -62,7 +62,7 @@ carb_acid = {"atoms": {
                       }
             }
 
-# This variable is used for the Compound.getPKa() method.  It uses some common
+# This variable is used for the Compound.get_PKa() method.  It uses some common
 # PKa patterns to assign approximate PKas to various molecules.  There will also
 # be program logic to work on an unknown compound, eventually
 pka_patterns = pka.pka_patterns
@@ -97,7 +97,7 @@ def str_to_list(a_stringy_list, mapped=None):
         # Fun fact, mapping 'None' to a list just returns the list
         return map(mapped, the_list)
     except ValueError: #Exception:
-        print "Function %s couldn't be mapped to list " % str(mapped), the_list
+        # print "Function %s couldn't be mapped to list " % str(mapped), the_list
         return the_list
 
 
@@ -111,22 +111,33 @@ def ret_str_list(alist):
     return "["+", ".join(map(str, alist))+"]"
 
 
+#def str_print_dict(adict):
+#    """Prints a dictionary using str() instead of repr()"""
+#    print "{"
+#    if "root" in adict:
+#        print "root: %s" % ret_str_list(adict["root"])
+#        s_keys = sorted(adict.keys(), key=lambda x: x.root if not x == "root" else "root")
+#        print s_keys
+#        for item in s_keys:
+#            if item != "root":
+#                print "%s: %s" % (item.name, ret_str_list(adict[item]))
+#    else:
+#        for key, value in adict.items():
+#            if isinstance(value, list) or isinstance(value, tuple):
+#                print " %s: %s," % (key, ret_str_list(value))
+#            else:
+#                print " %s: %s," % (key, value)
+#    print "}"
+
+
 def str_print_dict(adict):
     """Prints a dictionary using str() instead of repr()"""
     print "{"
-    if "root" in adict:
-        print "root: %s" % ret_str_list(adict["root"])
-        s_keys = sorted(adict.keys(), key=lambda x: x.root if not x == "root" else "root")
-        print s_keys
-        for item in s_keys:
-            if item != "root":
-                print "%s: %s" % (item.name, ret_str_list(adict[item]))
-    else:
-        for key, value in adict.items():
-            if isinstance(value, list) or isinstance(value, tuple):
-                print " %s: %s," % (key, ret_str_list(value))
-            else:
-                print " %s: %s," % (key, value)
+    for key, value in adict.items():
+        if isinstance(value, list) or isinstance(value, tuple):
+            print " %s: %s," % (key, ret_str_list(value))
+        else:
+            print " %s: %s," % (key, value)
     print "}"
 
 
@@ -158,16 +169,23 @@ periodic_table = read_periodic_table() # Populates a 'periodic table'
                                        # data for creating elements
 
 
-class Memoize:
-    """Taken from http://stackoverflow.com/a/1988826/3076272"""
-
-    def __init__(self, f):
-        self.f = f
-        self.memo = {}
-    def __call__(self, *args):
-        if not str(args) in self.memo:
-            self.memo[str(args)] = self.f(*args)
-        return self.memo[str(args)]
+#class Memoize:
+#    """Taken from http://stackoverflow.com/a/1988826/3076272"""
+#
+#    def __init__(self, f):
+#        self.f = f
+#        self.memo = {}
+#    def __call__(self, *args, **kwargs):
+#        print args, type(args)
+#        print kwargs
+#        if kwargs:
+#            if not (str(args), str(kwargs)) in self.memo:
+#                self.memo[(str(args), str(kwargs))] = self.f(*args, **kwargs)
+#        else:
+#            if not str(args) in self.memo:
+#                self.memo[str(args)] = self.f(*args)
+#
+#        return self.memo[str(args)]
 
 
 class Element(object):
@@ -256,30 +274,17 @@ class Element(object):
         return self.name
 
     def __repr__(self):
+        return str(self)
         return ''.join(["Element %s bonded to " % self.name,
                          ret_str_list([bond.get_other(self)
                                        for bond in self.bonds])])
 
-"""    def __eq__(self, other):
-        Maybe I'm misreading this... but I think I just made a very recursive
-        definition of this...
+    def __eq__(self, other):
+        return (isinstance(other, self.__class__)
+            and self.__dict__ == other.__dict__)
 
-
-        if isinstance(other, Element):
-            if other.name == self.name:
-                if sorted(lambda x: x.getOther(), self.bonds) == \
-                    sorted(lambda x: x.getOther(), other.bonds):
-                    return True
-
-        return False
-
-
-        if isinstance(other, Element):
-            if other.name == self.name:
-                return True
-
-        return False
-"""
+    def __ne__(self, other):
+        return not self.__eq__(other)
 
 class Bond(object):
 
@@ -328,6 +333,7 @@ class Bond(object):
         return "Bond between %s and %s" % (self.first.name, self.second.name)
 
     def __repr__(self):
+        return str(self)
         return "%s bond between %s and %s of order %d with %s chirality" \
                 % (self.type, self.first.name, self.second.name,
                    self.order, self.chirality)
@@ -364,7 +370,7 @@ class Compound(object):
         self.build_walkable()
         self.depth = self.get_depth()
         self.pka = (100, "")
-        ## self.getPKa()
+        ## self.get_PKa()
 
     def build_walkable(self):
         """Builds a version of self.atoms that can be traversed by the
@@ -388,7 +394,7 @@ class Compound(object):
             except ValueError:
                 return depth
 
-    def getPKa(self):
+    def get_PKa(self):
         """Determines the approximate PKa of the most acidic hydrogen in the
         molecule.  Returns a tuple of form (pka_value, atom_id).  Relies on some
         fuzzy comparisons and will need constants tweaked
@@ -413,6 +419,7 @@ class Compound(object):
                 pka = comparison[1]
                 h_id = self.getID(hyd)
                 threshold = comparison[0]
+            break
         return (pka, h_id)
 
     def getID(self, element):
@@ -517,14 +524,14 @@ def remove_proton(acid):
     """Removes a proton from a compound (acid) and then recalculates its pka"""
 
     # This will eventually have stuff that actually removes a proton
-    acid.pka = acid.getPKa()  # Has to be reset after the changes occur
+    acid.pka = acid.get_PKa()  # Has to be reset after the changes occur
 
 
 def add_proton(base):
     """Adds a proton to a compound (base) and then recalculates its pka"""
 
     # This will eventually have stuff that actually adds a proton
-    base.pka = base.getPKa()
+    base.pka = base.get_PKa()
 
 
 def fuzzy_comparison(walkable, hydrogens, pattern):
@@ -535,16 +542,19 @@ def fuzzy_comparison(walkable, hydrogens, pattern):
     No idea how I'm doing this at the moment
     """
 
-    ## str_print_dict(walkable)
+    # This gives me a walkable compound rooted at the acidic proton
+    str_print_dict(walkable)
+    target = walk_compound(pattern[1].atoms[pattern[2]], root=True)
+    str_print_dict(target)
     # heh.  Gives me a hydrogen first look
     elbaklaw = walk_compound(hydrogens)
-    ## str_print_dict(elbaklaw)
+    str_print_dict(elbaklaw)
     for key, connected_to in walkable.iteritems():
         pass # Doesn't do anything yet~
     return (0, 1000) # Just some nonsense values
 
 
-fuzzy_comparison = Memoize(fuzzy_comparison)
+# fuzzy_comparison = Memoize(fuzzy_comparison)
 
 
 def walk_compound(start, root=False):
@@ -578,6 +588,9 @@ def walk_compound(start, root=False):
     return walkable
 
 
+# walk_compound = Memoize(walk_compound)
+
+
 if __name__ == "__main__":
     """Main body of the program.  Creates some of the molecules and pka patterns
     and gets everything set up to actually react some stuff.  Full of testing
@@ -603,11 +616,12 @@ if __name__ == "__main__":
         molecules[mole.id] = mole.molecule
 
     # Setting the pka values for my predetermined values
-    for mol_pka, molecule, h_id in pka_patterns.values():
+    for key, (mol_pka, molecule, h_id) in pka_patterns.items():
         molecule = Compound(molecule)
-        mol_pka = (molecule.pka, h_id)
+        molecule.pka = (mol_pka, h_id)
+        pka_patterns[key] = (mol_pka, molecule, h_id)
 
     ## compounds = map(Compound, molecules.values())
     comp = Compound(molecules["m3"]) # Just using one of them for now
-    comp.getPKa() # Testing my pka stuff
-    str_print_dict(comp.walkable)
+    comp.get_PKa() # Testing my pka stuff
+    ## str_print_dict(comp.walkable)
