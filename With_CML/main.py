@@ -189,6 +189,92 @@ periodic_table = read_periodic_table() # Populates a 'periodic table'
                                        # data for creating elements
 
 
+def get_pka(hydrogen):
+    if hydrogen.bonds:
+        other = hydrogen.bonds[0].get_other(hydrogen)
+        if other.name == "Carbon":
+            if len(other.bonds) == 4:
+                print "SP3 Carbon"
+                return 50.
+            elif len(other.bonds) == 3:
+                if other.root == 4:
+                    print "SP2 Carbon"
+                    return 44.
+                raise NotImplementedError("Carbon Ion")
+            elif len(other.bonds) == 2:
+                if other.root == 4:
+                    print "SP Carbon"
+                    return 25.
+                raise NotImplementedError("Carbon Ion")
+        elif other.name == "Nitrogen":
+            if len(other.bonds) == 4:
+                print "Positive Nitrogen"
+                return 9.2
+            elif len(other.bonds) == 3:
+                print "Amine"
+                return 38.
+            raise NotImplementedError("Nitrogen problem")
+        elif other.name == "Hydrogen":
+            print "Conjugate acid of H-"
+            return 35.
+        elif other.name == "Sulfur":
+            if len(other.bonds) == 2:
+                print "Thiol"
+                return 7.
+            raise NotImplementedError("Sulfur problem")
+        elif other.name == "Chlorine":
+            print "Hydrochloric acid"
+            return -6.
+        elif other.name == "Bromine":
+            print "Hydrobromic acid"
+            return -9.
+        elif other.name == "Iodine":
+            print "Hydroiodic acid"
+            return -10.
+        elif other.name == "Oxygen":
+            # Things get hairy
+            if len(other.bonds) == 3:
+                print "Positive Oxygen"
+                return -2.
+            elif len(other.bonds) == 2:
+                next_other = other.bonds[0].get_other(other)
+                next_name = next_other.name
+                if next_name == "Carbon":
+                    if next_other.is_aromatic:
+                        print "Phenol"
+                        raise NotImplementedError("Aromatic system")
+                    elif len(next_other.bonds) == 4:
+                        print "Alcohol"
+                        return 16.
+                    elif next_other.root == 4:
+                        for bond in next_other.bonds:
+                            next_next = bond.get_other(next_other)
+                            if (next_next.name == "Oxygen" and
+                            bond.order == 2):
+                                continue
+                            if next_next.name == "Carbon":
+                                if any((abond.get_other(next_next).eneg > 2.5)
+                                       for abond in next_next.bonds):
+                                       print "Carboxylic acid with eneg groups"
+                                       return 0.2
+                                else:
+                                    print "Carboxylic acid"
+                                    return 4.8
+                            raise NotImplementedError("What is happening here")
+                elif next_name == "Hydrogen":
+                    print "Water"
+                    return 15.7
+                elif next_name == "Sulfur":
+                    print "Sulfuric acid"
+                    return -9.
+            elif other.root == 3:
+                print "Protonated diene system"
+                raise NotImplementedError("Protonated diene")
+        raise NotImplementedError("We got to the end~")            
+    else:
+        raise NotImplementedError("This hydrogen isn't bonded to anything")
+        
+        
 #class Memoize:
 #    """Taken from http://stackoverflow.com/a/1988826/3076272"""
 #
@@ -226,10 +312,13 @@ class Element(object):
             self.radius = periodic_table[symbol][10]
             self.oxid = periodic_table[symbol][11]
             self.bonds = []
-            self.ismetal = False # Work out a way to do this
             self.root = 0
             self.check_root()
-
+            
+            # Work out a way to do these
+            self.ismetal = False 
+            self.is_aromatic = False
+            
         except KeyError as e:
             print e
 
@@ -390,7 +479,7 @@ class Compound(object):
         self.build_walkable()
         self.depth = self.get_depth()
         self.pka = (100, "")
-        ## self.get_PKa()
+        self.get_PKa()
 
     def build_walkable(self):
         """Builds a version of self.atoms that can be traversed by the
@@ -426,21 +515,23 @@ class Compound(object):
                           hyd.name == "Hydrogen")
                     ]
         ## str_print_list(hydrogens)
+        
         pka = 1000
         h_id = self.getID(hydrogens[0])
-        threshold = 0
-        for name, pattern in pka_patterns.items():
-            # runs a fuzzy comparison on each hydrogen to the pattern
-            # constants will need tweaking, as will implementation
-            comparison = fuzzy_comparison(self.walkable, hydrogens, pattern)
-            if comparison[0] > threshold:
-                if comparison[0] == 1:
-                    return (comparison[1], self.getID(hyd))
-                pka = comparison[1]
-                h_id = self.getID(hyd)
-                threshold = comparison[0]
-            break
-        return (pka, h_id)
+        # threshold = 0
+        self.pka = (min(map(get_pka, hydrogens) + [pka]), h_id)
+        #for name, pattern in pka_patterns.items():
+        #    # runs a fuzzy comparison on each hydrogen to the pattern
+        #    # constants will need tweaking, as will implementation
+        #    comparison = fuzzy_comparison(self.walkable, hydrogens, pattern)
+        #    if comparison[0] > threshold:
+        #        if comparison[0] == 1:
+        #            return (comparison[1], self.getID(hyd))
+        #        pka = comparison[1]
+        #        h_id = self.getID(hyd)
+        #        threshold = comparison[0]
+        #    break
+        #return (pka, h_id)
 
     def getID(self, element):
         """Returns the id of an atom in a molecule"""
@@ -616,7 +707,6 @@ if __name__ == "__main__":
     and gets everything set up to actually react some stuff.  Full of testing
     stuff, will be cleaner and probably in a function, eventually
     """
-
     molecules = {''.join(['m', str(i)]): molecule
                  for i, molecule in
                  enumerate([hydronium, hydroxide, water, carb_acid])
@@ -637,11 +727,32 @@ if __name__ == "__main__":
 
     # Setting the pka values for my predetermined values
     for key, (mol_pka, molecule, h_id) in pka_patterns.items():
-        molecule = Compound(molecule)
-        molecule.pka = (mol_pka, h_id)
-        pka_patterns[key] = (mol_pka, molecule, h_id)
+        try:
+            molecule = Compound(molecule)
+            # molecule.pka = (mol_pka, h_id)
+            # pka_patterns[key] = (mol_pka, molecule, h_id)
+            print molecule.pka
+        except NotImplementedError as e:
+            str_print_dict(molecule)
+            print e
 
     ## compounds = map(Compound, molecules.values())
     comp = Compound(molecules["m3"]) # Just using one of them for now
-    comp.get_PKa() # Testing my pka stuff
-    ## str_print_dict(comp.walkable)
+    ## str_print_dict(comp.walkable) # comp
+    ## get_pka = time_decorator(get_pka)
+    print comp.pka
+    # This (mostly) correctly outputs the different hydrogens
+    # SP3 Carbon
+    # get_pka executed in 0.00 seconds
+    #
+    # SP3 Carbon
+    # get_pka executed in 0.00 seconds
+    #     
+    # SP3 Carbon
+    # get_pka executed in 0.00 seconds
+    #   
+    # Carboxylic acid with eneg groups 
+    # This is wrong. We should see that this is a normal Carboxylic acid                                        
+    # get_pka executed in 0.00 seconds
+    #     
+    # (0.2, "a1")
