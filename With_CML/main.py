@@ -1,9 +1,10 @@
-import csv
 from copy import deepcopy
 from collections import deque
 from collections import OrderedDict
 import sys
 import pka
+import time
+import csv
 sys.path.insert(0, "C:/Users/Dan/Desktop/Programming/GitHub/Chemistry")
 from CheML import CheML
 
@@ -67,6 +68,25 @@ carb_acid = {"atoms": {
 # be program logic to work on an unknown compound, eventually
 pka_patterns = pka.pka_patterns
 
+
+def time_decorator(my_function):
+    """ This is a decorator I use to test how long my different functions take.
+    Hopefully I can use this to determine which method of checking is ideal
+
+    By which method I mean either:
+        1. Hardcoding how to scan a molecule's hydrogens and use some algorithm
+           to assign a pka value (or range)
+        2. Compare everything to my predetermined pka pattern/values and then
+           assign a pka based on similarity
+    """
+
+    def inner(*args, **kwargs):
+        start = time.time()
+        return_value = my_function(*args, **kwargs)
+        end = time.time()
+        print "%s executed in %.2f seconds\n" % (my_function.__name__, end-start)
+        return return_value
+    return inner
 
 def convert_type(cell, typ):
     """Credit to SO user Marius for (most of) this function
