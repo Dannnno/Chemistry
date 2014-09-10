@@ -117,7 +117,7 @@ def str_to_list(a_stringy_list, mapped=None):
         # Fun fact, mapping 'None' to a list just returns the list
         return map(mapped, the_list)
     except ValueError: #Exception:
-        # print "Function %s couldn't be mapped to list " % str(mapped), the_list
+        ## print "Function %s couldn't be mapped to list " % str(mapped), the_list
         return the_list
 
 
@@ -194,47 +194,51 @@ def get_pka(hydrogen):
         other = hydrogen.bonds[0].get_other(hydrogen)
         if other.name == "Carbon":
             if len(other.bonds) == 4:
-                print "SP3 Carbon"
+                ## print "SP3 Carbon"
                 return 50.
             elif len(other.bonds) == 3:
                 if other.root == 4:
-                    print "SP2 Carbon"
+                    ## print "SP2 Carbon"
                     return 44.
+                str_print_list(other.bonds)
+                print len(other.bonds), other.root
+                for bond in other.bonds:
+                    print bond, bond.order
                 raise NotImplementedError("Carbon Ion")
             elif len(other.bonds) == 2:
                 if other.root == 4:
-                    print "SP Carbon"
+                    ## print "SP Carbon"
                     return 25.
                 raise NotImplementedError("Carbon Ion")
         elif other.name == "Nitrogen":
             if len(other.bonds) == 4:
-                print "Positive Nitrogen"
+                ## print "Positive Nitrogen"
                 return 9.2
             elif len(other.bonds) == 3:
-                print "Amine"
+                ## print "Amine"
                 return 38.
             raise NotImplementedError("Nitrogen problem")
         elif other.name == "Hydrogen":
-            print "Conjugate acid of H-"
+            ## print "Conjugate acid of H-"
             return 35.
         elif other.name == "Sulfur":
             if len(other.bonds) == 2:
-                print "Thiol"
+                ## print "Thiol"
                 return 7.
             raise NotImplementedError("Sulfur problem")
         elif other.name == "Chlorine":
-            print "Hydrochloric acid"
+            ## print "Hydrochloric acid"
             return -6.
         elif other.name == "Bromine":
-            print "Hydrobromic acid"
+            ## print "Hydrobromic acid"
             return -9.
         elif other.name == "Iodine":
-            print "Hydroiodic acid"
+            ## print "Hydroiodic acid"
             return -10.
         elif other.name == "Oxygen":
             # Things get hairy
             if len(other.bonds) == 3:
-                print "Positive Oxygen"
+                ## print "Positive Oxygen"
                 return -2.
             elif len(other.bonds) == 2:
                 next_other = other.bonds[0].get_other(other)
@@ -244,7 +248,7 @@ def get_pka(hydrogen):
                         print "Phenol"
                         raise NotImplementedError("Aromatic system")
                     elif len(next_other.bonds) == 4:
-                        print "Alcohol"
+                        ## print "Alcohol"
                         return 16.
                     elif next_other.root == 4:
                         for bond in next_other.bonds:
@@ -262,19 +266,19 @@ def get_pka(hydrogen):
                                     return 4.8
                             raise NotImplementedError("What is happening here")
                 elif next_name == "Hydrogen":
-                    print "Water"
+                    ## print "Water"
                     return 15.7
                 elif next_name == "Sulfur":
-                    print "Sulfuric acid"
+                    ## print "Sulfuric acid"
                     return -9.
             elif other.root == 3:
                 print "Protonated diene system"
                 raise NotImplementedError("Protonated diene")
-        raise NotImplementedError("We got to the end~")            
+        raise NotImplementedError("Nothing matches")
     else:
         raise NotImplementedError("This hydrogen isn't bonded to anything")
-        
-        
+
+
 #class Memoize:
 #    """Taken from http://stackoverflow.com/a/1988826/3076272"""
 #
@@ -314,11 +318,11 @@ class Element(object):
             self.bonds = []
             self.root = 0
             self.check_root()
-            
+
             # Work out a way to do these
-            self.ismetal = False 
+            self.ismetal = False
             self.is_aromatic = False
-            
+
         except KeyError as e:
             print e
 
@@ -374,10 +378,10 @@ class Element(object):
         have.  Double/Triple bonds are considered as well.  Electronegativity is
         taken into account elsewhere
         """
-
-        self.root = 0
+        acc = 0
         for bond in self.bonds:
-            self.root += int(bond.order)
+            acc += bond.order
+        self.root = acc
 
     def __str__(self):
         return self.name
@@ -404,7 +408,7 @@ class Bond(object):
         """
         self.first = first_element
         self.second = second_element
-        self.order = order
+        self.order = int(order)
         self.chirality = chirality
         self.type = self.eval_bond() # Cleaner to do it this way imo
 
@@ -479,7 +483,7 @@ class Compound(object):
         self.build_walkable()
         self.depth = self.get_depth()
         self.pka = (100, "")
-        self.get_PKa()
+        ## self.get_PKa()
 
     def build_walkable(self):
         """Builds a version of self.atoms that can be traversed by the
@@ -515,7 +519,7 @@ class Compound(object):
                           hyd.name == "Hydrogen")
                     ]
         ## str_print_list(hydrogens)
-        
+
         pka = 1000
         h_id = self.getID(hydrogens[0])
         # threshold = 0
@@ -729,30 +733,32 @@ if __name__ == "__main__":
     for key, (mol_pka, molecule, h_id) in pka_patterns.items():
         try:
             molecule = Compound(molecule)
-            # molecule.pka = (mol_pka, h_id)
-            # pka_patterns[key] = (mol_pka, molecule, h_id)
-            print molecule.pka
+            molecule.get_PKa()
+            molecule.pka = (mol_pka, h_id)
+            pka_patterns[key] = (mol_pka, molecule, h_id)
+            # print molecule.pka
         except NotImplementedError as e:
-            str_print_dict(molecule)
-            print e
+            print key,": issue with", e
+            str_print_dict(molecule.walkable)
+            pass
 
     ## compounds = map(Compound, molecules.values())
-    comp = Compound(molecules["m3"]) # Just using one of them for now
+    ## comp = Compound(molecules["m3"]) # Just using one of them for now
     ## str_print_dict(comp.walkable) # comp
     ## get_pka = time_decorator(get_pka)
-    print comp.pka
+    ## print comp.pka
     # This (mostly) correctly outputs the different hydrogens
     # SP3 Carbon
     # get_pka executed in 0.00 seconds
     #
     # SP3 Carbon
     # get_pka executed in 0.00 seconds
-    #     
+    #
     # SP3 Carbon
     # get_pka executed in 0.00 seconds
-    #   
-    # Carboxylic acid with eneg groups 
-    # This is wrong. We should see that this is a normal Carboxylic acid                                        
+    #
+    # Carboxylic acid with eneg groups
+    # This is wrong. We should see that this is a normal Carboxylic acid
     # get_pka executed in 0.00 seconds
-    #     
+    #
     # (0.2, "a1")
