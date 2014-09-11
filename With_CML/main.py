@@ -199,7 +199,7 @@ def get_pka(hydrogen):
             elif len(other.bonds) == 3:
                 if other.root == 4:
                     ## print "SP2 Carbon"
-                    return 44.
+                    return 43.
                 str_print_list(other.bonds)
                 print len(other.bonds), other.root
                 for bond in other.bonds:
@@ -213,18 +213,18 @@ def get_pka(hydrogen):
         elif other.name == "Nitrogen":
             if len(other.bonds) == 4:
                 ## print "Positive Nitrogen"
-                return 9.2
+                return 10.
             elif len(other.bonds) == 3:
                 ## print "Amine"
-                return 38.
+                return 35.
             raise NotImplementedError("Nitrogen problem")
         elif other.name == "Hydrogen":
             ## print "Conjugate acid of H-"
-            return 35.
+            return 42.
         elif other.name == "Sulfur":
             if len(other.bonds) == 2:
                 ## print "Thiol"
-                return 7.
+                return 13.
             raise NotImplementedError("Sulfur problem")
         elif other.name == "Chlorine":
             ## print "Hydrochloric acid"
@@ -235,11 +235,14 @@ def get_pka(hydrogen):
         elif other.name == "Iodine":
             ## print "Hydroiodic acid"
             return -10.
+        elif other.name == "Fluorine":
+            ## print "Hydrofluoric acid"
+            return 3.2
         elif other.name == "Oxygen":
             # Things get hairy
             if len(other.bonds) == 3:
                 ## print "Positive Oxygen"
-                return -2.
+                return -1.7
             elif len(other.bonds) == 2:
                 next_other = other.bonds[0].get_other(other)
                 next_name = next_other.name
@@ -249,7 +252,7 @@ def get_pka(hydrogen):
                         raise NotImplementedError("Aromatic system")
                     elif len(next_other.bonds) == 4:
                         ## print "Alcohol"
-                        return 16.
+                        return 17.
                     elif next_other.root == 4:
                         for bond in next_other.bonds:
                             next_next = bond.get_other(next_other)
@@ -263,14 +266,14 @@ def get_pka(hydrogen):
                                        return 0.2
                                 else:
                                     print "Carboxylic acid"
-                                    return 4.8
+                                    return 4
                             raise NotImplementedError("What is happening here")
                 elif next_name == "Hydrogen":
                     ## print "Water"
-                    return 15.7
+                    return 16.
                 elif next_name == "Sulfur":
                     ## print "Sulfuric acid"
-                    return -9.
+                    return -3.
             elif other.root == 3:
                 print "Protonated diene system"
                 raise NotImplementedError("Protonated diene")
@@ -347,6 +350,7 @@ class Element(object):
 
         else:
             self.check_root() # Revalues the element's value as a 'root' node
+            other.check_root()
 
     def remove_bond(self, bond):
         """Removes a bond from self and from other node"""
@@ -371,7 +375,8 @@ class Element(object):
             return
 
         else:
-            self.check_root() # Revalues the element's value as a 'root' node
+            self.check_root() # Re-evaluates the element's value as a 'root' node
+            bond.get_other(self).check_root()
 
     def check_root(self):
         """Function that determines how many 'children' the node (element) can
@@ -723,7 +728,7 @@ if __name__ == "__main__":
     for key in molecules.keys():
         CheML.CMLBuilder(molecules[key], key, ''.join([key, ".cml"]))
 
-    molecules = OrderedDict() # Reassings this name! But its okay, it'll use
+    molecules = OrderedDict() # Reassigns this name! But its okay, it'll use
                               # the same data, just a nicer format for me
     for filename in [''.join(['m', str(i), ".cml"]) for i in range(length)]:
         mole = CheML.CMLParser(filename) # Parsing those files I made above
@@ -734,9 +739,10 @@ if __name__ == "__main__":
         try:
             molecule = Compound(molecule)
             molecule.get_PKa()
-            molecule.pka = (mol_pka, h_id)
-            pka_patterns[key] = (mol_pka, molecule, h_id)
-            # print molecule.pka
+            # molecule.pka = (mol_pka, h_id)
+            # pka_patterns[key] = (mol_pka, molecule, h_id)
+            if mol_pka != molecule.pka[0]:
+                print key, mol_pka, molecule.pka
         except NotImplementedError as e:
             print key,": issue with", e
             str_print_dict(molecule.walkable)
