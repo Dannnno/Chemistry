@@ -131,25 +131,6 @@ def ret_str_list(alist):
     return "["+", ".join(map(str, alist))+"]"
 
 
-#def str_print_dict(adict):
-#    """Prints a dictionary using str() instead of repr()"""
-#    print "{"
-#    if "root" in adict:
-#        print "root: %s" % ret_str_list(adict["root"])
-#        s_keys = sorted(adict.keys(), key=lambda x: x.root if not x == "root" else "root")
-#        print s_keys
-#        for item in s_keys:
-#            if item != "root":
-#                print "%s: %s" % (item.name, ret_str_list(adict[item]))
-#    else:
-#        for key, value in adict.items():
-#            if isinstance(value, list) or isinstance(value, tuple):
-#                print " %s: %s," % (key, ret_str_list(value))
-#            else:
-#                print " %s: %s," % (key, value)
-#    print "}"
-
-
 def str_print_dict(adict):
     """Prints a dictionary using str() instead of repr()"""
     print "{"
@@ -282,25 +263,6 @@ def get_pka(hydrogen):
         raise NotImplementedError("This hydrogen isn't bonded to anything")
 
 
-#class Memoize:
-#    """Taken from http://stackoverflow.com/a/1988826/3076272"""
-#
-#    def __init__(self, f):
-#        self.f = f
-#        self.memo = {}
-#    def __call__(self, *args, **kwargs):
-#        print args, type(args)
-#        print kwargs
-#        if kwargs:
-#            if not (str(args), str(kwargs)) in self.memo:
-#                self.memo[(str(args), str(kwargs))] = self.f(*args, **kwargs)
-#        else:
-#            if not str(args) in self.memo:
-#                self.memo[str(args)] = self.f(*args)
-#
-#        return self.memo[str(args)]
-
-
 class Element(object):
 
     def __init__(self, symbol='C'):
@@ -310,7 +272,7 @@ class Element(object):
             self.symbol = symbol
             self.number = periodic_table[symbol][0]
             self.name = periodic_table[symbol][2]
-            self.group = periodic_table[symbol][3] # Find a better way to represent this
+            self.group = periodic_table[symbol][3] #TODO: Find a better way to represent this
             self.weight = periodic_table[symbol][4]
             self.density = periodic_table[symbol][5]
             self.mp = periodic_table[symbol][6]
@@ -322,7 +284,7 @@ class Element(object):
             self.root = 0
             self.check_root()
 
-            # Work out a way to do these
+            #TODO: Work out a way to do these
             self.ismetal = False
             self.is_aromatic = False
 
@@ -415,7 +377,8 @@ class Bond(object):
         self.second = second_element
         self.order = int(order)
         self.chirality = chirality
-        self.type = self.eval_bond() # Cleaner to do it this way imo
+        self.type = "Unknown type"
+        self.eval_bond() # Cleaner to do it this way imo
 
     def get_other(self, atom):
         """Method that determines the second node in a bond after being provided
@@ -437,15 +400,15 @@ class Bond(object):
 
         delta = abs(self.first.eneg - self.second.eneg)
         if delta <= 0.5:
-            return "Non-polar covalent"
+            self.type = "Non-polar covalent"
         elif delta <= 1.6 or (delta <= 2 and not (self.first.ismetal or
                                                    self.second.ismetal)):
-            return "Polar-covalent"
+            self.type = "Polar-covalent"
         elif delta > 2 or (delta <= 2 and (self.first.ismetal or
                                             self.second.ismetal)):
-            return "Ionic"
+            self.type = "Ionic"
         else:
-            return "Unknown type"
+            self.type = "Unknown type"
 
     def __str__(self):
         return "Bond between %s and %s" % (self.first.name, self.second.name)
@@ -467,9 +430,10 @@ class Compound(object):
         # safely mutate the originals or not
         self.atoms = deepcopy(mole_dict["atoms"])
         self.bonds = deepcopy(mole_dict["bonds"])
-        self.walkable = OrderedDict() # A more crawler friendly structure
-                                      # Look into a better way to do this
+        self.walkable = {} # A more crawler friendly structure
+                           #TODO: Look into a better way to do this
         self.depth = 0
+        self.pka = (100, "")
 
         for key, atom in self.atoms.iteritems(): # iterator uses less memory
             self.atoms[key] = Element(atom)
@@ -487,7 +451,6 @@ class Compound(object):
         self.root = self.get_root()
         self.build_walkable()
         self.depth = self.get_depth()
-        self.pka = (100, "")
         ## self.get_PKa()
 
     def build_walkable(self):
@@ -662,19 +625,17 @@ def fuzzy_comparison(walkable, hydrogens, pattern):
     No idea how I'm doing this at the moment
     """
 
-    # This gives me a walkable compound rooted at the acidic proton
-    str_print_dict(walkable)
-    target = walk_compound(pattern[1].atoms[pattern[2]], root=True)
-    str_print_dict(target)
-    # heh.  Gives me a hydrogen first look
-    elbaklaw = walk_compound(hydrogens)
-    str_print_dict(elbaklaw)
-    for key, connected_to in walkable.iteritems():
-        pass # Doesn't do anything yet~
-    return (0, 1000) # Just some nonsense values
-
-
-# fuzzy_comparison = Memoize(fuzzy_comparison)
+    pass
+    ## This gives me a walkable compound rooted at the acidic proton
+    #str_print_dict(walkable)
+    #target = walk_compound(pattern[1].atoms[pattern[2]], root=True)
+    #str_print_dict(target)
+    ## heh.  Gives me a hydrogen first look
+    #elbaklaw = walk_compound(hydrogens)
+    #str_print_dict(elbaklaw)
+    #for key, connected_to in walkable.iteritems():
+    #    pass # Doesn't do anything yet~
+    #return (0, 1000) # Just some nonsense values
 
 
 def walk_compound(start, root=False):
@@ -706,9 +667,6 @@ def walk_compound(start, root=False):
         to_crawl.extend(node_children - visited)
 
     return walkable
-
-
-# walk_compound = Memoize(walk_compound)
 
 
 if __name__ == "__main__":
@@ -749,8 +707,8 @@ if __name__ == "__main__":
             pass
 
     ## compounds = map(Compound, molecules.values())
-    ## comp = Compound(molecules["m3"]) # Just using one of them for now
-    ## str_print_dict(comp.walkable) # comp
+    comp = Compound(molecules["m3"])
+    
     ## get_pka = time_decorator(get_pka)
     ## print comp.pka
     # This (mostly) correctly outputs the different hydrogens
