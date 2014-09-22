@@ -6,6 +6,8 @@ import os
 import pka
 import time
 import csv
+import subprocess
+import json
 sys.path.insert(0, os.getcwd())
 from CheML import CheML
 
@@ -172,9 +174,14 @@ periodic_table = read_periodic_table() # Populates a 'periodic table'
 
 
 def get_pka(hydrogen):
+    """"""
     if hydrogen.bonds:
         other = hydrogen.bonds[0].get_other(hydrogen)
         if other.name == "Carbon":
+            for element in [bond.get_other(other) for bond in other.bonds]:
+                if element.name == "Sulfur":
+                    ## print "Sulfoxide"
+                    return 31
             if len(other.bonds) == 4:
                 ## print "SP3 Carbon"
                 return 50.
@@ -242,12 +249,12 @@ def get_pka(hydrogen):
                             bond.order == 2):
                                 continue
                             if next_next.name == "Carbon":
-                                if any((abond.get_other(next_next).eneg > 2.5)
+                                if any((abond.get_other(next_next).eneg > 3)
                                        for abond in next_next.bonds):
-                                       print "Carboxylic acid with eneg groups"
+                                       ## print "Carboxylic acid with eneg groups"
                                        return 0.2
                                 else:
-                                    print "Carboxylic acid"
+                                    ## print "Carboxylic acid"
                                     return 4
                             raise NotImplementedError("What is happening here")
                 elif next_name == "Hydrogen":
@@ -361,8 +368,8 @@ class Element(object):
                                        for bond in self.bonds])])
 
     def __eq__(self, other):
-        return (isinstance(other, self.__class__)
-            and self.__dict__ == other.__dict__)
+        return (isinstance(other, Element)
+             and self.__dict__ == other.__dict__)
 
     def __ne__(self, other):
         return not self.__eq__(other)
@@ -422,6 +429,7 @@ class Bond(object):
 
 
 class Compound(object):
+    my_id = 0
 
     def __init__(self, mole_dict):
         """Creates a molecule representation based on the input structured
@@ -433,8 +441,11 @@ class Compound(object):
         self.bonds = deepcopy(mole_dict["bonds"])
         self.walkable = {} # A more crawler friendly structure
                            #TODO: Look into a better way to do this
+        self.blockwalkable = {}
         self.depth = 0
         self.pka = (100, "")
+        self.my_id = "m" + str(Compound.my_id + 1)
+        Compound.my_id += 1
 
         for key, atom in self.atoms.iteritems(): # iterator uses less memory
             self.atoms[key] = Element(atom)
@@ -451,14 +462,42 @@ class Compound(object):
         # Some more complex logic, decided it makes more sense to do methods
         self.root = self.get_root()
         self.build_walkable()
+        #self.build_blocky()
         self.depth = self.get_depth()
         ## self.get_PKa()
+
+    def build_blocky(self):
+        """Builds a version of self.atoms that can be traversed by to_blockdiag()"""
+        
+        self.blockwalkable = OrderedDict()
+        count = {}
+        temp = {}
+        for key, atom in self.atoms.iteritems():
+            if atom.symbol in count:
+                count[atom.symbol] += 1
+            else:
+                count[atom.symbol] = 1
+            nkey = ''.join([atom.symbol, str(count[atom.symbol])])
+            temp[key] = nkey
+      
+        print temp
+          
+        for key, atom in reversed(sorted(self.atoms.iteritems(), key=lambda x: x[1].root)):
+            others = [self.getID(bond.get_other(atom)) for bond in atom.bonds]
+            print atom, others[0]
+            others = [temp[at] for at in others if temp[at] not in self.blockwalkable]
+            self.blockwalkable[temp[key]] = others
+        
+        str_print_dict(self.blockwalkable)    
+        to_blockdiag(self.my_id, self)
+            
+
 
     def build_walkable(self):
         """Builds a version of self.atoms that can be traversed by the
         Compound.walk() method
 
-        Doesn't handle cycles or rings
+        Doesn't handle cycles or rings (currently)
         """
 
         self.walkable = walk_compound(self.atoms[self.root], root=True)
@@ -640,7 +679,7 @@ def fuzzy_comparison(walkable, hydrogens, pattern):
 
 
 def walk_compound(start, root=False):
-    walkable = {}
+    walkable = OrderedDict()
 
     visited = set()
     if isinstance(start, list):
@@ -670,6 +709,59 @@ def walk_compound(start, root=False):
     return walkable
 
 
+def print_blockdiag(tree, parent=None):
+    if not parent: 
+        print('blockdiag { orientation = landscape')
+     
+    if isinstance(tree, basestring): 
+        if not tree:
+            tree = "None"
+        print('    {} -> {};'.format(parent, tree))
+    elif isinstance(tree, dict) or isinstance(tree, OrderedDict): 
+        for key in tree:
+            print_blockdiag(tree[key], parent=key)
+            
+    elif isinstance(tree, list): 
+        for item in tree:
+            print ('    {} -> {};'.format(parent, item))
+            
+    else: sys.exit()
+            
+def to_blockdiag(key, compound, json=False):
+    
+    directory = os.getcwd() + "\Images\\"
+    output_file_name = directory + key + ".diag"
+    image_file_name, _, _ = output_file_name.partition('.')
+    image_file_name += ".png"
+    
+    if json: 
+        with open(compound, "r") as json_file:
+            atree = json.load(json_file)
+    else:
+        atree = compound.blockwalkable
+                
+    orig = sys.stdout
+    with open(output_file_name, "w") as output_file:
+        sys.stdout = output_file            
+        print_blockdiag(atree)
+        print "}"
+    
+    sys.stdout = orig
+    
+    try:
+        subprocess.check_call(["blockdiag", output_file_name])
+    except subprocess.CalledProcessError as e:
+        print e
+        sys.exit("Error with blockdiag command. Exiting")
+    else:
+        try:
+            subprocess.check_call([image_file_name], shell=True)
+        except subprocess.CalledProcessError as e:
+            print e
+            sys.exit("Error with opening <%s>. Exiting" % image_file_name)
+    
+
+
 if __name__ == "__main__":
     """Main body of the program.  Creates some of the molecules and pka patterns
     and gets everything set up to actually react some stuff.  Full of testing
@@ -680,8 +772,6 @@ if __name__ == "__main__":
                  enumerate([hydronium, hydroxide, water, carb_acid])
                 } # Just the molecules I have ready for testing purposes
 
-    length = len(molecules)
-
     # Making some cml files for funsies.  Will be
     # removed when I'm sure the CML stuff won't change
     for key in molecules.keys():
@@ -689,14 +779,18 @@ if __name__ == "__main__":
 
     molecules = OrderedDict() # Reassigns this name! But its okay, it'll use
                               # the same data, just a nicer format for me
-    for filename in [''.join(['m', str(i), ".cml"]) for i in range(length)]:
+    for filename in [''.join(['m', str(i), ".cml"]) for i in range(len(molecules))]:
         mole = CheML.CMLParser(filename) # Parsing those files I made above
         molecules[mole.id] = mole.molecule
 
     # Setting the pka values for my predetermined values
-    for key, (mol_pka, molecule, h_id) in pka_patterns.items():
+    """for key, (mol_pka, molecule, h_id) in pka_patterns.items():
         try:
             molecule = Compound(molecule)
+            if key == "Ketone":
+                str_print_dict( molecule.atoms)
+                str_print_dict( molecule.bonds)
+                str_print_dict( molecule.walkable)
             molecule.get_PKa()
             # molecule.pka = (mol_pka, h_id)
             # pka_patterns[key] = (mol_pka, molecule, h_id)
@@ -706,24 +800,14 @@ if __name__ == "__main__":
             print key,": issue with", e
             str_print_dict(molecule.walkable)
             pass
+    """
+    
+    for key, (mol_pka, molecule, h_id) in pka_patterns.items():
+        molecule = Compound(molecule)
+        molecule.build_blocky()
 
     ## compounds = map(Compound, molecules.values())
-    comp = Compound(molecules["m3"])
+    ## comp = Compound(molecules["m3"])
     
     ## get_pka = time_decorator(get_pka)
     ## print comp.pka
-    # This (mostly) correctly outputs the different hydrogens
-    # SP3 Carbon
-    # get_pka executed in 0.00 seconds
-    #
-    # SP3 Carbon
-    # get_pka executed in 0.00 seconds
-    #
-    # SP3 Carbon
-    # get_pka executed in 0.00 seconds
-    #
-    # Carboxylic acid with eneg groups
-    # This is wrong. We should see that this is a normal Carboxylic acid
-    # get_pka executed in 0.00 seconds
-    #
-    # (0.2, "a1")

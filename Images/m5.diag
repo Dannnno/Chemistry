@@ -1,0 +1,11 @@
+blockdiag { orientation = landscape
+    C2 -> H4;
+    C2 -> H6;
+    C2 -> S1;
+    C2 -> H5;
+    S1 -> C1;
+    S1 -> O1;
+    C1 -> H1;
+    C1 -> H3;
+    C1 -> H2;
+}
