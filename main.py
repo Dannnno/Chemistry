@@ -2,10 +2,11 @@ from copy import deepcopy
 from collections import deque
 from collections import OrderedDict
 import sys
+import os
 import pka
 import time
 import csv
-sys.path.insert(0, "C:/Users/Dan/Desktop/Programming/GitHub/Chemistry")
+sys.path.insert(0, os.getcwd())
 from CheML import CheML
 
 
@@ -518,7 +519,7 @@ class Compound(object):
         the case of a tie
         """
 
-        # Just assumes the first one is a good choice
+        # Just assumes the first one is a good base case
         most = self.atoms[sorted(self.atoms.keys())[0]].root
         stored = [sorted(self.atoms.keys())[0]]
         for key, value in self.atoms.items():
@@ -589,19 +590,19 @@ def acid_base_rxn(acid=hydronium, base=hydroxide, aqueous=True, **kwargs):
     # I have no idea what I'm doing here
     # This should be ignored until I have an effective way to locate the two
     # different key sites
-    if not kwargs:
-        a_pka = acid.pka
-        b_pka = base.pka
-        if a_pka > b_pka:
-            a_pka, b_pka, acid, base = b_pka, a_pka, base, acid
-        remove_proton(acid)
-        add_proton(base)
-        a_pka = acid.pka
-        b_pka = base.pka
-
-        if b_pka - a_pka < 1:
-            acid_base_rxn(acid, base, aqueous, **kwargs)
-
+#    if not kwargs:
+#        a_pka = acid.pka
+#        b_pka = base.pka
+#        if a_pka > b_pka:
+#            a_pka, b_pka, acid, base = b_pka, a_pka, base, acid
+#        remove_proton(acid)
+#        add_proton(base)
+#        a_pka = acid.pka
+#        b_pka = base.pka
+#
+#        if b_pka - a_pka < 1:
+#            acid_base_rxn(acid, base, aqueous, **kwargs)
+    pass
 
 def remove_proton(acid):
     """Removes a proton from a compound (acid) and then recalculates its pka"""
