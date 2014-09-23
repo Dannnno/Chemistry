@@ -8,7 +8,6 @@ import time
 import csv
 import subprocess
 import json
-sys.path.insert(0, os.getcwd())
 from CheML import CheML
 
 
@@ -462,7 +461,7 @@ class Compound(object):
         # Some more complex logic, decided it makes more sense to do methods
         self.root = self.get_root()
         self.build_walkable()
-        #self.build_blocky()
+        self.build_blocky()
         self.depth = self.get_depth()
         ## self.get_PKa()
 
@@ -479,17 +478,14 @@ class Compound(object):
                 count[atom.symbol] = 1
             nkey = ''.join([atom.symbol, str(count[atom.symbol])])
             temp[key] = nkey
-      
-        print temp
-          
+        
         for key, atom in reversed(sorted(self.atoms.iteritems(), key=lambda x: x[1].root)):
             others = [self.getID(bond.get_other(atom)) for bond in atom.bonds]
-            print atom, others[0]
             others = [temp[at] for at in others if temp[at] not in self.blockwalkable]
             self.blockwalkable[temp[key]] = others
         
-        str_print_dict(self.blockwalkable)    
-        to_blockdiag(self.my_id, self)
+        ## str_print_dict(self.blockwalkable)    
+        ## to_blockdiag(self.my_id, self)
             
 
 
@@ -727,14 +723,14 @@ def print_blockdiag(tree, parent=None):
             
     else: sys.exit()
             
-def to_blockdiag(key, compound, json=False):
+def to_blockdiag(key, compound, jsonbool=False):
     
     directory = os.getcwd() + "\Images\\"
     output_file_name = directory + key + ".diag"
     image_file_name, _, _ = output_file_name.partition('.')
     image_file_name += ".png"
     
-    if json: 
+    if jsonbool: 
         with open(compound, "r") as json_file:
             atree = json.load(json_file)
     else:
@@ -759,7 +755,6 @@ def to_blockdiag(key, compound, json=False):
         except subprocess.CalledProcessError as e:
             print e
             sys.exit("Error with opening <%s>. Exiting" % image_file_name)
-    
 
 
 if __name__ == "__main__":
@@ -784,27 +779,23 @@ if __name__ == "__main__":
         molecules[mole.id] = mole.molecule
 
     # Setting the pka values for my predetermined values
-    """for key, (mol_pka, molecule, h_id) in pka_patterns.items():
+    for key, (mol_pka, molecule, h_id) in pka_patterns.items():
         try:
             molecule = Compound(molecule)
-            if key == "Ketone":
-                str_print_dict( molecule.atoms)
-                str_print_dict( molecule.bonds)
-                str_print_dict( molecule.walkable)
             molecule.get_PKa()
-            # molecule.pka = (mol_pka, h_id)
-            # pka_patterns[key] = (mol_pka, molecule, h_id)
+            pka_patterns[key] = (mol_pka, molecule, h_id)
             if mol_pka != molecule.pka[0]:
-                print key, mol_pka, molecule.pka
+                print key, mol_pka, h_id, molecule.pka
         except NotImplementedError as e:
+            if key == "Ketone":
+                to_blockdiag("Ketone", molecule)
+            print "Not Implemented"
             print key,": issue with", e
-            str_print_dict(molecule.walkable)
-            pass
-    """
+            str_print_dict(molecule.walkable)    
     
-    for key, (mol_pka, molecule, h_id) in pka_patterns.items():
-        molecule = Compound(molecule)
-        molecule.build_blocky()
+    ## for key, (mol_pka, molecule, h_id) in pka_patterns.items():
+    ##     molecule = Compound(molecule)
+    ##     molecule.build_blocky()
 
     ## compounds = map(Compound, molecules.values())
     ## comp = Compound(molecules["m3"])
