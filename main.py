@@ -173,31 +173,48 @@ periodic_table = read_periodic_table() # Populates a 'periodic table'
 
 
 def get_pka(hydrogen):
-    """"""
+    """Determines the approximate pka of a hydrogen based on the compound's 
+    structure.  Raises NotImplementedErrors for things that I haven't added yet.
+    Those can all be considered 'Todo'
+    """
+    
     if hydrogen.bonds:
         other = hydrogen.bonds[0].get_other(hydrogen)
         if other.name == "Carbon":
-            for element in [bond.get_other(other) for bond in other.bonds]:
-                if element.name == "Sulfur":
-                    ## print "Sulfoxide"
-                    return 31
-            if len(other.bonds) == 4:
-                ## print "SP3 Carbon"
-                return 50.
-            elif len(other.bonds) == 3:
-                if other.root == 4:
-                    ## print "SP2 Carbon"
-                    return 43.
-                str_print_list(other.bonds)
-                print len(other.bonds), other.root
-                for bond in other.bonds:
-                    print bond, bond.order
-                raise NotImplementedError("Carbon Ion")
-            elif len(other.bonds) == 2:
-                if other.root == 4:
-                    ## print "SP Carbon"
-                    return 25.
-                raise NotImplementedError("Carbon Ion")
+            if other.is_bonded_to("Sulfur"):
+                ## print "Sulfoxide"
+                return 31
+            if other.is_bonded_to("Carbon", exclude=[other]):
+                for element, bnd in [(bond.get_other(other), bond) for bond in other.bonds]:
+                    if element.name == "Carbon":
+                        if bnd.order == 1 and element.root == 4: 
+                            if element.is_bonded_to("Oxygen"):
+                                return "Diene"
+                            ## print "SP3 Carbon"
+                            return 50
+                        if bnd.order == 2 and element.root == 4: 
+                            ## print "SP2 Carbon"
+                            return 43.
+                        if bnd.order == 3 and element.root == 4: 
+                            ## print "SP Carbon"
+                            return 25.        
+            #if len(other.bonds) == 4:
+            #    ## print "SP3 Carbon"
+            #    return 50.
+            #elif len(other.bonds) == 3:
+            #    if other.root == 4:
+            #        ## print "SP2 Carbon"
+            #        return 43.
+            #    str_print_list(other.bonds)
+            #    print len(other.bonds), other.root
+            #    for bond in other.bonds:
+            #        print bond, bond.order
+            #    raise NotImplementedError("Carbon Ion")
+            #elif len(other.bonds) == 2:
+            #    if other.root == 4:
+            #        ## print "SP Carbon"
+            #        return 25.
+            #    raise NotImplementedError("Carbon Ion")
         elif other.name == "Nitrogen":
             if len(other.bonds) == 4:
                 ## print "Positive Nitrogen"
@@ -356,6 +373,18 @@ class Element(object):
         for bond in self.bonds:
             acc += bond.order
         self.root = acc
+        
+    def is_bonded_to(self, element, exclude=[]):
+        """Checks if the Element is bonded to an instance of some element (using
+        the string name of the element.  Excludes any elements in exclude
+        """
+        
+        for bond in self.bonds:
+            if (bond.get_other(self).name == element and 
+                bond.get_other(self) not in exclude):
+                return True
+        
+        return False
 
     def __str__(self):
         return self.name
@@ -778,7 +807,7 @@ if __name__ == "__main__":
         mole = CheML.CMLParser(filename) # Parsing those files I made above
         molecules[mole.id] = mole.molecule
 
-    # Setting the pka values for my predetermined values
+    # Testing the get_pka function
     for key, (mol_pka, molecule, h_id) in pka_patterns.items():
         try:
             molecule = Compound(molecule)
@@ -787,8 +816,6 @@ if __name__ == "__main__":
             if mol_pka != molecule.pka[0]:
                 print key, mol_pka, h_id, molecule.pka
         except NotImplementedError as e:
-            if key == "Ketone":
-                to_blockdiag("Ketone", molecule)
             print "Not Implemented"
             print key,": issue with", e
             str_print_dict(molecule.walkable)    
