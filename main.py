@@ -210,37 +210,23 @@ def get_pka(hydrogen):
             if other.is_bonded_to("Sulfur"):
                 ## print "Sulfoxide"
                 return 31
-            if other.is_bonded_to("Carbon", exclude=[other]):
-                for element, bnd in [(bond.get_other(other), bond) for bond in other.bonds]:
-                    if element.name == "Carbon":
-                        if bnd.order == 1 and element.root == 4: 
-                            if element.is_bonded_to("Oxygen"):
-                                return "Diene"
-                            ## print "SP3 Carbon"
-                            return 50
-                        if bnd.order == 2 and element.root == 4: 
-                            ## print "SP2 Carbon"
-                            return 43.
-                        if bnd.order == 3 and element.root == 4: 
-                            ## print "SP Carbon"
-                            return 25.        
-            #if len(other.bonds) == 4:
-            #    ## print "SP3 Carbon"
-            #    return 50.
-            #elif len(other.bonds) == 3:
-            #    if other.root == 4:
-            #        ## print "SP2 Carbon"
-            #        return 43.
-            #    str_print_list(other.bonds)
-            #    print len(other.bonds), other.root
-            #    for bond in other.bonds:
-            #        print bond, bond.order
-            #    raise NotImplementedError("Carbon Ion")
-            #elif len(other.bonds) == 2:
-            #    if other.root == 4:
-            #        ## print "SP Carbon"
-            #        return 25.
-            #    raise NotImplementedError("Carbon Ion")
+            if len(other.bonds) == 4:
+                ## print "SP3 Carbon"
+                return 50.
+            elif len(other.bonds) == 3:
+                if other.root == 4:
+                    ## print "SP2 Carbon"
+                    return 43.
+                str_print_list(other.bonds)
+                print len(other.bonds), other.root
+                for bond in other.bonds:
+                    print bond, bond.order
+                raise NotImplementedError("Carbon Ion")
+            elif len(other.bonds) == 2:
+                if other.root == 4:
+                    ## print "SP Carbon"
+                    return 25.
+                raise NotImplementedError("Carbon Ion")
         elif other.name == "Nitrogen":
             if len(other.bonds) == 4:
                 ## print "Positive Nitrogen"
@@ -533,7 +519,7 @@ class Compound(object):
                 count[atom.symbol] = 1
             nkey = ''.join([atom.symbol, str(count[atom.symbol])])
             temp[key] = nkey
-        
+      
         for key, atom in reversed(sorted(self.atoms.iteritems(), key=lambda x: x[1].root)):
             others = [self.getID(bond.get_other(atom)) for bond in atom.bonds]
             others = [temp[at] for at in others if temp[at] not in self.blockwalkable]
@@ -541,8 +527,6 @@ class Compound(object):
         
         ## str_print_dict(self.blockwalkable)    
         ## to_blockdiag(self.my_id, self)
-            
-
 
     def build_walkable(self):
         """Builds a version of self.atoms that can be traversed by the
@@ -810,6 +794,7 @@ def to_blockdiag(key, compound, jsonbool=False):
         except subprocess.CalledProcessError as e:
             print e
             sys.exit("Error with opening <%s>. Exiting" % image_file_name)
+    
 
 
 if __name__ == "__main__":
@@ -838,17 +823,17 @@ if __name__ == "__main__":
         try:
             molecule = Compound(molecule)
             molecule.get_PKa()
-            pka_patterns[key] = (mol_pka, molecule, h_id)
             if mol_pka != molecule.pka[0]:
-                print key, mol_pka, h_id, molecule.pka
+                print key, mol_pka, molecule.pka
         except NotImplementedError as e:
-            print "Not Implemented"
             print key,": issue with", e
-            str_print_dict(molecule.walkable)    
+            str_print_dict(molecule.walkable)
+            pass
     
-    ## for key, (mol_pka, molecule, h_id) in pka_patterns.items():
-    ##     molecule = Compound(molecule)
-    ##     molecule.build_blocky()
+    
+    #for key, (mol_pka, molecule, h_id) in pka_patterns.items():
+    #    molecule = Compound(molecule)
+    #    molecule.build_blocky()
 
     ## compounds = map(Compound, molecules.values())
     ## comp = Compound(molecules["m3"])
