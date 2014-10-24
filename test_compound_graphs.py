@@ -6,6 +6,7 @@ finally:
     from collections import OrderedDict
     import compound_graphs as cg
     import contextlib
+    import doctest
     import os
     import sys
     import unittest
@@ -77,14 +78,12 @@ class test_compound(unittest.TestCase):
 
 class test_element(unittest.TestCase): 
     
-    def test_create_bond(self): 
-        """This doesn't actually get tested very well because Bond.__init__()
-        automatically adds the bond and element to a's sets.
-        """
+    def test_create_bond(self):
         a = cg.Element()
         b = cg.Element()
         ab = cg.Bond(a, b)
-        a.create_bond(ab, b)
+        a.create_bond(ab, b) # This is a bad test
+                             # It really happens in Bond.__init__()
         self.assertIn(ab, a.bonds)
         self.assertIn(a, b.bonded_to)
     
@@ -136,6 +135,7 @@ if __name__ == '__main__':
         suites_list.append(suite)
 
     big_suite = unittest.TestSuite(suites_list)
+    big_suite.addTests(doctest.DocTestSuite(cg))
 
-    runner = unittest.TextTestRunner(sys.stdout, verbosity=1)
+    runner = unittest.TextTestRunner(sys.stdout, verbosity=2)
     runner.run(big_suite)

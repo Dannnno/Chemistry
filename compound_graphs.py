@@ -26,6 +26,7 @@ If not, see <http://opensource.org/licenses/MIT>
 from collections import OrderedDict
 from functools import partial
 import csv
+import doctest
 import json
 import os
     
@@ -37,8 +38,20 @@ def convert_type(cell, typ):
     http://stackoverflow.com/a/25498445/3076272
 
     Takes a string and a function that the string should be represented as,
-    if possible.  If the function can't be applied to that string then it returns
+    if possible.  
+    
+    For example,
+    >>> convert_type('4', int)
+    4
+    >>> convert_type('4.0', float)
+    4.0
+    >>> convert_type('[1,2,3]', str_to_list)
+    [1, 2, 3]
+    
+    If the function can't be applied to that string then it returns
     "No_Data"
+    >>> convert_type('No Data', int)
+    'No_Data'
     """
 
     try:
@@ -50,11 +63,15 @@ def convert_type(cell, typ):
         
 def str_to_list(a_stringy_list, mapped=None):
     """Takes a string that looks like a list and makes it a list
-    Usage:
-        >>> str_to_list("[1, 2, 3]")
-        ["1", "2", "3"]
-    If mapped is provided a function it will map that function to the list
+    
+    >>> str_to_list("[1,2,3]")
+    ['1', '2', '3']
+    
+    If a function to be mapped is provided it will attempt to do so
+    >>> str_to_list("[1,2,3]", mapped=int)
+    [1, 2, 3]
     """
+    
     the_list = a_stringy_list[1:-1].split(",")
     try:
         # Fun fact, mapping 'None' to a list just returns the list
@@ -97,11 +114,41 @@ class Compound(object):
     def from_CML(cls, CML_file):
         """An alternate constructor if I'd like to load this directly from a 
         CML file
+        
+        >>> Compound.from_CML("")
+        Traceback (most recent call last):
+        ...
+        NotImplementedError
         """
+        
         raise NotImplementedError
         
     @classmethod
     def json_serialize(cls, obj):
+        """Serializes a compound (or ay other) object for json,
+        and is then used to make a detailed and pretty repr of a Compound instance
+        
+        >>> Compound.json_serialize(Element()) # doctest: +NORMALIZE_WHITESPACE
+        {'oxid': [1, 2, 3, 4, -4, -3, -2, -1], 'group': 14, 'name': 'Carbon', 
+         'weight': 12.011, 'bonds': set([]), 'symbol': 'C', 'density': 2.267,
+         'number': 6, 'eneg': 2.55, 'bp': 4300.0, 'bonded_to': set([]), 
+         'radius': 67.0, 'mp': 3800.0}
+        
+        >>> a, b = Element(), Element()
+        >>> ab = Bond(a, b)                          
+        >>> Compound.json_serialize(ab) # doctest: +NORMALIZE_WHITESPACE
+        {'second': Element C bonded to ['C'], 
+         'first': Element C bonded to ['C'], 
+         'chirality': None, 
+         'order': 1, 
+         'bond': set([Element C bonded to ['C'], 
+                      Element C bonded to ['C']])}
+
+         
+        >>> Compound.json_serialize(set([1, 2, 3]))
+        ['1', '2', '3']
+        """
+        
         try:
             return obj.__dict__
         except AttributeError:
@@ -113,7 +160,7 @@ class Compound(object):
             bonds[key] = (self.atoms[value[0]], self.atoms[value[1]], value[2])
         self.bonds = {key:Bond(*value) for key, value in bonds.iteritems()}
                                       
-    def __repr__(self):
+    def __repr__(self):        
         return '\n'.join(map(partial(json.dumps,
                                       default=self.json_serialize,
                                       sort_keys=True, 
@@ -141,10 +188,24 @@ class Element(object):
         
         
     def create_bond(self, a_bond, an_element):
+        """Adds a bond and the other element to self's sets"""
         self.bonds.add(a_bond)
         self.bonded_to.add(an_element)
         
     def break_bond(self, a_bond, flag=False):
+        """Breaks (removes) a bond from self to other.  The flag variable
+        ensures that we don't hit an infinitely recursive scenario
+        
+        >>> a, b = Element(), Element()
+        >>> ab = Bond(a, b)
+        >>> a.break_bond(ab)
+        >>> ((ab not in a.bonds) and
+        ...  (ab not in b.bonds) and
+        ...  (a not in b.bonded_to) and
+        ...  (b not in a.bonded_to))
+        True
+        """
+        
         other = a_bond.get_other(self)
         self.bonds.discard(a_bond)
         self.bonded_to.discard(other)
@@ -161,6 +222,35 @@ class Element(object):
 class Bond(object): 
 
     def __init__(self, element1, element2, order=1, chirality=None):
+        """Creates a bond object with the necessary information.  
+        
+        >>> a, b = Element(), Element()
+        >>> ab = Bond(a, b)
+        >>> ((ab.first == a) and
+        ...  (ab.second == b) and
+        ...  (ab.order == 1) and
+        ...  (ab.chirality is None))
+        True
+        
+        If the bond is given impossible situations (such as bond order > 4, 
+        or an unknown chirality), a ValueError will be raised
+        >>> try:
+        ...     Bond(a, b, 4)        
+        ... except ValueError:
+        ...     print 'ValueError'
+        ...     try:
+        ...         Bond(a, b, 1, 'Q')        
+        ...     except ValueError:
+        ...         print 'ValueError'
+        ...         try:
+        ...             Bond(a, a)        
+        ...         except ValueError:
+        ...             print 'ValueError'
+        ValueError
+        ValueError
+        ValueError
+        """
+        
         if order not in xrange(1, 4):
             raise ValueError(
                 "The order of a bond must be [1,3], not {}".format(order))
@@ -168,6 +258,8 @@ class Bond(object):
             raise ValueError(''.join(["A bond must have no ",
                                         "(None) chirality or R/S/E/Z ",
                                         "chirality, not {}"]).format(chirality))
+        if element1 is element2:
+            raise ValueError("A bond can't go from an element to itself.")
         self.order = order
         self.chirality = chirality
         self.bond = set([element1, element2])
@@ -177,6 +269,16 @@ class Bond(object):
         element2.create_bond(self, element1)
         
     def get_other(self, an_element):
+        """Gets the other element in a bond (ie the adjacent vertex)
+        
+        >>> a, b = Element(), Element()
+        >>> ab = Bond(a, b)
+        >>> ab.get_other(a)
+        Element C bonded to ['C']
+        >>> ab.get_other(b)
+        Element C bonded to ['C']
+        """
+        
         if an_element in self.bond:
             for element in self.bond:
                 if an_element is not element: return element
@@ -193,5 +295,11 @@ class Bond(object):
                                                   self.order, 
                                                   self.chirality)
      
-if __name__ == '__main__':           
-    pass
+if __name__ == '__main__':     
+    #a = Element()
+    #b = Element()
+    #ab = Bond(a, b)
+    #print ab.get_other(a)
+    #print ab.get_other(b)
+    #print repr(Compound({'a1':'O', 'a2':'H', 'a3':'H'},
+    #                     {'b1':('a1', 'a2', 1), 'b2':('a1', 'a3', 1)}))
