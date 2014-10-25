@@ -26,16 +26,16 @@ If not, see <http://opensource.org/licenses/MIT>
 import unittest
 import os
 import sys
-import CheML.CheML as CheML
+import CheML
 
-primary_directory = "C:/Users/Dan/Desktop/Programming/1 - GitHub/Chemistry/"
-os.chdir(primary_directory)
 
 class TestCMLParser(unittest.TestCase):
+    primary_directory = os.getcwd()
+    
     
     def setUp(self): 
         self.maxDiff = None
-        os.chdir("C:/Users/Dan/Desktop/Programming/1 - GitHub/Chemistry/CheML/molecules/test_molecules")
+        os.chdir(self.primary_directory + '/molecules/test_molecules')
         self.testfiles = ["CML_1.cml", "CML_2.cml"]
         self.test_write_files = ["CML_1w.cml", "CML_2w.cml"]
         self.test_molecules = {'Water': {'bonds': {'b1': ('a1', 'a3', '1'), 'b2': ('a2', 'a3', '1')}, 'atoms': {'a1': 'H', 'a3': 'O', 'a2': 'H'}}, 'Salt': {'bonds': {'b1': ('a1', 'a2', '1')}, 'atoms': {'a1': 'Na', 'a2': 'Cl'}}}
@@ -70,6 +70,10 @@ class TestCMLParser(unittest.TestCase):
         except OSError as e:
             print "Path %s does not exist" % e.strerror
             self.assertEqual(1, 2) 
-            
-suite = unittest.TestLoader().loadTestsFromTestCase(TestCMLParser)
-unittest.TextTestRunner(sys.stdout, verbosity=2).run(suite)
+    
+    def tearDown(self):
+        os.chdir(self.primary_directory)
+ 
+if __name__ == '__main__':           
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestCMLParser)
+    unittest.TextTestRunner(sys.stdout, verbosity=2).run(suite)

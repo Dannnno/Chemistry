@@ -23,5 +23,22 @@ You should have received a copy of the MIT License along with this program.
 If not, see <http://opensource.org/licenses/MIT>
 """
 
+import inspect
+import Testing
+import sys
 import unittest
-from Testing import test_CML
+
+
+loader = unittest.TestLoader()
+suites_list = []
+for _, module in inspect.getmembers(Testing):
+    for _, aclass in inspect.getmembers(module):
+        try:
+            if issubclass(aclass, unittest.TestCase):
+                suites_list.append(loader.loadTestsFromTestCase(aclass))
+        except TypeError: continue
+            
+big_suite = unittest.TestSuite(suites_list)
+
+runner = unittest.TextTestRunner(sys.stdout, verbosity=1)
+runner.run(big_suite)
