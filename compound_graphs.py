@@ -136,14 +136,14 @@ class Compound(object):
         
         >>> a, b = Element(), Element()
         >>> ab = Bond(a, b)                          
-        >>> Compound.json_serialize(ab) # doctest: +NORMALIZE_WHITESPACE
-        {'second': Element C bonded to ['C'], 
-         'first': Element C bonded to ['C'], 
-         'chirality': None, 
-         'order': 1, 
-         'bond': set([Element C bonded to ['C'], 
-                      Element C bonded to ['C']])}
-
+        >>> Compound.json_serialize(ab)  == {'second': b, 
+        ...                                  'first': a, 
+        ...                                  'chirality': None, 
+        ...                                  'order': 1, 
+        ...                                  'type': 'Non-polar covalent',
+        ...                                  'bond': set([a, b]),
+        ...                                  'type': 'Non-polar covalent'}
+        True
          
         >>> Compound.json_serialize(set([1, 2, 3]))
         ['1', '2', '3']
@@ -229,7 +229,8 @@ class Bond(object):
         >>> ((ab.first == a) and
         ...  (ab.second == b) and
         ...  (ab.order == 1) and
-        ...  (ab.chirality is None))
+        ...  (ab.chirality is None) and
+        ...  (ab.type == 'Non-polar covalent'))
         True
         
         If the bond is given impossible situations (such as bond order > 4, 
@@ -267,6 +268,7 @@ class Bond(object):
         self.second = element2
         element1.create_bond(self, element2)
         element2.create_bond(self, element1)
+        self.eval_bond()
         
     def get_other(self, an_element):
         """Gets the other element in a bond (ie the adjacent vertex)
@@ -284,6 +286,24 @@ class Bond(object):
                 if an_element is not element: return element
         raise KeyError('Element {} not in bond {}'.format(an_element, self))
         
+    def eval_bond(self):
+        """This method will determine covalent/ionic bond
+        Uses http://www.chemteam.info/Bonding/Electroneg-Bond-Polarity.html
+        for the boundaries between types
+        """
+
+        delta = abs(self.first.eneg - self.second.eneg)
+        if delta <= 0.5:
+            self.type = "Non-polar covalent"
+        elif delta <= 1.6 or (delta <= 2 and not (self.first.ismetal or
+                                                   self.second.ismetal)):
+            self.type = "Polar-covalent"
+        elif delta > 2 or (delta <= 2 and (self.first.ismetal or
+                                            self.second.ismetal)):
+            self.type = "Ionic"
+        else:
+            self.type = "Unknown type"    
+        
     def __str__(self):
         return "Bond between {} and {}".format(self.first, self.second)
         
@@ -296,10 +316,5 @@ class Bond(object):
                                                   self.chirality)
      
 if __name__ == '__main__':     
-    #a = Element()
-    #b = Element()
-    #ab = Bond(a, b)
-    #print ab.get_other(a)
-    #print ab.get_other(b)
-    #print repr(Compound({'a1':'O', 'a2':'H', 'a3':'H'},
-    #                     {'b1':('a1', 'a2', 1), 'b2':('a1', 'a3', 1)}))
+    pass
+    

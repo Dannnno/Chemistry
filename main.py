@@ -34,7 +34,7 @@ import time
 import csv
 import subprocess
 import json
-from CheML import CheML
+import CheML
 
 
 hydronium = {"atoms": {
@@ -176,7 +176,11 @@ def read_periodic_table():
     """
 
     per_table = OrderedDict()
-    with open("element_list.csv", "r") as f:
+    if os.path.exists(os.getcwd() + "element_list.csv"):
+        filepath = os.getcwd() + "element_list.csv"
+    else:
+        filepath = os.getcwd() + "/desktop/programming/github/chemistry/element_list.csv"
+    with open(filepath, "r") as f:
         my_reader = csv.reader(f)
         my_reader.next() # skips the header
         try:

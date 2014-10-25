@@ -23,4 +23,5 @@ You should have received a copy of the MIT License along with this program.
 If not, see <http://opensource.org/licenses/MIT>
 """
 
-# Just an init file
+from . import test_CML
+from . import test_compound_graphs
