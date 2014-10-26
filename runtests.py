@@ -23,14 +23,21 @@ You should have received a copy of the MIT License along with this program.
 If not, see <http://opensource.org/licenses/MIT>
 """
 
+## Needed for testing
+import doctest
 import inspect
 import Testing
 import sys
 import unittest
 
+## My stuff (for doctests)
+import compound_graphs
+import CheML
+
 
 loader = unittest.TestLoader()
 suites_list = []
+
 for _, module in inspect.getmembers(Testing):
     for _, aclass in inspect.getmembers(module):
         try:
@@ -40,5 +47,9 @@ for _, module in inspect.getmembers(Testing):
             
 big_suite = unittest.TestSuite(suites_list)
 
+map(big_suite.addTests,
+    map(doctest.DocTestSuite,
+        [compound_graphs, CheML]))
+        
 runner = unittest.TextTestRunner(sys.stdout, verbosity=1)
 runner.run(big_suite)

@@ -29,6 +29,7 @@ except ImportError:
     import StringIO as IO
 finally:
     from collections import OrderedDict
+    from functools import partial
     import compound_graphs as cg
     import contextlib
     import doctest
@@ -75,20 +76,42 @@ class test_global_functions(unittest.TestCase):
                          tuple((cg.convert_type(cell, typ)
                                 for cell, typ in zip(line, col_types))))
 
-class test_compound(unittest.TestCase): 
-    
+
+class test_compound(unittest.TestCase):
+
+    def setUp(self):
+        ## Water
+        self.compound1 = cg.Compound({"a1":"H", "a2":"H", "a3":"O"},
+                                     {"b1":("a1", "a3", 1), 
+                                      "b2":("a2", "a3", 1)})
+        ## Ketone
+        self.compound2 = cg.Compound({"a1": "H", "a2": "H", "a3": "H", 
+                                      "a4": "H","a5": "H", "a6": "H", "a7": "C",
+                                      "a8": "C", "a9": "C", "a10": "O"},
+                                     {"b0": ("a1", "a7", 1),
+                                      "b1": ("a2", "a7", 1),
+                                      "b2": ("a3", "a7", 1),
+                                      "b3": ("a4", "a9", 1),
+                                      "b4": ("a5", "a9", 1),
+                                      "b5": ("a6", "a9", 1),
+                                      "b6": ("a7", "a8", 1),
+                                      "b7": ("a9", "a8", 1),
+                                      "b8": ("a8", "a10", 2)})
+
     def test_from_CML(self):
-        self.assertRaises(NotImplementedError,
-                          cg.Compound.from_CML,
-                          "any_file_name.cml")
+        self.assertEqual(
+                self.compound1, 
+                cg.Compound.from_CML(os.getcwd() + 
+                                     "/molecules/test_molecules/CML_1.cml"))
                           
-    def test_json_serializer(self):
+    def test_json_serializer_repr(self):
         self.assertEqual(cg.Compound.json_serialize(cg.Element()),
                          {'oxid': [1, 2, 3, 4, -4, -3, -2, -1], 
                           'group': 14, 'name': 'Carbon', 'weight': 12.011, 
                           'bonds': set([]), 'symbol': 'C', 'density': 2.267,
                           'number': 6, 'eneg': 2.55, 'bp': 4300.0, 
-                          'bonded_to': set([]), 'radius': 67.0, 'mp': 3800.0})
+                          'ismetal': False, 'bonded_to': set([]),
+                          'root': (0, 2.55), 'radius': 67.0, 'mp': 3800.0})
         a = cg.Element()
         b = cg.Element()
         ab = cg.Bond(a, b)                          
@@ -100,28 +123,47 @@ class test_compound(unittest.TestCase):
                           'type': 'Non-polar covalent'})
         self.assertEqual(cg.Compound.json_serialize(set([1, 2, 3])),
                          ['1', '2', '3'])
+        
+        self.assertEqual(cg.Compound.json_serialize(a, as_str=True),
+                         {'name': 'Carbon', 'bonded_to': ['C']})
+        
+        self.assertEqual(cg.Compound.json_serialize(ab, as_str=True),
+                         {'first': 'C', 'second': 'C'})
+                         
+    def test_get_root(self):
+        self.assertIs(self.compound1.root, self.compound1['a3'])
+        self.assertIs(self.compound2.root, self.compound2['a8'])
+        
+    def test_get_item(self):
+        self.assertIs(self.compound1['a1'], self.compound1.atoms['a1'])
+        self.assertIs(self.compound2['b1'], self.compound2.bonds['b1'])
+        self.assertRaises(KeyError, self.compound1.__getitem__, 'z3')
+        self.assertRaises(KeyError, self.compound2.__getitem__, 'b9')
 
 
 class test_element(unittest.TestCase): 
     
+    def setUp(self):
+        self.a = cg.Element()
+        self.b = cg.Element()
+        self.ab = cg.Bond(self.a, self.b)     
+    
     def test_create_bond(self):
-        a = cg.Element()
-        b = cg.Element()
-        ab = cg.Bond(a, b)
-        a.create_bond(ab, b) # This is a bad test
+        self.a.create_bond(self.ab, self.b) # This is a bad test
                              # It really happens in Bond.__init__()
-        self.assertIn(ab, a.bonds)
-        self.assertIn(a, b.bonded_to)
+        self.assertIn(self.ab, self.a.bonds)
+        self.assertIn(self.a, self.b.bonded_to)
     
     def test_break_bond(self): 
-        a = cg.Element()
-        b = cg.Element()
-        ab = cg.Bond(a, b)
-        a.break_bond(ab)
-        self.assertNotIn(ab, a.bonds)
-        self.assertNotIn(ab, b.bonds)
-        self.assertNotIn(a, b.bonded_to)
-        self.assertNotIn(b, a.bonded_to)
+        self.a.break_bond(self.ab)
+        self.assertNotIn(self.ab, self.a.bonds)
+        self.assertNotIn(self.ab, self.b.bonds)
+        self.assertNotIn(self.a, self.b.bonded_to)
+        self.assertNotIn(self.b, self.a.bonded_to)
+        
+    def test_get_root(self):
+        self.assertEquals(self.a.root, (1, self.a.eneg))
+        self.assertEquals(self.b.root, (1, self.b.eneg))
 
 
 class test_bond(unittest.TestCase): 
@@ -166,5 +208,5 @@ if __name__ == '__main__':
     big_suite = unittest.TestSuite(suites_list)
     big_suite.addTests(doctest.DocTestSuite(cg))
 
-    runner = unittest.TextTestRunner(sys.stdout, verbosity=2)
+    runner = unittest.TextTestRunner(sys.stdout, verbosity=1)
     runner.run(big_suite)

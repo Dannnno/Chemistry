@@ -147,7 +147,10 @@ class CMLParser(object):
                 print "Aborting:", e
 
         finally:
-            self.CML.close()      
+            self.CML.close()  
+            
+    def __str__(self):
+        return str(self.molecule)    
 
 
 def insert_attribs(tag, attributes, values): 
