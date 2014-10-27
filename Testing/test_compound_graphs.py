@@ -29,13 +29,13 @@ except ImportError:
     import StringIO as IO
 finally:
     from collections import OrderedDict
-    from functools import partial
     import compound_graphs as cg
     import contextlib
     import doctest
     import os
     import sys
     import unittest
+    
 
 @contextlib.contextmanager
 def capture():
@@ -97,6 +97,10 @@ class test_compound(unittest.TestCase):
                                       "b6": ("a7", "a8", 1),
                                       "b7": ("a9", "a8", 1),
                                       "b8": ("a8", "a10", 2)})
+                                      
+        self.a = cg.Element()
+        self.b = cg.Element()
+        self.ab = cg.Bond(self.a, self.b) 
 
     def test_from_CML(self):
         self.assertEqual(
@@ -112,59 +116,86 @@ class test_compound(unittest.TestCase):
                           'number': 6, 'eneg': 2.55, 'bp': 4300.0, 
                           'ismetal': False, 'bonded_to': set([]),
                           'root': (0, 2.55), 'radius': 67.0, 'mp': 3800.0})
-        a = cg.Element()
-        b = cg.Element()
-        ab = cg.Bond(a, b)                          
-        self.assertEqual(cg.Compound.json_serialize(ab),
-                         {'second': b,
-                          'first': a,
+                                              
+        self.assertEqual(cg.Compound.json_serialize(self.ab),
+                         {'second': self.b,
+                          'first': self.a,
                           'chirality': None, 'order': 1, 
-                          'bond': set([a,b]),
+                          'bond': set([self.a, self.b]),
                           'type': 'Non-polar covalent'})
+                         
+    def test_json_serializer_str(self):
         self.assertEqual(cg.Compound.json_serialize(set([1, 2, 3])),
                          ['1', '2', '3'])
         
-        self.assertEqual(cg.Compound.json_serialize(a, as_str=True),
+        self.assertEqual(cg.Compound.json_serialize(self.a, as_str=True),
                          {'name': 'Carbon', 'bonded_to': ['C']})
         
-        self.assertEqual(cg.Compound.json_serialize(ab, as_str=True),
-                         {'first': 'C', 'second': 'C'})
+        self.assertEqual(cg.Compound.json_serialize(self.ab, as_str=True),
+                         {'first': 'C', 'second': 'C'})                         
                          
     def test_get_root(self):
         self.assertIs(self.compound1.root, self.compound1['a3'])
         self.assertIs(self.compound2.root, self.compound2['a8'])
         
-    def test_get_item(self):
+    def test_getitem_goodvalues(self):
         self.assertIs(self.compound1['a1'], self.compound1.atoms['a1'])
         self.assertIs(self.compound2['b1'], self.compound2.bonds['b1'])
+        
+    def test_getitem_badvalues(self):
         self.assertRaises(KeyError, self.compound1.__getitem__, 'z3')
         self.assertRaises(KeyError, self.compound2.__getitem__, 'b9')
-
+        
+    def test_constructor_sorting(self):
+        a, b, c = cg.Element('H'), cg.Element('H'), cg.Element('O')
+        ac, bc = cg.Bond(a, c), cg.Bond(b, c)
+        
+        self.assertEqual(self.compound1.atoms, 
+                         OrderedDict((("a1", a),
+                                      ("a2", b),
+                                      ("a3", c))))
+                                      
+        self.assertEqual(self.compound1.bonds,
+                         OrderedDict((("b1", ac),
+                                      ("b2", bc))))
+        
 
 class test_element(unittest.TestCase): 
     
     def setUp(self):
         self.a = cg.Element()
         self.b = cg.Element()
+        self.c = cg.Element('O')
         self.ab = cg.Bond(self.a, self.b)     
     
     def test_create_bond(self):
-        self.a.create_bond(self.ab, self.b) # This is a bad test
-                             # It really happens in Bond.__init__()
         self.assertIn(self.ab, self.a.bonds)
         self.assertIn(self.a, self.b.bonded_to)
     
     def test_break_bond(self): 
         self.a.break_bond(self.ab)
+        
         self.assertNotIn(self.ab, self.a.bonds)
         self.assertNotIn(self.ab, self.b.bonds)
+        
         self.assertNotIn(self.a, self.b.bonded_to)
         self.assertNotIn(self.b, self.a.bonded_to)
         
     def test_get_root(self):
         self.assertEquals(self.a.root, (1, self.a.eneg))
         self.assertEquals(self.b.root, (1, self.b.eneg))
-
+        
+    def test_rich_comparisons(self):
+        self.assertLess(self.a, self.c)
+        
+        self.assertLessEqual(self.a, self.b)
+        self.assertLessEqual(self.a, self.c)
+        
+        self.assertGreater(self.c, self.a)
+        
+        self.assertGreaterEqual(self.c, cg.Element('O'))
+        self.assertGreaterEqual(self.c, self.a)
+        
 
 class test_bond(unittest.TestCase): 
 
@@ -175,28 +206,52 @@ class test_bond(unittest.TestCase):
         self.b2 = (self.elements[2], self.elements[3], 4)
         self.b3 = (self.elements[4], self.elements[5], 1, 'W')
     
-    def test_constructor(self):
-        ## Testing that it throws a ValueError when it should
+    def test_constructor_ValueError(self):
+        """Testing that it throws a ValueError when it should"""
         self.assertRaises(ValueError, cg.Bond, *self.b2)
         self.assertRaises(ValueError, cg.Bond, *self.b3)
         
-        ## Testing that its updating the Elements' sets
+    def test_constructor_updates_elements(self):
+        """Testing that its updating the Elements' sets"""
         self.assertIn(self.b1, self.elements[0].bonds)
         self.assertIn(self.elements[1], self.elements[0].bonded_to)
         
-    def test_get_other(self):
+    def test_get_other_good_value(self):
         self.assertEqual(self.b1.first, self.b1.get_other(self.b1.second))
+        
+    def test_get_other_KeyError(self):
         self.assertRaises(KeyError, self.b1.get_other, self.elements[3])
         
     def test_eval_bond(self):
         self.assertEqual(self.b1.type, "Non-polar covalent")
+        
+    def test_getitem(self):
+        self.assertEqual(self.b1[0], self.b1.first)
+        self.assertEqual(self.b1[1], self.b1.second)
+        
+    def test_rich_comparisons(self):
+        self.assertLess(self.b1, cg.Bond(cg.Element(), cg.Element(), 2))
+        
+        self.assertLessEqual(self.b1, cg.Bond(cg.Element(), cg.Element(), 2))
+        self.assertLessEqual(cg.Bond(cg.Element(), cg.Element(), 2), 
+                             cg.Bond(cg.Element(), cg.Element(), 2))
+                             
+        self.assertGreater(cg.Bond(cg.Element(), cg.Element(), 2), self.b1)
+        
+        self.assertGreaterEqual(cg.Bond(cg.Element(), cg.Element(), 2), self.b1)
+        self.assertGreaterEqual(cg.Bond(cg.Element(), cg.Element(), 2), 
+                                cg.Bond(cg.Element(), cg.Element(), 2))
 
 
 if __name__ == '__main__':
-    test_classes_to_run = [test_global_functions, 
-                           test_compound, 
-                           test_element, 
-                           test_bond]
+    import types
+    
+                          
+    test_classes_to_run = []
+    for key, value in globals().items():
+        if isinstance(value, (type, types.ClassType)):
+            if issubclass(value, unittest.TestCase):
+                test_classes_to_run.append(value)
 
     loader = unittest.TestLoader()
 
