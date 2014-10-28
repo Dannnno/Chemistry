@@ -24,6 +24,8 @@ If not, see <http://opensource.org/licenses/MIT>
 """
 
 import CheML2
+import compound_graphs as cg
+import itertools
 import os
 import tempfile
 import unittest
@@ -78,9 +80,20 @@ class test_cml_builder(unittest.TestCase):
             self.assertEqual(str(self.Builder1), str(Builder3))                    
             
     def test_build(self):
-        for line1, line2 in zip(
-                                 str(self.Builder1).split('\n'),
-                                 self.cml.split('\n')
-                                ):
+        for line1, line2 in itertools.izip(
+                                            str(self.Builder1).split('\n'),
+                                            self.cml.split('\n')
+                                           ):
             self.assertEqual(line1.lstrip(), line2.lstrip())
         
+    def test_from_Compound(self):
+        self.assertEqual(CheML2.CMLBuilder.from_Compound(
+                            cg.Compound.from_CML(os.getcwd() + "/CML_1.cml")
+                                                        ),
+                         cg.Compound(self.molecule.molecule['atoms'], 
+                                     self.molecule.molecule['bonds'],
+                                     {key:value 
+                                      for key, value in 
+                                      self.molecule.molecule.iteritems()
+                                      if key not in ['atoms', 'bonds']}
+                                     ))

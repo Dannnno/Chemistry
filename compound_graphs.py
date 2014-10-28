@@ -30,7 +30,7 @@ import csv
 import json
 import os
 
-import CheML
+import CheML2 as cml
     
     
 ## My global functions
@@ -125,9 +125,13 @@ class Compound(object):
         #...                 "b2":("a2", "a3", 1)})
         #True
         """
-        
-        parsed = CheML.CMLParser(CML_file)
-        return Compound(parsed.atoms, parsed.bonds)
+        with open(CML_file, 'r') as CML_in:
+            parsed = cml.CMLParser(CML_in)
+        return Compound(parsed.atoms, 
+                         parsed.bonds, 
+                         {key:value 
+                          for key, value in parsed.molecule.iteritems()
+                          if key not in ["atoms", "bonds"]})
         
     @classmethod
     def json_serialize(cls, obj, as_str=False):
@@ -176,7 +180,7 @@ class Compound(object):
             except AttributeError:
                 return map(repr, obj)
 
-    def __init__(self, atoms, bonds):
+    def __init__(self, atoms, bonds, other_info):
         self.atoms = OrderedDict(sorted((
                                          (key,Element(value))
                                          for key, value in atoms.iteritems()
@@ -189,7 +193,8 @@ class Compound(object):
                                          for key, value in bonds.iteritems()
                                         ),
                                         key=lambda x: (x[1], x[0])))
-                                        
+        self.molecule = {'atoms':self.atoms, 'bonds':self.bonds}
+        self.molecule.update(other_info)
         self.root = None
         self.get_root()
         
@@ -199,7 +204,8 @@ class Compound(object):
         
         >>> comp = Compound({"a1":"O", "a2":"H", "a3":"H"},
         ...                 {"b1":("a1", "a2", 1), 
-        ...                  "b2":("a1", "a3", 1)})
+        ...                  "b2":("a1", "a3", 1)},
+        ...                 {})
         >>> comp.root is comp['a1']
         True
         """
@@ -214,6 +220,9 @@ class Compound(object):
                 root_eneg = atom.root[1]
                 self.root = atom
                 
+    def to_cml(self, filename):
+        cml.CMLBuilder.from_Compound(self, filename)
+            
     def __getitem__(self, i):
         if (not isinstance(i, basestring)) or (i[0] not in ['a', 'b']):
             raise KeyError(' '.join(["Keys must be strings of form a#",

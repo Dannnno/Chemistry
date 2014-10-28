@@ -83,7 +83,8 @@ class test_compound(unittest.TestCase):
         ## Water
         self.compound1 = cg.Compound({"a1":"H", "a2":"H", "a3":"O"},
                                      {"b1":("a1", "a3", 1), 
-                                      "b2":("a2", "a3", 1)})
+                                      "b2":("a2", "a3", 1)},
+                                     {"id":"Water"})
         ## Ketone
         self.compound2 = cg.Compound({"a1": "H", "a2": "H", "a3": "H", 
                                       "a4": "H","a5": "H", "a6": "H", "a7": "C",
@@ -96,7 +97,8 @@ class test_compound(unittest.TestCase):
                                       "b5": ("a6", "a9", 1),
                                       "b6": ("a7", "a8", 1),
                                       "b7": ("a9", "a8", 1),
-                                      "b8": ("a8", "a10", 2)})
+                                      "b8": ("a8", "a10", 2)},
+                                     {})
                                       
         self.a = cg.Element()
         self.b = cg.Element()
@@ -158,6 +160,15 @@ class test_compound(unittest.TestCase):
         self.assertEqual(self.compound1.bonds,
                          OrderedDict((("b1", ac),
                                       ("b2", bc))))
+                                      
+    def test_to_cml(self):
+        from_cml = cg.Compound.from_CML(os.getcwd() + 
+                                        "/molecules/test_molecules/CML_1.cml")
+        from_cml.to_cml(os.getcwd() + "/molecules/test_molecules/CML_1w.cml")
+        self.assertEqual(from_cml, 
+                         cg.Compound.from_CML(os.getcwd() + 
+                                    "/molecules/test_molecules/CML_1w.cml"))
+                                    
         
 
 class test_element(unittest.TestCase): 

@@ -25,6 +25,7 @@ If not, see <http://opensource.org/licenses/MIT>
 
 from lxml import etree
 from lxml import builder as lb
+import compound_graphs as cg
 import json
               
           
@@ -70,6 +71,25 @@ class CMLParser(object):
     
 class CMLBuilder(object):
     
+    @classmethod
+    def from_Compound(cls, comp):
+        atom = {key:str(value) for key, value in comp.atoms.iteritems()}
+        rev = {value:key for key, value in comp.atoms.iteritems()}
+        bond = {}
+        for bkey, bondobj in comp.bonds.iteritems():
+            key_1, key_2 = '', ''
+            for akey, element in comp.atoms.iteritems():
+                if bondobj in element.bonds:
+                    key_1, key_2 = akey, rev[bondobj.get_other(element)]
+                    break
+            bond[bkey] = [key_1, key_2, str(bondobj.order)]
+        rest = {key:value for key, value in comp.molecule.iteritems()
+                if key not in ['atoms', 'bonds']}
+        rest.update({'atoms':atom})
+        rest.update({'bonds':bond})
+        print rest
+        return CMLBuilder(rest)
+        
     def __init__(self, molecule_dict):
         self.atoms = molecule_dict['atoms']
         self.bonds = molecule_dict['bonds']
