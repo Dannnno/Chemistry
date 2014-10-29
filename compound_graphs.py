@@ -125,8 +125,11 @@ class Compound(object):
         #...                 "b2":("a2", "a3", 1)})
         #True
         """
-        with open(CML_file, 'r') as CML_in:
-            parsed = cml.CMLParser(CML_in)
+        try:
+            with open(CML_file, 'r') as CML_in:
+                parsed = cml.CMLParser(CML_in)
+        except TypeError:
+            parsed = cml.CMLParser(CML_file)
         return Compound(parsed.atoms, 
                          parsed.bonds, 
                          {key:value 
@@ -221,7 +224,7 @@ class Compound(object):
                 self.root = atom
                 
     def to_cml(self, filename):
-        cml.CMLBuilder.from_Compound(self, filename)
+        cml.CMLBuilder.from_Compound(self)
             
     def __getitem__(self, i):
         if (not isinstance(i, basestring)) or (i[0] not in ['a', 'b']):

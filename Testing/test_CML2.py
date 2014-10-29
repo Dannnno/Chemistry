@@ -87,13 +87,16 @@ class test_cml_builder(unittest.TestCase):
             self.assertEqual(line1.lstrip(), line2.lstrip())
         
     def test_from_Compound(self):
-        self.assertEqual(CheML2.CMLBuilder.from_Compound(
-                            cg.Compound.from_CML(os.getcwd() + "/CML_1.cml")
-                                                        ),
-                         cg.Compound(self.molecule.molecule['atoms'], 
-                                     self.molecule.molecule['bonds'],
-                                     {key:value 
-                                      for key, value in 
-                                      self.molecule.molecule.iteritems()
-                                      if key not in ['atoms', 'bonds']}
-                                     ))
+        Builder = CheML2.CMLBuilder.from_Compound(
+                    cg.Compound.from_CML(os.getcwd() + "/CML_1.cml")
+                                                  )
+                                                 
+        with tempfile.NamedTemporaryFile(
+                                          mode='r+',
+                                          suffix='.cml',
+                                          dir=os.getcwd()
+                                         ) as tfile:
+            Builder.to_file(tfile)
+            tfile.seek(0)
+            self.assertEqual(cg.Compound.from_CML(os.getcwd() + "/CML_1.cml"),
+                             cg.Compound.from_CML(tfile))
