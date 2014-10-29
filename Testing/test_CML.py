@@ -31,8 +31,7 @@ import CheML
 
 class TestCMLParser(unittest.TestCase):
     primary_directory = os.getcwd()
-    
-    
+      
     def setUp(self): 
         self.maxDiff = None
         os.chdir(self.primary_directory + '/molecules/test_molecules')

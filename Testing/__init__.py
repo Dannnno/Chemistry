@@ -25,3 +25,14 @@ If not, see <http://opensource.org/licenses/MIT>
 
 from . import test_CML
 from . import test_compound_graphs
+from . import test_CML2
+
+#import os
+#
+#try:
+#    os.chdir(os.getcwd() + "/desktop/programming/github/chemistry")
+#except (WindowsError, IOError, OSError):
+#    pass
+#
+#import CheML
+#import compound_graphs

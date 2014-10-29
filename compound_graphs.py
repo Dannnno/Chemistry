@@ -25,11 +25,12 @@ If not, see <http://opensource.org/licenses/MIT>
 
 from collections import OrderedDict
 from functools import partial
+from functools import total_ordering
 import csv
 import json
 import os
 
-import CheML
+import CheML2 as cml
     
     
 ## My global functions
@@ -124,9 +125,16 @@ class Compound(object):
         #...                 "b2":("a2", "a3", 1)})
         #True
         """
-        
-        parsed = CheML.CMLParser(CML_file)
-        return Compound(parsed.atoms, parsed.bonds)
+        try:
+            with open(CML_file, 'r') as CML_in:
+                parsed = cml.CMLParser(CML_in)
+        except TypeError:
+            parsed = cml.CMLParser(CML_file)
+        return Compound(parsed.atoms, 
+                         parsed.bonds, 
+                         {key:value 
+                          for key, value in parsed.molecule.iteritems()
+                          if key not in ["atoms", "bonds"]})
         
     @classmethod
     def json_serialize(cls, obj, as_str=False):
@@ -175,11 +183,21 @@ class Compound(object):
             except AttributeError:
                 return map(repr, obj)
 
-    def __init__(self, atoms, bonds):
-        self.atoms = {key:Element(value) for key, value in atoms.iteritems()}
-        for key, value in bonds.iteritems():
-            bonds[key] = (self[value[0]], self[value[1]], value[2])
-        self.bonds = {key:Bond(*value) for key, value in bonds.iteritems()}
+    def __init__(self, atoms, bonds, other_info):
+        self.atoms = OrderedDict(sorted((
+                                         (key,Element(value))
+                                         for key, value in atoms.iteritems()
+                                        ),
+                                        key=lambda x: (x[1], x[0])))
+        self.bonds = OrderedDict(sorted((
+                                         (key, Bond(self[value[0]], 
+                                                    self[value[1]], 
+                                                    value[2]))
+                                         for key, value in bonds.iteritems()
+                                        ),
+                                        key=lambda x: (x[1], x[0])))
+        self.molecule = {'atoms':self.atoms, 'bonds':self.bonds}
+        self.molecule.update(other_info)
         self.root = None
         self.get_root()
         
@@ -189,7 +207,8 @@ class Compound(object):
         
         >>> comp = Compound({"a1":"O", "a2":"H", "a3":"H"},
         ...                 {"b1":("a1", "a2", 1), 
-        ...                  "b2":("a1", "a3", 1)})
+        ...                  "b2":("a1", "a3", 1)},
+        ...                 {})
         >>> comp.root is comp['a1']
         True
         """
@@ -204,6 +223,9 @@ class Compound(object):
                 root_eneg = atom.root[1]
                 self.root = atom
                 
+    def to_cml(self, filename):
+        cml.CMLBuilder.from_Compound(self)
+            
     def __getitem__(self, i):
         if (not isinstance(i, basestring)) or (i[0] not in ['a', 'b']):
             raise KeyError(' '.join(["Keys must be strings of form a#",
@@ -239,6 +261,7 @@ class Compound(object):
         return not self == other
 
 
+@total_ordering
 class Element(object): 
 
     def __init__(self, symbol='C'):
@@ -315,13 +338,20 @@ class Element(object):
         return "Element {} bonded to {}".format(self.symbol, map(str, self.bonded_to))
         
     def __eq__(self, other):
-        """These are very weak implementations..."""
+        """These are very weak implementations of == and !="""
         return self.symbol == other.symbol
         
     def __ne__(self, other):
         return not self.__eq__(other)
+        
+    def __lt__(self, other):
+        if self == other:
+            return len(self.bonds) < len(other.bonds)
+        else:
+            return self.number < other.number
 
 
+@total_ordering
 class Bond(object): 
 
     def __init__(self, element1, element2, order=1, chirality=None):
@@ -386,9 +416,9 @@ class Bond(object):
         """
         
         if an_element in self.bond:
-            for element in self.bond:
-                if an_element is not element: 
-                    return element
+            if an_element is self.first:
+                return self.second
+            return self.first
         raise KeyError('Element {} not in bond {}'.format(an_element, self))
         
     def eval_bond(self):
@@ -408,6 +438,14 @@ class Bond(object):
             self.type = "Ionic"
         else:
             self.type = "Unknown type" 
+            
+    def __getitem__(self, i):
+        if i == 0:
+            return self.first
+        elif i == 1:
+            return self.second
+        else:
+            raise IndexError("There are only two items in a bond")
         
     def __str__(self):
         return "Bond between {} and {}".format(self.first, self.second)
@@ -421,16 +459,21 @@ class Bond(object):
                                                   self.chirality)
                                                   
     def __eq__(self, other):
-        return ((self.first == other.first and self.second == other.second) or
-                 (self.first == other.second and self.second == other.first))
+        return ((self.order == other.order) and
+                 ((self.first == other.first and self.second == other.second) or
+                  (self.first == other.second and self.second == other.first)))
         
     def __ne__(self, other):
         return not self.__eq__(other)
+        
+    def __lt__(self, other):
+        if self.order == other.order:
+            for one, two in zip(sorted(self.bond), sorted(other.bond)):
+                if one < two:
+                    return True                    
+        return self.order < other.order
      
      
 if __name__ == '__main__':     
-    a = Element()
-    b = Element()
-    ab = Bond(a, b)  
-    for item in map(Compound.json_serialize, [a, b, ab], [True]*3):
-        print item
+    pass
+    
