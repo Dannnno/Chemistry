@@ -169,6 +169,57 @@ class test_compound(unittest.TestCase):
                          cg.Compound.from_CML(os.getcwd() + 
                                     "/molecules/test_molecules/CML_1w.cml"))
                                     
+    def test_strict_path(self): 
+        self.assertEquals(self.compound1.path(cg.Element('H'), 
+                                              cg.Element('O')), 
+                          [['a1', 'a3'], ['a2', 'a3']])
+                          
+    def test_strict_path_raises_TE(self):
+        self.assertRaises(TypeError, self.compound1.path, (1,))
+        
+    def test_strict_path_raises_VE(self):
+        with self.assertRaises(ValueError):
+            self.compound1.path(cg.Element('H'),
+                                cg.Element('O'),
+                                cg.Element('H'),
+                                bonds=['1'])
+                          
+    def test_strict_path_varargs(self):
+        self.assertEquals(self.compound1.path(cg.Element('H'),
+                                              cg.Element('O'),
+                                              cg.Element('H')),
+                          [['a1', 'a3', 'a2'], ['a2', 'a3', 'a1']])
+    
+    def test_strict_path_bond_type(self):
+        self.assertEquals(self.compound1.path(cg.Element('H'),
+                                              cg.Element('O'),
+                                              bonds=[{'order':1, 
+                                                      'chirality':None}]),
+                          [['a1', 'a3'], ['a2', 'a3']])              
+    
+    def test_contains(self): 
+        self.assertIn(cg.Element('H'), self.compound1)
+        self.assertNotIn(cg.Element('Hg'), self.compound2)
+        
+    def test_get_key(self):
+        self.assertEqual('a1', 
+                         self.compound1.get_key(
+                                self.compound1.atoms['a1']
+                                               ))
+                         
+    def test__path_helper_with_bonds(self):
+        self.assertEquals(self.compound1._path_helper_with_bonds(
+                                    [cg.Element('H'), cg.Element('O')], 
+                                    [{'order':1, 'chirality':None}]
+                                                                ),
+                          [['a1', 'a3'], ['a2', 'a3']]) 
+        
+    def test__path_helper(self):
+        
+        self.assertEquals(self.compound1._path_helper(
+                            [cg.Element('H'), cg.Element('O'), cg.Element('H')]
+                                                     ),
+                          [['a1', 'a3', 'a2'], ['a2', 'a3', 'a1']])                                
         
 
 class test_element(unittest.TestCase): 
@@ -239,6 +290,17 @@ class test_bond(unittest.TestCase):
     def test_getitem(self):
         self.assertEqual(self.b1[0], self.b1.first)
         self.assertEqual(self.b1[1], self.b1.second)
+        
+    def test_membership(self):
+        """Testing equals-a not is-a"""
+        self.assertIn(self.elements[0], self.b1)
+        self.assertNotIn(cg.Element('He'), self.b1)
+        
+    @unittest.expectedFailure
+    def test_alternate_membership(self):
+        """Testing is-a not equals-a"""
+        self.assertIn(self.elements[0], self.b1)
+        self.assertNotIn(self.elements[3], self.b1)
         
     def test_rich_comparisons(self):
         self.assertLess(self.b1, cg.Bond(cg.Element(), cg.Element(), 2))

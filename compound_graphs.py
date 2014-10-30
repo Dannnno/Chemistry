@@ -200,7 +200,37 @@ class Compound(object):
         self.molecule.update(other_info)
         self.root = None
         self.get_root()
+        self.memoized_paths = {}
         
+    def path(self, *args, **kwargs):
+        if not all(map(isinstance, args, [Element]*len(args))):
+            raise TypeError("A path can only consist of elements")
+            
+        print ''.join(map(str, args))
+        flag = False
+               
+        if 'bonds' in kwargs:
+            flag = True
+            if len(kwargs['bonds']) != len(args)-1:
+                raise ValueError("There must be {} bonds, not {}".format(len(args)-1, len(kwargs['bonds'])))
+
+        if flag:
+            return self._path_helper_with_bonds(args, kwargs['bonds'])
+        else:
+            return self._path_helper(args)
+            
+    def _path_helper_with_bonds(self, atoms, bonds):
+        pass
+        
+    def _path_helper(self, atoms):
+        paths = []
+        i=0
+        for key, atom in self.atoms.iteritems():
+            temp = []
+            
+            
+            if temp: paths.append(temp)
+            
     def get_root(self):
         """Gets the root of a molecule.  Does so by evaluating the 'root'
         value of each non-Hydrogen atom
@@ -223,8 +253,34 @@ class Compound(object):
                 root_eneg = atom.root[1]
                 self.root = atom
                 
+    def get_key(self, element):
+        if isinstance(element, Element):
+            iterator = self.atoms.iteritems()
+        elif isinstance(element, Bond):
+            iterator = self.bonds.iteritems()
+        else:
+            raise NotImplementedError("Doesn't have a key for this type {}"
+                                                .format(type(element)))
+        for key, value in iterator:
+            if element is value:
+                return key
+        raise ValueError("Element {} not in compound".format(element))
+                
     def to_cml(self, filename):
         cml.CMLBuilder.from_Compound(self)
+        
+    def __contains__(self, obj):
+        if isinstance(obj, Element):
+            iterator = self.atoms.iteritems()
+        elif isinstance(obj, Bond):
+            iterator = self.bonds.iteritems()
+        else:
+            iterator = self.molecule.iteritems()
+        
+        for key, value in iterator:
+            if value == obj:
+                return True
+        return False
             
     def __getitem__(self, i):
         if (not isinstance(i, basestring)) or (i[0] not in ['a', 'b']):
@@ -446,6 +502,11 @@ class Bond(object):
             return self.second
         else:
             raise IndexError("There are only two items in a bond")
+            
+    def __contains__(self, element):
+        ## I need to consider how strict I want this to be - do I want
+        ## an is-element or an equals-element requirement?
+        return (element == self[0]) or (element == self[1])        
         
     def __str__(self):
         return "Bond between {} and {}".format(self.first, self.second)
