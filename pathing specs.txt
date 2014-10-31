@@ -54,3 +54,11 @@ Path specs:
     Really weird stuff:
         Bridged rings
         
+    Other thoughts:
+        I need to have a wildcard matching system (ie be able to say that _ 
+        is bonded to something, but I don't care what)
+        
+        I need to be able to indicate something that **can't** be in the
+        path/adjacent to the path.  This can probably be achieved by determing
+        that there **is** a path that I want, and that there **is not** a path
+        with the undesired substituents

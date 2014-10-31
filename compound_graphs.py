@@ -27,8 +27,10 @@ from collections import OrderedDict
 from functools import partial
 from functools import total_ordering
 import csv
+import itertools
 import json
 import os
+import types
 
 import CheML2 as cml
     
@@ -101,6 +103,15 @@ def read_periodic_table(filename):
             per_table[tl[1]] = new_row
     
     return per_table
+    
+    
+def memoizer(func):
+    mem_dict = {}
+    def inner(*args, **kwargs):
+        if args not in mem_dict:
+            mem_dict[args] = func(*args, **kwargs)
+        return mem_dict[args]
+    return inner
     
 # Populates my periodic table with all of the element data
 try:
@@ -207,13 +218,80 @@ class Compound(object):
         #self.get_cycles()
         
     def path(self, *args, **kwargs):
-        raise NotImplementedError
+        bflag, rflag = False, False
+        if 'bonds' in kwargs:
+            bflag = True
+        if 'ring' in kwargs:
+            rflag = True
+        
+        i=0
+        paths = set()
+        if not all(map(isinstance, 
+                        args, 
+                        [(list, tuple, Element)]*len(args))):
+            raise TypeError("Only Elements and collections on a path")           
+        elif not (bflag or rflag):
+            ## Then we don't care about bonds and we aren't looking for rings
+            starting_points = ((key, atom) 
+                               for key, atom in self.atoms.iteritems()
+                               if atom == args[i])
+            if not starting_points:
+                return []
+            else:
+                for start in starting_points:
+                    temp = self._path_helper(start, args[1:])
+                    if temp:
+                        paths.update(temp)
+                return paths
+        elif bflag:
+            if not all(map(isinstance, kwargs['bonds'], [(dict, types.NoneType)]*len(kwargs['bonds']))):
+                 raise ValueError("Only NoneTypes and dicts for kwargs['bonds']")           
+            elif rflag:
+                ## We care about bonds and we are looking for rings
+                pass
+            else:
+                ## We care about bonds, not rings
+                pass
+        elif rflag:
+            ## We are looking for rings, we don't care about bonds
+            pass
+        else:
+            ## We aren't doing anything
+            return []
             
     def _path_helper_with_bonds(self, atoms, bonds):
         raise NotImplementedError
         
-    def _path_helper(self, atoms):
-        raise NotImplementedError
+    def _path_helper(self, start, atoms, so_far=[]):
+        key, atom = start
+        so_far.append(key)
+        next_atom = list(((self.get_key(bonded_to), bonded_to)
+                     for bonded_to in atom.bonded_to
+                     if (bonded_to == atoms[0]) and 
+                        (self.get_key(bonded_to) not in so_far)))
+    
+        if len(atoms) == 1:
+            if len(so_far) == 0:
+                return set(((key, akey) for akey, _ in next_atom))
+            return list(itertools.starmap(
+                        lambda x,y: tuple(x + [y]), 
+                            itertools.izip(itertools.repeat(so_far, 
+                                                            len(next_atom)),
+                                           itertools.imap(lambda x: x[0],
+                                                            next_atom))))
+        else:
+            returned_iterators = map(lambda x: 
+                                        self._path_helper(x, 
+                                                          atoms[1:],
+                                                          so_far),
+                                     next_atom)
+            print returned_iterators, type(returned_iterators)                                     
+            for iterator in returned_iterators:
+                print iterator, type(iterator)
+                for it in iterator:
+                    print it, type(it)
+            
+            #return set(tuple(list(iterator)[0] for iterator in returned_iterators))
             
     def get_root(self):
         """Gets the root of a molecule.  Does so by evaluating the 'root'
@@ -236,7 +314,10 @@ class Compound(object):
                 root_val = atom.root[0]
                 root_eneg = atom.root[1]
                 self.root = atom
-                
+          
+    # I don't have to make the entire reversed dictionary, but there is no 
+    # reason to iterate through the entire thing every time
+    #@memoizer # I think this currently checks equals-a not is-a.
     def get_key(self, element):
         if isinstance(element, Element):
             iterator = self.atoms.iteritems()
@@ -273,7 +354,13 @@ class Compound(object):
         return False
             
     def __getitem__(self, i):
-        if (not isinstance(i, basestring)) or (i[0] not in ['a', 'b']):
+        if isinstance(i, (Element, Bond)): ## TODO: Go through and convert get_key to a helper function _get_key
+                                           ## and then change all of the get_keys to self[element]
+            try:
+                return self.get_key(i)
+            except ValueError:
+                raise KeyError("Object {} was not in the compound".format(i))
+        elif (not isinstance(i, basestring)) or (i[0] not in ['a', 'b']):
             raise KeyError(' '.join(["Keys must be strings of form a#",
                                        "or b#, where # is some number"]))
         elif i[0] == 'a':
@@ -384,7 +471,6 @@ class Element(object):
         return "Element {} bonded to {}".format(self.symbol, map(str, self.bonded_to))
         
     def __eq__(self, other):
-        """These are very weak implementations of == and !="""
         return self.symbol == other.symbol
         
     def __ne__(self, other):
@@ -486,9 +572,9 @@ class Bond(object):
             self.type = "Unknown type" 
             
     def __getitem__(self, i):
-        if i == 0:
+        if i in [0, 'first']:
             return self.first
-        elif i == 1:
+        elif i in [1, 'second']:
             return self.second
         else:
             raise IndexError("There are only two items in a bond")
@@ -526,5 +612,17 @@ class Bond(object):
      
      
 if __name__ == '__main__':     
-    pass
-    
+    compound1 = Compound({"a1":"H", "a2":"C", "a3":"H", "a4":"H", "a5":"H"},
+                         {"b1":("a1", "a2", 1),
+                          "b2":("a2", "a3", 1),
+                          "b3":("a2", "a4", 1),
+                          "b4":("a2", "a5", 1)},
+                         {})
+    compound2 = Compound({"a1":"H", "a2":"H", "a3":"O"},
+                         {"b1":("a1", "a3", 1), 
+                          "b2":("a2", "a3", 1)},
+                         {"id":"Water"})
+                                     
+    #compound1.path(Element('H'), Element('O'), Element('H'))
+    print compound2._path_helper(('a1', compound1['a1']), (Element('O'), Element('H')))
+    print compound1._path_helper(('a1', compound1['a1']), (Element(), Element('H')))

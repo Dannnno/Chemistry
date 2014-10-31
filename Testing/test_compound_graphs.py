@@ -75,7 +75,17 @@ class test_global_functions(unittest.TestCase):
         self.assertEqual(cg.read_periodic_table("element_list.csv")["C"],
                          tuple((cg.convert_type(cell, typ)
                                 for cell, typ in zip(line, col_types))))
-
+                                
+    def test_memoizer(self):
+        @cg.memoizer
+        def tfunc(a):
+            return a.__dict__
+        
+        a, b, c = cg.Element(), cg.Element(), cg.Element()
+        cg.Bond(b,c)
+        
+        a1, a2 = tfunc(a), tfunc(b)
+        self.assertNotEqual(a1, a2)
 
 class test_linear_paths(unittest.TestCase):
     
@@ -107,10 +117,11 @@ class test_linear_paths(unittest.TestCase):
     def test_linear_path(self): 
         self.assertEquals(self.compound1.path(cg.Element('H'), 
                                               cg.Element('O')), 
-                          [['a1', 'a3'], ['a2', 'a3']])
+                          set([('a1', 'a3'), ('a2', 'a3')]))
                           
     def test_path_raises_TE(self):
-        self.assertRaises(TypeError, self.compound1.path, (1,))
+        with self.assertRaises(TypeError):
+            self.compound1.path(1)
         
     def test_path_raises_VE(self):
         with self.assertRaises(ValueError):
@@ -140,22 +151,15 @@ class test_linear_paths(unittest.TestCase):
                                                        'chirality':None},
                                                       None]),
                            [['a1', 'a3'], ['a2', 'a3']]) 
-                                              
-    def test_linear__path_helper_with_bonds(self):
-        ## These helper methods will be generators, so the list is necessary
-        self.assertEquals(list(self.compound1._path_helper_with_bonds(
-                                    [cg.Element('H'), cg.Element('O')], 
-                                    [{'order':1, 'chirality':None}]
-                                                                )),
-                          [['a1', 'a3'], ['a2', 'a3']]) 
-        
-    def test_linear__path_helper(self):
-        self.assertEquals(list(self.compound1._path_helper(
-                            [cg.Element('H'), cg.Element('O'), cg.Element('H')]
-                                                     )),
-                          [['a1', 'a3', 'a2'], ['a2', 'a3', 'a1']])  
+                           
+    def test__path_helper(self):
+        self.assertEquals(self.compound1._path_helper(('a3', 
+                                                       self.compound1['a3']),
+                                                      (cg.Element('H'),)),
+                          set([('a3', 'a1'), ('a3', 'a2')]))
 
 
+@unittest.skip("None of these are close to working")
 class test_branched_paths(unittest.TestCase):
 
     def setUp(self):
@@ -234,8 +238,9 @@ class test_branched_paths(unittest.TestCase):
                                     [cg.Element('H'),
                                      cg.Element('H')])),
                           [['a3', ['a1', 'a2']], ['a3', ['a1', 'a2']]])                                     
-                          
-
+   
+                                                 
+@unittest.skip("None of these are close to working")
 class test_ring_compounds(unittest.TestCase):
     
     def setUp(self):
