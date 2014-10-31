@@ -201,35 +201,19 @@ class Compound(object):
         self.root = None
         self.get_root()
         self.memoized_paths = {}
+        self.has_cycles = False
+        self.cycles = [set()]
+        #self.check_cycles()
+        #self.get_cycles()
         
     def path(self, *args, **kwargs):
-        if not all(map(isinstance, args, [Element]*len(args))):
-            raise TypeError("A path can only consist of elements")
-            
-        print ''.join(map(str, args))
-        flag = False
-               
-        if 'bonds' in kwargs:
-            flag = True
-            if len(kwargs['bonds']) != len(args)-1:
-                raise ValueError("There must be {} bonds, not {}".format(len(args)-1, len(kwargs['bonds'])))
-
-        if flag:
-            return self._path_helper_with_bonds(args, kwargs['bonds'])
-        else:
-            return self._path_helper(args)
+        raise NotImplementedError
             
     def _path_helper_with_bonds(self, atoms, bonds):
-        pass
+        raise NotImplementedError
         
     def _path_helper(self, atoms):
-        paths = []
-        i=0
-        for key, atom in self.atoms.iteritems():
-            temp = []
-            
-            
-            if temp: paths.append(temp)
+        raise NotImplementedError
             
     def get_root(self):
         """Gets the root of a molecule.  Does so by evaluating the 'root'
@@ -265,6 +249,12 @@ class Compound(object):
             if element is value:
                 return key
         raise ValueError("Element {} not in compound".format(element))
+        
+    def get_cycles(self):
+        raise NotImplementedError
+        
+    def check_cycles(self):
+        raise NotImplementedError
                 
     def to_cml(self, filename):
         cml.CMLBuilder.from_Compound(self)
