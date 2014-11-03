@@ -225,74 +225,125 @@ class Compound(object):
             rflag = True
         
         i=0
-        paths = set()
+        
         if not all(map(isinstance, 
                         args, 
                         [(list, tuple, Element)]*len(args))):
-            raise TypeError("Only Elements and collections on a path")           
+            raise TypeError("Only Elements and collections on a path") 
+            
+        paths = set()
+        starting_points = ((key, atom) 
+                           for key, atom in self.atoms.iteritems()
+                           if atom == args[i])
+        if not starting_points:
+            return paths          
         elif not (bflag or rflag):
             ## Then we don't care about bonds and we aren't looking for rings
-            starting_points = ((key, atom) 
-                               for key, atom in self.atoms.iteritems()
-                               if atom == args[i])
-            if not starting_points:
-                return []
-            else:
-                for start in starting_points:
-                    temp = self._path_helper(start, args[1:])
-                    if temp:
-                        paths.update(temp)
-                return paths
+            for start in starting_points:
+                temp = self._path_helper(start, args[1:])
+                if temp:
+                    paths.update(temp)
+            return paths
         elif bflag:
-            if not all(map(isinstance, kwargs['bonds'], [(dict, types.NoneType)]*len(kwargs['bonds']))):
-                 raise ValueError("Only NoneTypes and dicts for kwargs['bonds']")           
+            if not all(map(isinstance, 
+                            kwargs['bonds'],
+                            [(dict, types.NoneType)]*len(kwargs['bonds']))):
+                 raise ValueError(
+                            "Only NoneTypes and dicts for kwargs['bonds']"
+                                   )           
             elif rflag:
                 ## We care about bonds and we are looking for rings
                 pass
             else:
-                ## We care about bonds, not rings
-                pass
+                for start in starting_points:
+                    temp = self._path_helper_with_bonds(start, 
+                                                        args[1:],
+                                                        kwargs['bonds'])
+                    if temp:
+                        paths.update(temp)
+                return paths
         elif rflag:
             ## We are looking for rings, we don't care about bonds
             pass
         else:
             ## We aren't doing anything
-            return []
-            
-    def _path_helper_with_bonds(self, atoms, bonds):
-        raise NotImplementedError
-        
-    def _path_helper(self, start, atoms, so_far=[]):
+            return paths
+
+    def _path_helper(self, start, atoms, so_far=()):
         key, atom = start
-        so_far.append(key)
-        next_atom = list(((self.get_key(bonded_to), bonded_to)
+        so_far += (key,)
+        
+        next_atom = [(self.get_key(bonded_to), bonded_to)
                      for bonded_to in atom.bonded_to
-                     if (bonded_to == atoms[0]) and 
-                        (self.get_key(bonded_to) not in so_far)))
-    
+                     if ((bonded_to == atoms[0]) and 
+                         (self.get_key(bonded_to) not in so_far))]
+        
         if len(atoms) == 1:
-            if len(so_far) == 0:
-                return set(((key, akey) for akey, _ in next_atom))
-            return list(itertools.starmap(
-                        lambda x,y: tuple(x + [y]), 
-                            itertools.izip(itertools.repeat(so_far, 
-                                                            len(next_atom)),
-                                           itertools.imap(lambda x: x[0],
-                                                            next_atom))))
+            return set(itertools.starmap(
+                            lambda x,y: x + (y,), 
+                                itertools.izip(itertools.repeat(so_far, 
+                                                                len(next_atom)),
+                                               itertools.imap(lambda x: x[0],
+                                                              next_atom))))
         else:
-            returned_iterators = map(lambda x: 
-                                        self._path_helper(x, 
-                                                          atoms[1:],
-                                                          so_far),
-                                     next_atom)
-            print returned_iterators, type(returned_iterators)                                     
+            returned_iterators = itertools.imap(lambda x: 
+                                                    self._path_helper(x, 
+                                                                      atoms[1:],
+                                                                      so_far),
+                                                next_atom)
+            ret_set = set()
             for iterator in returned_iterators:
-                print iterator, type(iterator)
-                for it in iterator:
-                    print it, type(it)
+                ret_set = ret_set.union(iterator)
+                
+            return ret_set
             
-            #return set(tuple(list(iterator)[0] for iterator in returned_iterators))
-            
+    def _path_helper_with_bonds(self, start, atoms, bonds, so_far=()):
+        key, atom = start
+        so_far += (key,)
+        
+        ret_set = set()
+        possible_bonds = []
+        for bond in atom.bonds:
+            flag = True
+            if ((atom == bond.first and atoms[0] == bond.second) or 
+                (atom == bond.second and atoms[0] == bond.first)):
+                if bonds[0] is None:
+                    possible_bonds.append(bond)
+                else:
+                    for key, value in bonds[0].iteritems():
+                        if not bond.__dict__[key] == value:
+                            flag = False
+                            break
+                    if flag:
+                        possible_bonds.append(bond)
+                        
+        next_atom = [(self.get_key(bond.get_other(atom)), bond.get_other(atom)) 
+                     for bond in possible_bonds
+                     if self.get_key(bond.get_other(atom)) not in so_far]
+        
+        if len(atoms) == 1:
+            return set(itertools.starmap(
+                            lambda x,y: x + (y,), 
+                                itertools.izip(itertools.repeat(so_far, 
+                                                                len(next_atom)),
+                                               itertools.imap(lambda x: x[0],
+                                                              next_atom))))
+        else:
+            returned_iterators = itertools.imap(
+                                    lambda x: 
+                                        self._path_helper_with_bonds(x, 
+                                                                     atoms[1:],
+                                                                     bonds[1:],
+                                                                     so_far),
+                                    next_atom)
+            ret_set = set()
+            for iterator in returned_iterators:
+                ret_set = ret_set.union(iterator)
+                
+            return ret_set
+                    
+        
+                                
     def get_root(self):
         """Gets the root of a molecule.  Does so by evaluating the 'root'
         value of each non-Hydrogen atom
@@ -612,17 +663,23 @@ class Bond(object):
      
      
 if __name__ == '__main__':     
-    compound1 = Compound({"a1":"H", "a2":"C", "a3":"H", "a4":"H", "a5":"H"},
+    compound1 = Compound({"a1":"H", "a2":"H", "a3":"O"},
+                         {"b1":("a1", "a3", 1), 
+                          "b2":("a2", "a3", 1)},
+                         {"id":"Water"})
+    compound2 = Compound({"a1":"H", "a2":"C", "a3":"H", "a4":"H", "a5":"H"},
                          {"b1":("a1", "a2", 1),
                           "b2":("a2", "a3", 1),
                           "b3":("a2", "a4", 1),
                           "b4":("a2", "a5", 1)},
-                         {})
-    compound2 = Compound({"a1":"H", "a2":"H", "a3":"O"},
-                         {"b1":("a1", "a3", 1), 
-                          "b2":("a2", "a3", 1)},
-                         {"id":"Water"})
-                                     
-    #compound1.path(Element('H'), Element('O'), Element('H'))
-    print compound2._path_helper(('a1', compound1['a1']), (Element('O'), Element('H')))
-    print compound1._path_helper(('a1', compound1['a1']), (Element(), Element('H')))
+                         {})                                 
+    
+    print compound1._path_helper_with_bonds(('a1', compound1['a1']), (Element('O'), Element('H')),
+                                  ({'order':1, 'chirality':None}, 
+                                   {'order':1, 'chirality':None}))
+    print
+    print compound2._path_helper_with_bonds(('a1', compound2['a1']), 
+                                  (Element(), Element('H')), 
+                                  ({'order':1, 'chirality':None}, 
+                                   {'order':1, 'chirality':None}))
+    

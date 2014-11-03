@@ -134,14 +134,14 @@ class test_linear_paths(unittest.TestCase):
         self.assertEquals(self.compound1.path(cg.Element('H'),
                                               cg.Element('O'),
                                               cg.Element('H')),
-                          [['a1', 'a3', 'a2'], ['a2', 'a3', 'a1']])
+                          set([('a1', 'a3', 'a2'), ('a2', 'a3', 'a1')]))
     
     def test_linear_path_with_bond_type(self):
         self.assertEquals(self.compound1.path(cg.Element('H'),
                                               cg.Element('O'),
                                               bonds=[{'order':1, 
                                                       'chirality':None}]),
-                          [['a1', 'a3'], ['a2', 'a3']])      
+                          set([('a1', 'a3'), ('a2', 'a3')]))
                           
     def test_linear_path_with_partial_bonds(self):
          self.assertEquals(self.compound2.path(cg.Element('C'),
@@ -150,13 +150,20 @@ class test_linear_paths(unittest.TestCase):
                                                bonds=[{'order':1, 
                                                        'chirality':None},
                                                       None]),
-                           [['a1', 'a3'], ['a2', 'a3']]) 
+                           set([('a7', 'a8', 'a9'), ('a9', 'a8', 'a7')])) 
                            
     def test__path_helper(self):
         self.assertEquals(self.compound1._path_helper(('a3', 
                                                        self.compound1['a3']),
                                                       (cg.Element('H'),)),
                           set([('a3', 'a1'), ('a3', 'a2')]))
+                          
+    def test__path_helper_with_bonds(self):
+        self.assertEquals(self.compound1._path_helper_with_bonds(
+                                    ('a3', self.compound1['a3']),
+                                    (cg.Element('H'),),
+                                    ({'order':1, 'chirality':None},)),
+                          set([('a3', 'a1'), ('a3', 'a2')]))                          
 
 
 @unittest.skip("None of these are close to working")
