@@ -166,7 +166,6 @@ class test_linear_paths(unittest.TestCase):
                           set([('a3', 'a1'), ('a3', 'a2')]))                          
 
 
-@unittest.skip("None of these are close to working")
 class test_branched_paths(unittest.TestCase):
 
     def setUp(self):

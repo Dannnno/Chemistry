@@ -27,6 +27,7 @@ from collections import OrderedDict
 from functools import partial
 from functools import total_ordering
 import csv
+import inspect
 import itertools
 import json
 import os
@@ -218,7 +219,7 @@ class Compound(object):
         #self.get_cycles()
         
     def path(self, *args, **kwargs):
-        bflag, rflag = False, False
+        bflag, rflag, branching = False, False, False
         if 'bonds' in kwargs:
             bflag = True
         if 'ring' in kwargs:
@@ -226,48 +227,65 @@ class Compound(object):
         
         i=0
         
-        if not all(map(isinstance, 
-                        args, 
-                        [(list, tuple, Element)]*len(args))):
-            raise TypeError("Only Elements and collections on a path") 
+        if not all(itertools.imap(isinstance, 
+                                   args, 
+                                   [Element]*len(args))):
+            if not all(itertools.imap(isinstance,
+                                       args,
+                                       [(list, tuple, Element)]*len(args))):
+                raise TypeError("Only Elements and collections on a path") 
+            else:
+                branching = True
             
         paths = set()
         starting_points = ((key, atom) 
                            for key, atom in self.atoms.iteritems()
                            if atom == args[i])
         if not starting_points:
-            return paths          
-        elif not (bflag or rflag):
-            ## Then we don't care about bonds and we aren't looking for rings
-            for start in starting_points:
-                temp = self._path_helper(start, args[1:])
-                if temp:
-                    paths.update(temp)
-            return paths
-        elif bflag:
-            if not all(map(isinstance, 
-                            kwargs['bonds'],
-                            [(dict, types.NoneType)]*len(kwargs['bonds']))):
-                 raise ValueError(
-                            "Only NoneTypes and dicts for kwargs['bonds']"
-                                   )           
+            return paths    
+            
+        if branching:
+            if not (bflag or rflag):
+                pass
+            elif bflag:
+                pass
             elif rflag:
-                ## We care about bonds and we are looking for rings
                 pass
             else:
+                return paths
+        else:
+            if not (bflag or rflag):
+                ## Then we don't care about bonds and we aren't looking for rings
                 for start in starting_points:
-                    temp = self._path_helper_with_bonds(start, 
-                                                        args[1:],
-                                                        kwargs['bonds'])
+                    temp = self._path_helper(start, args[1:])
                     if temp:
                         paths.update(temp)
                 return paths
-        elif rflag:
-            ## We are looking for rings, we don't care about bonds
-            pass
-        else:
-            ## We aren't doing anything
-            return paths
+            elif bflag:
+                if not all(itertools.imap(
+                                isinstance, 
+                                kwargs['bonds'],
+                                [(dict, types.NoneType)]*len(kwargs['bonds']))):
+                    raise ValueError(
+                                "Only NoneTypes and dicts for kwargs['bonds']"
+                                    )           
+                elif rflag:
+                    ## We care about bonds and we are looking for rings
+                    pass
+                else:
+                    for start in starting_points:
+                        temp = self._path_helper_with_bonds(start, 
+                                                            args[1:],
+                                                            kwargs['bonds'])
+                        if temp:
+                            paths.update(temp)
+                    return paths
+            elif rflag:
+                ## We are looking for rings, we don't care about bonds
+                pass
+            else:
+                ## We aren't doing anything
+                return paths
 
     def _path_helper(self, start, atoms, so_far=()):
         key, atom = start
@@ -341,9 +359,7 @@ class Compound(object):
                 ret_set = ret_set.union(iterator)
                 
             return ret_set
-                    
-        
-                                
+                                                    
     def get_root(self):
         """Gets the root of a molecule.  Does so by evaluating the 'root'
         value of each non-Hydrogen atom
@@ -660,9 +676,25 @@ class Bond(object):
                 if one < two:
                     return True                    
         return self.order < other.order
+        
+        
+def needs_a_docstring():
+    """Function that looks at all of the functions and methods and checks if
+    they have a docstring
+    """
+    
+    for key, value in globals().items():
+        if isinstance(value, types.FunctionType):
+            if value.__doc__ is None:
+                yield value.__name__
+        elif inspect.isclass(value):
+            for k, v in value.__dict__.items():
+                if isinstance(v, types.FunctionType):
+                    if v.__doc__ is None:
+                        yield "{}.{}".format(key, v.__name__)
      
      
-if __name__ == '__main__':     
+if __name__ == '__main__':
     compound1 = Compound({"a1":"H", "a2":"H", "a3":"O"},
                          {"b1":("a1", "a3", 1), 
                           "b2":("a2", "a3", 1)},
