@@ -450,9 +450,8 @@ class test_compound(unittest.TestCase):
     def test_get_key(self):
         self.assertEqual('a1', 
                          self.compound1.get_key(
-                                self.compound1.atoms['a1']
-                                               ))                              
-        
+                                self.compound1.atoms['a1']))                              
+                                        
 
 class test_element(unittest.TestCase): 
     

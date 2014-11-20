@@ -29,7 +29,7 @@ try:
 except ImportError:
     import table_builder
     table_builder.build_table()
-    del table_builder
+    del globals()["table_builder"]
     from periodic_table import periodic_table
 finally:
     from collections import OrderedDict
