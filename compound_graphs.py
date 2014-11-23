@@ -35,7 +35,7 @@ finally:
     from collections import OrderedDict
     from functools import partial
     from functools import total_ordering
-    import inspect
+    from inspect import isclass
     import itertools
     import json
     import types    
@@ -220,18 +220,14 @@ class Compound(object):
         key, atom = start
         so_far += (key,)
         
-        next_atom = [(self.get_key(bonded_to), bonded_to)
-                     for bonded_to in atom.bonded_to
-                     if ((bonded_to == atoms[0]) and 
-                         (self.get_key(bonded_to) not in so_far))]
+        next_atom = ((self.get_key(bonded_to), bonded_to)
+                      for bonded_to in atom.bonded_to
+                      if ((bonded_to == atoms[0]) and 
+                          (self.get_key(bonded_to) not in so_far)))
         
         if len(atoms) == 1:
-            return set(itertools.starmap(
-                            lambda x,y: x + (y,), 
-                                itertools.izip(itertools.repeat(so_far, 
-                                                                len(next_atom)),
-                                               itertools.imap(lambda x: x[0],
-                                                              next_atom))))
+            return set([so_far + (atom[0],) for atom in next_atom])
+            
         else:
             returned_iterators = itertools.imap(lambda x: 
                                                     self._path_helper(x, 
@@ -269,12 +265,7 @@ class Compound(object):
                      if self.get_key(bond.get_other(atom)) not in so_far]
         
         if len(atoms) == 1:
-            return set(itertools.starmap(
-                            lambda x,y: x + (y,), 
-                                itertools.izip(itertools.repeat(so_far, 
-                                                                len(next_atom)),
-                                               itertools.imap(lambda x: x[0],
-                                                              next_atom))))
+            return set([so_far + (atom[0],) for atom in next_atom])
         else:
             returned_iterators = itertools.imap(
                                     lambda x: 
@@ -408,7 +399,7 @@ class Element(object):
         self.eneg = periodic_table[symbol][9]
         self.radius = periodic_table[symbol][10]
         self.oxid = periodic_table[symbol][11]
-        self.ismetal = False ## Figure out how to do this
+        self.is_metal = False ## Figure out how to do this
         self.root = (0, self.eneg)
         self.get_root()
         
@@ -558,11 +549,11 @@ class Bond(object):
         delta = abs(self.first.eneg - self.second.eneg)
         if delta <= 0.5:
             self.type = "Non-polar covalent"
-        elif delta <= 1.6 or (delta <= 2 and not (self.first.ismetal or
-                                                   self.second.ismetal)):
+        elif delta <= 1.6 or (delta <= 2 and not (self.first.is_metal or
+                                                   self.second.is_metal)):
             self.type = "Polar-covalent"
-        elif delta > 2 or (delta <= 2 and (self.first.ismetal or
-                                            self.second.ismetal)):
+        elif delta > 2 or (delta <= 2 and (self.first.is_metal or
+                                            self.second.is_metal)):
             self.type = "Ionic"
         else:
             self.type = "Unknown type" 
@@ -616,7 +607,7 @@ def needs_a_docstring():
         if isinstance(value, types.FunctionType):
             if value.__doc__ is None:
                 yield value.__name__
-        elif inspect.isclass(value):
+        elif isclass(value):
             for k, v in value.__dict__.items():
                 if isinstance(v, types.FunctionType):
                     if v.__doc__ is None:

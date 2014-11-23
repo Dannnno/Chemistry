@@ -28,40 +28,34 @@ try:
 except ImportError:
     import StringIO as IO
 finally:
-    import compound_graphs as cg
     import doctest
     import sys
     import unittest
-
-
-class test_acid_base(unittest.TestCase):
+    import table_builder as tb
     
-    def setUp(self):
-        ## Water
-        self.compound1 = cg.Compound({"a1":"H", "a2":"H", "a3":"O", "a4":"H"},
-                                     {"b1":("a1", "a3", 1), 
-                                      "b2":("a2", "a3", 1),
-                                      "b3":("a3", "a4", 1)},
-                                     {"id":"Hydronium"})
-        ## Ketone
-        self.compound2 = cg.Compound({"a1": "H", "a2": "O"},
-                                     {"b1": ("a1", "a2", 1)},
-                                     {"id":"Hydroxide"})
-                                     
-    def test_strongacid_strongbase(self): 
     
-        self.assertEqual(cg.Compound.react(self.compound1, self.compound2),
-                         set([cg.Compound({"a1": "H", "a2": "O", "a3": "H"},
-                                     {"b1": ("a1", "a2", 1),
-                                      "b2": ("a2", "a3", 1)},
-                                     {}),
-                          cg.Compound({"a1": "H", "a2": "O", "a3": "H"},
-                                     {"b1": ("a1", "a2", 1),
-                                      "b2": ("a2", "a3", 1)},
-                                     {})
-                         ]))
+class test_helpers(unittest.TestCase):
+    
+    def setUp(self): pass
+    
+    def tearDown(self): pass
+    
+    @unittest.expectedFailure
+    def test_periodic_table(self):
+        ## Also tests table_builder.build_table()
+        tb.build_table()
+        self.assertRaises(ImportError, __import__, "periodic_table")
         
-    
+    def test_convert_type(self):
+        self.assertEqual(tb.convert_type('1', int), 1)
+        self.assertEqual(tb.convert_type('1.0', float), 1.0)
+        self.assertEqual(tb.convert_type('Hello', str), 'Hello')
+        self.assertEqual(tb.convert_type('[1,2,3]', tb.str_to_list), [1, 2, 3])
+     
+    def test_str_to_list(self):
+        self.assertEqual(tb.str_to_list('[1,2,3]'), ['1', '2', '3'])
+        self.assertEqual(tb.str_to_list('[1,2,3]', mapped=int), [1, 2, 3])
+
 
 if __name__ == '__main__':
     import types
