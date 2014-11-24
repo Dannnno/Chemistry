@@ -33,6 +33,7 @@ except ImportError:
     from periodic_table import periodic_table
 finally:
     from collections import OrderedDict
+    from copy import deepcopy
     from functools import partial
     from functools import total_ordering
     from inspect import isclass
@@ -41,7 +42,8 @@ finally:
     import types    
     
     import CheML2 as cml
-    
+
+
 ## My global functions    
 def memoizer(func):
     mem_dict = {}
@@ -83,10 +85,9 @@ class Compound(object):
         and is then used to make a detailed and pretty repr of a Compound instance
         
         >>> a, b = Element(), Element()                        
-        >>> Compound.json_serialize(Bond(a, b))  == \\
-        ...            {'second': b, 'first': a, 'chirality': None, 
-        ...             'order': 1, 'type': 'Non-polar covalent',
-        ...             'bond': set([a, b])}
+        >>> Compound.json_serialize(Bond(a, b)) == \\
+        ...            {'second': b, 'first': a, 'chirality': None, 'order': 1,
+        ...             'type': 'Non-polar covalent', 'bond': set([a, b])}
         True
          
         >>> Compound.json_serialize(set([1, 2, 3]))
@@ -148,7 +149,7 @@ class Compound(object):
         #self.get_cycles()
         
     def path(self, *args, **kwargs):
-        bflag, rflag, branching = False, False, False
+        bflag, rflag = False, False
         if 'bonds' in kwargs:
             bflag = True
         if 'ring' in kwargs:
@@ -156,16 +157,8 @@ class Compound(object):
         
         i=0
         
-        if not all(itertools.imap(isinstance, 
-                                   args, 
-                                   [Element]*len(args))):
-            if not all(itertools.imap(isinstance,
-                                       args,
-                                       [(list, tuple, Element)]*len(args))):
-                raise TypeError("Only Elements and collections on a path") 
-            else:
-                branching = True
-            
+        if not all(itertools.imap(lambda x: isinstance(x, (Element, Ring)), args)):
+            raise TypeError("Only Elements on a path") 
         paths = set()
         starting_points = ((key, atom) 
                            for key, atom in self.atoms.iteritems()
@@ -173,48 +166,38 @@ class Compound(object):
         if not starting_points:
             return paths    
             
-        if branching:
-            if not (bflag or rflag):
-                pass
-            elif bflag:
-                pass
+        if not (bflag or rflag):
+            ## Then we don't care about bonds and we aren't looking for rings
+            for start in starting_points:
+                temp = self._path_helper(start, args[1:])
+                if temp:
+                    paths.update(temp)
+            return paths
+        elif bflag:
+            if not all(itertools.imap(
+                            isinstance, 
+                            kwargs['bonds'],
+                            [(dict, types.NoneType)]*len(kwargs['bonds']))):
+                raise ValueError(
+                            "Only NoneTypes and dicts for kwargs['bonds']"
+                                )           
             elif rflag:
+                ## We care about bonds and we are looking for rings
                 pass
             else:
-                return paths
-        else:
-            if not (bflag or rflag):
-                ## Then we don't care about bonds and we aren't looking for rings
                 for start in starting_points:
-                    temp = self._path_helper(start, args[1:])
+                    temp = self._path_helper_with_bonds(start, 
+                                                        args[1:],
+                                                        kwargs['bonds'])
                     if temp:
                         paths.update(temp)
                 return paths
-            elif bflag:
-                if not all(itertools.imap(
-                                isinstance, 
-                                kwargs['bonds'],
-                                [(dict, types.NoneType)]*len(kwargs['bonds']))):
-                    raise ValueError(
-                                "Only NoneTypes and dicts for kwargs['bonds']"
-                                    )           
-                elif rflag:
-                    ## We care about bonds and we are looking for rings
-                    pass
-                else:
-                    for start in starting_points:
-                        temp = self._path_helper_with_bonds(start, 
-                                                            args[1:],
-                                                            kwargs['bonds'])
-                        if temp:
-                            paths.update(temp)
-                    return paths
-            elif rflag:
-                ## We are looking for rings, we don't care about bonds
-                pass
-            else:
-                ## We aren't doing anything
-                return paths
+        elif rflag:
+            ## We are looking for rings, we don't care about bonds
+            pass
+        else:
+            ## We aren't doing anything
+            return paths
 
     def _path_helper(self, start, atoms, so_far=()):
         key, atom = start
@@ -279,7 +262,7 @@ class Compound(object):
                 ret_set = ret_set.union(iterator)
                 
             return ret_set
-                                                    
+    
     def get_root(self):
         """Gets the root of a molecule.  Does so by evaluating the 'root'
         value of each non-Hydrogen atom
@@ -379,8 +362,15 @@ class Compound(object):
             
     def __ne__(self, other):
         return not self == other
-
-
+        
+        
+class Ring(Compound):
+    
+    def __init__(self, atoms, bonds, other_info, substituents):
+        super(Ring, self).__init__(atoms, bonds, other_info)
+        self.size = len(atoms)
+        self.aromatic = False
+        
 @total_ordering
 class Element(object): 
 
@@ -506,13 +496,13 @@ class Bond(object):
         
         if int(order) not in xrange(1, 4):
             raise ValueError(
-                "The order of a bond must be [1,3], not {}".format(order))
+                "The order of a bond must be [1,2,3], not {}".format(order))
         if chirality not in [None, 'R', 'S', 'E', 'Z']:
             raise ValueError(''.join(["A bond must have no ",
                                         "(None) chirality or R/S/E/Z ",
                                         "chirality, not {}"]).format(chirality))
         if element1 is element2:
-            raise ValueError("A bond can/'t go from an element to itself.")
+            raise ValueError("A bond can't go from an element to itself.")
             
         self.order = int(order)
         self.chirality = chirality

@@ -142,92 +142,11 @@ class test_linear_paths(unittest.TestCase):
                                     ('a3', self.compound1['a3']),
                                     (cg.Element('H'),),
                                     ({'order':1, 'chirality':None},)),
-                          set([('a3', 'a1'), ('a3', 'a2')]))                          
-
-
-@unittest.skip('')
-class test_branched_paths(unittest.TestCase):
-
-    def setUp(self):
-        ## Water
-        self.compound1 = cg.Compound({"a1":"H", "a2":"H", "a3":"O"},
-                                     {"b1":("a1", "a3", 1), 
-                                      "b2":("a2", "a3", 1)},
-                                     {"id":"Water"})
-        ## Ketone
-        self.compound2 = cg.Compound({"a1": "H", "a2": "H", "a3": "H", 
-                                      "a4": "H","a5": "H", "a6": "H", "a7": "C",
-                                      "a8": "C", "a9": "C", "a10": "O"},
-                                     {"b0": ("a1", "a7", 1),
-                                      "b1": ("a2", "a7", 1),
-                                      "b2": ("a3", "a7", 1),
-                                      "b3": ("a4", "a9", 1),
-                                      "b4": ("a5", "a9", 1),
-                                      "b5": ("a6", "a9", 1),
-                                      "b6": ("a7", "a8", 1),
-                                      "b7": ("a9", "a8", 1),
-                                      "b8": ("a8", "a10", 2)},
-                                     {})
-                                     
-    def test_branching_path(self): 
-        self.assertEquals(self.compound1.path(cg.Element('O'),
-                                              [cg.Element('H'),
-                                               cg.Element('H')]),
-                          [['a3', ['a1', 'a2']], ['a3', ['a1', 'a2']]])
-                          
-    def test_nested_branching_path(self): 
-        self.assertEquals(self.compound2.path(cg.Element('C'),
-                                              [cg.Element('O'),
-                                               [cg.Element('C'),
-                                                [cg.Element('H')]],
-                                               cg.Element('C')]),
-                          [['a8', ['a10', ['a7', 'a1'], 'a9']],
-                           ['a8', ['a10', ['a7', 'a2'], 'a9']],
-                           ['a8', ['a10', ['a7', 'a3'], 'a9']],
-                           ['a8', ['a10', ['a9', 'a4'], 'a7']],
-                           ['a8', ['a10', ['a9', 'a5'], 'a7']],
-                           ['a8', ['a10', ['a9', 'a6'], 'a7']]])
-    
-    def test_branching_path_with_bond_type(self): 
-        self.assertEquals(self.compound1.path(cg.Element('O'),
-                                              [cg.Element('H'),
-                                               cg.Element('H')],
-                                              bonds=[{'order':1, 
-                                                      'chirality':None},
-                                                     {'order':1, 
-                                                      'chirality':None}]),
-                          [['a3', ['a1', 'a2']], ['a3', ['a1', 'a2']]]) 
-                          
-    def test_branching_path_with_partial_bonds(self):
-        self.assertEquals(self.compound1.path(cg.Element('O'),
-                                              [cg.Element('H'),
-                                               cg.Element('H')],
-                                              bonds=[None,
-                                                     {'order':1, 
-                                                      'chirality':None}]),
-                          [['a3', ['a1', 'a2']], ['a3', ['a1', 'a2']]])
-                             
-    def test_branching__path_helper_with_bonds(self): 
-        self.assertEquals(list(self.compound1._path_helper_with_bonds(
-                                cg.Element('O'),
-                                [cg.Element('H'),
-                                 cg.Element('H')],
-                                bonds=[{'order':1, 
-                                        'chirality':None},
-                                       {'order':1, 
-                                        'chirality':None}])),
-                          [['a3', ['a1', 'a2']], ['a3', ['a1', 'a2']]])            
-        
-    def test_branching__path_helper(self): 
-        self.assertEquals(list(self.compound1._path_helper(
-                                    cg.Element('O'),
-                                    [cg.Element('H'),
-                                     cg.Element('H')])),
-                          [['a3', ['a1', 'a2']], ['a3', ['a1', 'a2']]])                                     
+                          set([('a3', 'a1'), ('a3', 'a2')]))                                                             
    
                                                  
 @unittest.skip("None of these are close to working")
-class test_ring_compounds(unittest.TestCase):
+class test_ring_paths(unittest.TestCase):
     
     def setUp(self):
         self.compound1 = cg.Compound({"a1":"H", "a2":"H", "a3":"O"},
@@ -371,7 +290,7 @@ class test_compound(unittest.TestCase):
                           'group': 14, 'name': 'Carbon', 'weight': 12.011, 
                           'bonds': set([]), 'symbol': 'C', 'density': 2.267,
                           'number': 6, 'eneg': 2.55, 'bp': 4300.0, 
-                          'ismetal': False, 'bonded_to': set([]),
+                          'is_metal': False, 'bonded_to': set([]),
                           'root': (0, 2.55), 'radius': 67.0, 'mp': 3800.0})
                                               
         self.assertEqual(cg.Compound.json_serialize(self.ab),
@@ -428,8 +347,19 @@ class test_compound(unittest.TestCase):
         self.assertEqual('a1', 
                          self.compound1.get_key(
                                 self.compound1.atoms['a1']))                              
+                                     
                                         
-
+class test_ring_compound(unittest.TestCase):
+    
+    def setUp(self): 
+        pass
+        
+    def tearDown(self):
+        pass    
+    
+    
+    
+    
 class test_element(unittest.TestCase): 
     
     def setUp(self):
