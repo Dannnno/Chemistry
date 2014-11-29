@@ -24,17 +24,42 @@ If not, see <http://opensource.org/licenses/MIT>
 """
 
 from . import test_CML
+from . import test_CML2
 from . import test_compound_graphs
 from . import test_graphs3
 from . import test_reactions
 from . import test_periodic_helpers
 
-#import os
-#
-#try:
-#    os.chdir(os.getcwd() + "/desktop/programming/github/chemistry")
-#except (WindowsError, IOError, OSError):
-#    pass
-#
-#import CheML
-#import compound_graphs
+import os
+import logging
+import sys
+
+
+logging.basicConfig(stream=sys.stdout, 
+                    filename=os.getcwd()+"/testLog.log",
+                    level=logging.DEBUG)
+cur_dir = os.getcwd()
+try:
+    try:
+        os.chdir(os.getcwd() + "/desktop/programming/github/chemistry/Testing")
+    except Exception:
+        try: 
+            os.chdir(os.getcwd() + "/Testing")
+        except Exception:
+            print 1
+            os.chdir(cur_dir)
+    finally:
+        for path in os.listdir(os.getcwd()):
+            if (path.startswith('test_') and 
+                (path.endswith('.py') or path.endswith('.pyc'))):
+                cut_path = path.split('.')[0]
+                if cut_path not in globals():
+                    try:
+                        globals()[cut_path] = __import__(cut_path)
+                    except ImportError as e:
+                        print e
+                    finally:
+                        logging.warn(
+                            "{} was not imported for testing".format(cut_path))
+finally:
+    os.chdir(cur_dir)

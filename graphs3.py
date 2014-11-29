@@ -37,7 +37,7 @@ finally:
     
     import networkx as nx
     
-    import CheML as cml
+    import CheML2 as cml
 
 def get_Element(symbol='C'):
     return {"symbol":symbol} #periodic_table[symbol]

@@ -64,6 +64,30 @@ class CMLParser(object):
                     last = []
                     
         del self.bonds[None]
+        
+        for key, bond in self.bonds.items():
+            try:
+                rest = bond[2:]
+            except KeyError:
+                self.bonds[key] = (bond[0], bond[1], {'order':'1', 'chirality':'None'},)
+            else:
+                if len(rest) == 1:
+                    self.bonds[key] = (bond[0], bond[1], 
+                                       {'order':'{}'.format(rest[0]), 
+                                        'chirality':'None'},)
+                elif len(rest) == 2:
+                    self.bonds[key] = (bond[0], bond[1], 
+                                       {'order':'{}'.format(rest[0]),
+                                        'chirality':'{}'.format(rest[1])},)
+                else:
+                    d = {'order':'{}'.format(rest[0]),
+                         'chirality':'{}'.format(rest[1])}
+                    i=0
+                    for value in rest[2:]:
+                        d['unknown{}'.format(i)] = '{}'.format(value)
+                        i+=1
+                    self.bonds[key] = (bond[0], bond[1], d)
+                    
             
     def __str__(self):
         return json.dumps(self.molecule, indent=4)
@@ -126,7 +150,10 @@ class CMLBuilder(object):
                                      ).format(type(cml_file)))
         
     def __str__(self):
-        return etree.tostring(self.CML, pretty_print=True)  
+        return etree.tostring(self.CML, pretty_print=True) 
+        
+    def __repr__(self):
+        return str(self)
         
     
 if __name__ == '__main__':

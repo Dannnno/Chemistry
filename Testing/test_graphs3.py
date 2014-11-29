@@ -56,10 +56,10 @@ class test_Compound(unittest.TestCase):
     
     def setUp(self): 
         self.compound1 = Chemistry.Compound(
-                            {'a1':'H', 'a2':'H', 'a3':'O'}, 
-                            {'b1':('a1', 'a2', {'order':1, 'chirality':None}), 
-                             'b2':('a2', 'a3', {'order':1, 'chirality':None})})
-    
+                                {"a1":"H", "a2":"H", "a3":"O"},
+                                {"b1":("a1", "a3", {'order':1, 'chirality':None}), 
+                                 "b2":("a2", "a3", {'order':1, 'chirality':None})},
+                                {"id":"Water"})
     def tearDown(self): pass
     
     @classmethod
@@ -87,6 +87,15 @@ class test_Compound(unittest.TestCase):
         self.compound1._add_edge_('b1', 'a1', 'a4', 
                                   {'order':1, 'chirality':None})
         self.assertEqual(self.compound1['a1']['a4']['key'], "b1")
+        
+    def test_from_CML(self):
+        self.assertEqual(
+                self.compound1, 
+                Chemistry.Compound.from_CML(os.getcwd() + 
+                                     "/molecules/test_molecules/CML_1.cml"))
+                          
+    
+        
         
 
 if __name__ == '__main__':
