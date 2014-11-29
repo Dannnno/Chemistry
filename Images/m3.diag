@@ -1,4 +1,0 @@
-blockdiag { orientation = landscape
-    H2 -> H1;
-    H1 -> H1;
-}

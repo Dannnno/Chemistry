@@ -41,7 +41,7 @@ finally:
     import json
     import types    
     
-    import CheML2 as cml
+    import CheML as cml
 
 
 ## My global functions    
