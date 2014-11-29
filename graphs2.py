@@ -22,6 +22,7 @@ class Graph(object):
         self.molecule = {'atoms':self.atoms, 'bonds':self.bonds}
         self.other_info = other_info
         
+        
 class CompoundTree(Graph):
     
     def __init__(self, atoms, bonds, other_info={}, connections={}):
@@ -32,6 +33,7 @@ class CompoundRing(Graph):
     
     def __init__(self, atoms, bonds, other_info={}, connections={}):
         super(CompoundRing, self).__init__(atoms, bonds, other_info)
+        
         
 class SubGraphConnectors(Graph):
     
@@ -50,11 +52,28 @@ class SubGraphConnectors(Graph):
                 raise ValueError(
                     "All left values must in in graph1 and right values graph2")
                     
+
+class CompleteCompound(Graph):
+    
+    def __init__(self, rings=[], trees=[], connections=[]):
+        self.rings = rings
+        self.trees = trees
+        self.connections = connections
         
-            
-                                                   
-        
-        
+        for connection in connections:
+            lg, rg = connection.graph1, connection.graph2
+            left, right = connection.left_graph, connection.right_graph
+            lg = (self.trees[self.trees.index(lg)] 
+                  if lg in self.trees 
+                  else self.rings[self.rings.index(lg)])
+            rg = (self.trees[self.trees.index(rg)] 
+                  if rg in self.trees 
+                  else self.rings[self.rings.index(rg)])
+            for latom, ratom in itertools.izip(left, right):
+                if not (latom in lg.atoms and ratom in rg.atoms):
+                    raise ValueError("The connections don't match")
+
+
 @total_ordering
 class Element(object): 
 
@@ -270,6 +289,7 @@ class Bond(object):
                 if one < two:
                     return True                    
         return self.order < other.order
+        
 
 if __name__ == '__main__':
     g1 = CompoundTree({"a1":"H", "a2":"H", "a3":"O"},

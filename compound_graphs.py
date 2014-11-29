@@ -363,13 +363,14 @@ class Compound(object):
     def __ne__(self, other):
         return not self == other
         
-        
+
 class Ring(Compound):
     
     def __init__(self, atoms, bonds, other_info, substituents):
         super(Ring, self).__init__(atoms, bonds, other_info)
         self.size = len(atoms)
         self.aromatic = False
+        
         
 @total_ordering
 class Element(object): 

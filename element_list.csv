@@ -1,4 +1,4 @@
-Num,Sym,Element,Group,Weight,Density,Melting,Boiling,Heat,Eneg,Radius,Oxidation
+Atomic Number,Symbol,Element,Group,Weight,Density,Melting Point,Boiling Point,Heat of ?,Electronegativity,Atomic Radius,Oxidation Number(s)
 1,H,Hydrogen,1,1.008,0.00008988,14.01,20.28,14.304,2.2,53,"[1,-1]"
 2,He,Helium,18,4.002602,0.0001785,0.956,4.22,5.193,No_Data,31,[0]
 3,Li,Lithium,1,6.94,0.534,453.69,1560,3.582,0.98,167,[1]
