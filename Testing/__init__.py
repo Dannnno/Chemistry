@@ -25,7 +25,7 @@ If not, see <http://opensource.org/licenses/MIT>
 
 from . import test_CML
 from . import test_compound_graphs
-from . import test_CML2
+from . import test_graphs3
 from . import test_reactions
 from . import test_periodic_helpers
 

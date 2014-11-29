@@ -33,29 +33,45 @@ except ImportError:
     from periodic_table2 import periodic_table
     import periodic_table2 as pt
 finally:
+    import json
+    
     import networkx as nx
-
+    
+    import CheML as cml
 
 def get_Element(symbol='C'):
-    return periodic_table[symbol]
+    return {"symbol":symbol} #periodic_table[symbol]
 
 
 class Compound(nx.Graph):
-    
+
+    @classmethod
+    def from_CML(cls, CML_file):        
+        try:
+            with open(CML_file, 'r') as CML_in:
+                parsed = cml.CMLParser(CML_in)
+        except TypeError:
+            parsed = cml.CMLParser(CML_file)
+        return Compound(parsed.atoms,
+                         parsed.bonds,
+                         {key: value
+                          for key, value in parsed.molecule.iteritems()
+                          if key not in ["atoms", "bonds"]})
+   
     def __init__(self, atoms, bonds, other_info={}):
         super(Compound, self).__init__()
-        self.add_nodes_from_(atoms)
-        self.add_edges_from_(bonds)
+        self._add_nodes_from_(atoms)
+        self._add_edges_from_(bonds)
         
-    def add_nodes_from_(self, atoms):
+    def _add_nodes_from_(self, atoms):
         for key, atom in atoms.iteritems():
-            self.add_node_(key, get_Element(atom))
+            self._add_node_(key, get_Element(atom))
         
-    def add_edges_from_(self, bonds):
+    def _add_edges_from_(self, bonds):
         for id_, bond in bonds.iteritems():
-            self.add_edge_(id_, *bond)
+            self._add_edge_(id_, *bond)
             
-    def add_node_(self, key, atom):
+    def _add_node_(self, key, atom):
         try:
             self.node[key]
         except KeyError:
@@ -63,9 +79,9 @@ class Compound(nx.Graph):
         else:
             raise KeyError("There is already an atom {}".format(key))
             
-    def add_edge_(self, key, first, second, rest):
+    def _add_edge_(self, key, first, second, rest):
         try:
-            self.edge[first][second][key]
+            self.edge[first][second]
         except KeyError:            
             d = {'order':1, 'chirality':None}
             d.update(rest)
@@ -74,7 +90,6 @@ class Compound(nx.Graph):
             raise KeyError("There is already a bond {}".format(key))
         
 
-    
 if __name__ == '__main__':
     a = Compound({'a1':'H', 'a2':'H', 'a3':'O'}, 
                  {'b1':('a1', 'a2', {'order':1, 'chirality':None}), 

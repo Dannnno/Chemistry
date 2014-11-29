@@ -23,56 +23,80 @@ You should have received a copy of the MIT License along with this program.
 If not, see <http://opensource.org/licenses/MIT>
 """
 
-import unittest
+import CheML as cml
+import compound_graphs as cg
+import itertools
 import os
-import sys
-import CheML
+import tempfile
+import unittest
 
 
-class TestCMLParser(unittest.TestCase):
-    primary_directory = os.getcwd()
-      
-    def setUp(self): 
-        self.maxDiff = None
-        os.chdir(self.primary_directory + '/molecules/test_molecules')
-        self.testfiles = ["CML_1.cml", "CML_2.cml"]
-        self.test_write_files = ["CML_1w.cml", "CML_2w.cml"]
-        self.test_molecules = {'Water': {'bonds': {'b1': ('a1', 'a3', '1'), 'b2': ('a2', 'a3', '1')}, 'atoms': {'a1': 'H', 'a3': 'O', 'a2': 'H'}}, 'Salt': {'bonds': {'b1': ('a1', 'a2', '1')}, 'atoms': {'a1': 'Na', 'a2': 'Cl'}}}
+class test_cml_parser(unittest.TestCase):
+    primary = os.getcwd()
     
-    def test_parse(self):
-        self.parsed_molecules = {parsed_cml.id:parsed_cml.molecule for parsed_cml in map(CheML.CMLParser, self.testfiles)}    
-        self.assertDictEqual(self.test_molecules, self.parsed_molecules)
-
-    def test_build(self):
-        for cmlfile, mol_id in zip(self.test_write_files, self.test_molecules.keys()):
-            CheML.CMLBuilder(self.test_molecules[mol_id], mol_id, cmlfile)
-            
-        try:
-            with open(self.test_write_files[0], 'r') as a, \
-                 open(self.test_write_files[1], 'r') as b, \
-                 open(self.testfiles[0], 'r') as c, \
-                 open(self.testfiles[1], 'r') as d:
-              
-                self.assertEqual(*map(os.path.getsize, [self.test_write_files[0], self.testfiles[0]]))
-                self.assertEqual(*map(os.path.getsize, [self.test_write_files[1], self.testfiles[1]]))
-                
-                for line1, line2, line3, line4 in zip(a, b, c, d):
-                   self.assertEqual(line1, line3)
-                   self.assertEqual(line2, line4)
-                 
-                return   
+    def setUp(self):
+        os.chdir(self.primary + "/molecules")
+        self.molecule = {'atoms': {'a1': 'H',
+                                   'a2': 'H',
+                                   'a3': 'O'},
+                         'bonds': {'b1': ['a1', 'a3', '1'],
+                                   'b2': ['a2', 'a3', '1']},
+                         'id': 'Water'}
         
-        except IOError as e:
-            print "Operation failed: %s" % e.strerror
-            self.assertEqual(1, 2) 
-            
-        except OSError as e:
-            print "Path %s does not exist" % e.strerror
-            self.assertEqual(1, 2) 
-    
+    def test_parse(self):
+        with open('CML_1.cml', 'r') as CML_file:
+            Parser = cml.CMLParser(CML_file)
+        self.assertEqual(Parser.molecule,
+                         self.molecule)
+
     def tearDown(self):
-        os.chdir(self.primary_directory)
- 
-if __name__ == '__main__':           
-    suite = unittest.TestLoader().loadTestsFromTestCase(TestCMLParser)
-    unittest.TextTestRunner(sys.stdout, verbosity=2).run(suite)
+        os.chdir(self.primary)
+        
+        
+class test_cml_builder(unittest.TestCase): 
+    primary = os.getcwd()
+    
+    def setUp(self):
+        os.chdir(self.primary + "/molecules")
+        with open('CML_1.cml', 'r') as cml_file:
+            self.molecule = cml.CMLParser(cml_file)
+            cml_file.seek(0)
+            self.cml = cml_file.read()
+        self.Builder1 = cml.CMLBuilder( 
+                {'atoms': {'a1': 'H',
+                           'a2': 'H',
+                           'a3': 'O'},
+                 'bonds': {'b1': ['a1', 'a3', '1'],
+                           'b2': ['a2', 'a3', '1']},
+                 'id': 'Water'})
+        self.Builder2 = cml.CMLBuilder(self.molecule.molecule)
+        
+    def test_to_file(self):
+        with tempfile.NamedTemporaryFile(mode='w+', suffix='.cml',
+                                         dir=self.primary) as tfile:
+            self.Builder1.to_file(tfile)
+            tfile.seek(0)
+            Builder3 = cml.CMLBuilder(cml.CMLParser(tfile).molecule)
+            self.assertEqual(str(self.Builder1), str(Builder3))                    
+            
+    def test_build(self):
+        for line1, line2 in itertools.izip(
+                                            str(self.Builder1).split('\n'),
+                                            self.cml.split('\n')
+                                           ):
+            self.assertEqual(line1.lstrip(), line2.lstrip())
+        
+    def test_from_Compound(self):
+        Builder = cml.CMLBuilder.from_Compound(
+                    cg.Compound.from_CML(os.getcwd() + "/CML_1.cml")
+                                                  )
+                                                 
+        with tempfile.NamedTemporaryFile(
+                                          mode='r+',
+                                          suffix='.cml',
+                                          dir=os.getcwd()
+                                         ) as tfile:
+            Builder.to_file(tfile)
+            tfile.seek(0)
+            self.assertEqual(cg.Compound.from_CML(os.getcwd() + "/CML_1.cml"),
+                             cg.Compound.from_CML(tfile))
