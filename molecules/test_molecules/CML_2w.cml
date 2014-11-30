@@ -12,6 +12,7 @@
             <string builtin="atomRef">a1</string>
             <string builtin="atomRef">a2</string>
             <string builtin="order">1</string>
+	    <string builtin="chirality">None</string>
         </bond>
     </bondArray>
 </molecule>

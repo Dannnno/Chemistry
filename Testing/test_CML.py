@@ -23,25 +23,28 @@ You should have received a copy of the MIT License along with this program.
 If not, see <http://opensource.org/licenses/MIT>
 """
 
-import CheML as cml
-import compound_graphs as cg
 import itertools
 import os
 import tempfile
 import unittest
+
+import CheML as cml
+import compounds as Chemistry
 
 
 class test_cml_parser(unittest.TestCase):
     primary = os.getcwd()
     
     def setUp(self):
-        os.chdir(self.primary + "/molecules")
+        os.chdir(self.primary + "/molecules/test_molecules")
         self.molecule = {'atoms': {'a1': 'H',
                                    'a2': 'H',
                                    'a3': 'O'},
-                         'bonds': {'b1': ['a1', 'a3', '1'],
-                                   'b2': ['a2', 'a3', '1']},
-                         'id': 'Water'}
+                         'bonds': {'b1': ('a1', 'a3', {'order': 1,
+                                                       'chirality': None}),
+                                   'b2': ('a2', 'a3', {'order': 1,
+                                                       'chirality': None})},
+                         'other_info': {'id': 'Water'}}
         
     def test_parse(self):
         with open('CML_1.cml', 'r') as CML_file:
@@ -57,7 +60,7 @@ class test_cml_builder(unittest.TestCase):
     primary = os.getcwd()
     
     def setUp(self):
-        os.chdir(self.primary + "/molecules")
+        os.chdir(self.primary + "/molecules/test_molecules")
         with open('CML_1.cml', 'r') as cml_file:
             self.molecule = cml.CMLParser(cml_file)
             cml_file.seek(0)
@@ -66,9 +69,11 @@ class test_cml_builder(unittest.TestCase):
                 {'atoms': {'a1': 'H',
                            'a2': 'H',
                            'a3': 'O'},
-                 'bonds': {'b1': ['a1', 'a3', '1'],
-                           'b2': ['a2', 'a3', '1']},
-                 'id': 'Water'})
+                 'bonds': {'b1': ['a1', 'a3', {'order':1, 
+                                               'chirality': None}],
+                           'b2': ['a2', 'a3', {'order':1, 
+                                               'chirality': None}]},
+                 'other_info': {'id': 'Water'}})
         self.Builder2 = cml.CMLBuilder(self.molecule.molecule)
         
     def test_to_file(self):
@@ -88,8 +93,7 @@ class test_cml_builder(unittest.TestCase):
         
     def test_from_Compound(self):
         Builder = cml.CMLBuilder.from_Compound(
-                    cg.Compound.from_CML(os.getcwd() + "/CML_1.cml")
-                                                  )
+                    Chemistry.Compound.from_CML("CML_1.cml"))
                                                  
         with tempfile.NamedTemporaryFile(
                                           mode='r+',
@@ -98,5 +102,5 @@ class test_cml_builder(unittest.TestCase):
                                          ) as tfile:
             Builder.to_file(tfile)
             tfile.seek(0)
-            self.assertEqual(cg.Compound.from_CML(os.getcwd() + "/CML_1.cml"),
-                             cg.Compound.from_CML(tfile))
+            self.assertEqual(Chemistry.Compound.from_CML("CML_1.cml").molecule,
+                             Chemistry.Compound.from_CML(tfile).molecule)

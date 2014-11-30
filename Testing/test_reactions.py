@@ -28,34 +28,35 @@ try:
 except ImportError:
     import StringIO as IO
 finally:
-    import compound_graphs as cg
     import doctest
     import sys
     import unittest
+    
+    import compounds as Chemistry
 
-
+@unittest.skip('NYI')
 class test_acid_base(unittest.TestCase):
     
     def setUp(self):
         ## Water
-        self.compound1 = cg.Compound({"a1":"H", "a2":"H", "a3":"O", "a4":"H"},
+        self.compound1 = Chemistry.Compound({"a1":"H", "a2":"H", "a3":"O", "a4":"H"},
                                      {"b1":("a1", "a3", 1), 
                                       "b2":("a2", "a3", 1),
                                       "b3":("a3", "a4", 1)},
                                      {"id":"Hydronium"})
         ## Ketone
-        self.compound2 = cg.Compound({"a1": "H", "a2": "O"},
+        self.compound2 = Chemistry.Compound({"a1": "H", "a2": "O"},
                                      {"b1": ("a1", "a2", 1)},
                                      {"id":"Hydroxide"})
                                      
     def test_strongacid_strongbase(self): 
     
-        self.assertEqual(cg.Compound.react(self.compound1, self.compound2),
-                         set([cg.Compound({"a1": "H", "a2": "O", "a3": "H"},
+        self.assertEqual(Chemistry.Compound.react(self.compound1, self.compound2),
+                         set([Chemistry.Compound({"a1": "H", "a2": "O", "a3": "H"},
                                      {"b1": ("a1", "a2", 1),
                                       "b2": ("a2", "a3", 1)},
                                      {}),
-                          cg.Compound({"a1": "H", "a2": "O", "a3": "H"},
+                          Chemistry.Compound({"a1": "H", "a2": "O", "a3": "H"},
                                      {"b1": ("a1", "a2", 1),
                                       "b2": ("a2", "a3", 1)},
                                      {})
@@ -81,7 +82,7 @@ if __name__ == '__main__':
         suites_list.append(suite)
 
     big_suite = unittest.TestSuite(suites_list)
-    big_suite.addTests(doctest.DocTestSuite(cg))
+    big_suite.addTests(doctest.DocTestSuite(Chemistry))
 
     runner = unittest.TextTestRunner(sys.stdout, verbosity=1)
     runner.run(big_suite)
