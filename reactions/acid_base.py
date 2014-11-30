@@ -23,41 +23,12 @@ You should have received a copy of the MIT License along with this program.
 If not, see <http://opensource.org/licenses/MIT>
 """
 
-from . import test_CML
-from . import test_acid_base_reactions
-from . import test_base_reactions
-from . import test_compounds
-from . import test_periodic_helpers
-
-import os
-import logging
-import sys
-
-import reactions
+import compounds
+import base_reactions
 
 
-logging.basicConfig(stream=sys.stdout, 
-                    filename=os.getcwd()+"/testLog.log",
-                    level=logging.DEBUG)
-cur_dir = os.getcwd()
-try:
-    try:
-        os.chdir(os.getcwd() + "/desktop/programming/github/chemistry/Testing")
-    except Exception:
-        try: 
-            os.chdir(os.getcwd() + "/Testing")
-        except Exception:
-            os.chdir(cur_dir)
-    finally:
-        for path in os.listdir(os.getcwd()):
-            if (path.startswith('test_') and 
-                (path.endswith('.py') or path.endswith('.pyc'))):
-                cut_path = path.split('.')[0]
-                if cut_path not in globals():
-                    try:
-                        globals()[cut_path] = __import__(cut_path)
-                    except ImportError as e:
-                        logging.warn(
-                            "{} was not imported for testing".format(cut_path))
-finally:
-    os.chdir(cur_dir)
+class AcidBase(base_reactions.Reaction):
+    
+    def __init__(self, other_info={}, *reactants, **conditions):
+        pass
+        

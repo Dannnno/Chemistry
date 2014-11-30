@@ -33,34 +33,7 @@ finally:
     import unittest
     
     import compounds as Chemistry
-
-@unittest.skip('NYI')
-class test_acid_base(unittest.TestCase):
-    
-    def setUp(self):
-        ## Water
-        self.compound1 = Chemistry.Compound({"a1":"H", "a2":"H", "a3":"O", "a4":"H"},
-                                     {"b1":("a1", "a3", 1), 
-                                      "b2":("a2", "a3", 1),
-                                      "b3":("a3", "a4", 1)},
-                                     {"id":"Hydronium"})
-        ## Ketone
-        self.compound2 = Chemistry.Compound({"a1": "H", "a2": "O"},
-                                     {"b1": ("a1", "a2", 1)},
-                                     {"id":"Hydroxide"})
-                                     
-    def test_strongacid_strongbase(self): 
-    
-        self.assertEqual(Chemistry.Compound.react(self.compound1, self.compound2),
-                         set([Chemistry.Compound({"a1": "H", "a2": "O", "a3": "H"},
-                                     {"b1": ("a1", "a2", 1),
-                                      "b2": ("a2", "a3", 1)},
-                                     {}),
-                          Chemistry.Compound({"a1": "H", "a2": "O", "a3": "H"},
-                                     {"b1": ("a1", "a2", 1),
-                                      "b2": ("a2", "a3", 1)},
-                                     {})
-                         ]))
+    import base_reactions
         
     
 
