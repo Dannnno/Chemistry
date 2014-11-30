@@ -50,6 +50,39 @@ class Reactant(compounds.Compound):
             return self.paths[reaction]
         except KeyError:
             raise KeyError("{} paths haven't been found yet".format(reaction))
+            
+            
+class Acid(Reactant):
+
+    def __init__(self, atoms, bonds, acidic_point, pka, other_info={}):
+        super(Acid, self).__init__(atoms, bonds, other_info)
+        self.acidic_point = acidic_point
+        self._validate_pka()
+                
+    def _validate_pka(self, pka):
+        try:
+            self.__dict__['pka']
+        except KeyError:
+            self.pka = pka
+        else:
+            if pka != self.pka:
+                raise ValueError("pKa must equal {}".format(self.pka))
+        
+            
+class Base(Reactant):
+    
+    def __init__(self, atoms, bonds, basic_point, pka, other_info={}):
+        self.basic_point = basic_point
+        self._validate_pka()
+                
+    def _validate_pka(self, pka):
+        try:
+            self.__dict__['pka']
+        except KeyError:
+            self.pka = pka
+        else:
+            if pka != self.pka:
+                raise ValueError("pKa must equal {}".format(self.pka))
 
 
 class Product(compounds.Compound): 
@@ -101,6 +134,4 @@ class Reaction(object):
         
 
 if __name__ == '__main__':
-    Reaction()
-    Product({1:1}, {2:(1, 2, {'order':1, 'chirality':None})}, 30, [30, 30, 30, 10])
-    
+    pass
