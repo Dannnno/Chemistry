@@ -31,7 +31,6 @@ import tempfile
 import unittest
 
 
-@unittest.expectedFailure
 class test_cml_parser(unittest.TestCase):
     primary = os.getcwd()
     
@@ -40,8 +39,10 @@ class test_cml_parser(unittest.TestCase):
         self.molecule = {'atoms': {'a1': 'H',
                                    'a2': 'H',
                                    'a3': 'O'},
-                         'bonds': {'b1': ('a1', 'a3', {'order':'1'}),
-                                   'b2': ('a2', 'a3', {'order':'1'})},
+                         'bonds': {'b1': ('a1', 'a3', {'order':'1',
+                                                       'chirality':'None'}),
+                                   'b2': ('a2', 'a3', {'order':'1',
+                                                       'chirality':'None'})},
                          'id': 'Water'}
         
     def test_parse(self):
@@ -54,7 +55,7 @@ class test_cml_parser(unittest.TestCase):
         os.chdir(self.primary)
         
         
-@unittest.expectedFailure
+@unittest.skip('NYI')
 class test_cml_builder(unittest.TestCase): 
     primary = os.getcwd()
     

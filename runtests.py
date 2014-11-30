@@ -23,18 +23,17 @@ You should have received a copy of the MIT License along with this program.
 If not, see <http://opensource.org/licenses/MIT>
 """
 
-## Needed for testing
 import doctest
 import inspect
-import Testing
+import logging
+import os
 import sys
 import unittest
 
-## My stuff (for doctests)
-import compound_graphs
-import CheML
+import Testing
 
 
+## Preparing all of the written unittests within Testing/
 loader = unittest.TestLoader()
 suites_list = []
 
@@ -47,9 +46,30 @@ for _, module in inspect.getmembers(Testing):
             
 big_suite = unittest.TestSuite(suites_list)
 
-map(big_suite.addTests,
-    map(doctest.DocTestSuite,
-        [compound_graphs, CheML]))
+## Imports every *.py/*.pyc file in the directory (except for this one) 
+## and imports it, then extracts the doctests as necessary
+logging.basicConfig(stream=sys.stdout, 
+                    filename=os.getcwd()+"/testLog.log",
+                    level=logging.DEBUG)
+local_imports = set()
+
+for path in os.listdir(os.getcwd()):
+    if ((path.endswith('.py') or path.endswith('.pyc'))):
+        cut_path, _, _ = path.partition('.')
+        if cut_path != "runtests":
+            if cut_path not in globals():
+                try:
+                    globals()[cut_path] = __import__(cut_path)
+                    local_imports.add(globals()[cut_path])
+                except ImportError as e:
+                    print e
+                finally:
+                    logging.warn(
+                        "{} was not imported for doctesting".format(cut_path))
+
+map(big_suite.addTests, 
+    map(doctest.DocTestSuite, local_imports))
         
+## Finally runs the tests
 runner = unittest.TextTestRunner(sys.stdout, verbosity=1)
 runner.run(big_suite)

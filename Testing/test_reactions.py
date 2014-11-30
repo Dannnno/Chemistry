@@ -33,7 +33,7 @@ finally:
     import sys
     import unittest
 
-
+@unittest.skip('NYI')
 class test_acid_base(unittest.TestCase):
     
     def setUp(self):

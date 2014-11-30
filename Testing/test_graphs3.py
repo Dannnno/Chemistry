@@ -28,7 +28,6 @@ try:
 except ImportError:
     import StringIO as IO
 finally:
-    from collections import OrderedDict
     import graphs3 as Chemistry
     import contextlib
     import doctest
@@ -55,11 +54,39 @@ def capture():
 class test_Compound(unittest.TestCase):
     
     def setUp(self): 
+        ## Water
         self.compound1 = Chemistry.Compound(
                                 {"a1":"H", "a2":"H", "a3":"O"},
-                                {"b1":("a1", "a3", {'order':1, 'chirality':None}), 
-                                 "b2":("a2", "a3", {'order':1, 'chirality':None})},
+                                {"b1":("a1", "a3", {'order': 1,  
+                                                    'chirality': None}), 
+                                 "b2":("a2", "a3", {'order': 1, 
+                                                    'chirality': None})},
                                 {"id":"Water"})
+        ## Ketone
+        self.compound2 = Chemistry.Compound(
+                                {"a1": "H", "a2": "H", "a3": "H", 
+                                 "a4": "H","a5": "H", "a6": "H", "a7": "C", 
+                                 "a8": "C", "a9": "C", "a10": "O"},
+                                {"b0": ("a1", "a7", {'order': 1, 
+                                                     'chirality': None}),
+                                 "b1": ("a2", "a7", {'order': 1, 
+                                                     'chirality': None}),
+                                 "b2": ("a3", "a7", {'order': 1,       
+                                                     'chirality': None}),
+                                 "b3": ("a4", "a9", {'order': 1, 
+                                                     'chirality': None}),
+                                 "b4": ("a5", "a9", {'order': 1, 
+                                                     'chirality': None}),
+                                 "b5": ("a6", "a9", {'order': 1, 
+                                                     'chirality': None}),
+                                 "b6": ("a7", "a8", {'order': 1, 
+                                                     'chirality': None}),
+                                 "b7": ("a9", "a8", {'order': 1, 
+                                                     'chirality': None}),
+                                 "b8": ("a8", "a10", {'order': 2,
+                                                      'chirality': None})},
+                                {})
+
     def tearDown(self): pass
     
     @classmethod
@@ -68,26 +95,41 @@ class test_Compound(unittest.TestCase):
     @classmethod
     def tearDownClass(cls): pass
     
-    def test__add_node_1(self): 
+    def test_contains_element_positive(self): 
+        self.assertIn('H', self.compound1)
+        
+    def test_contains_element_negative(self):
+        self.assertNotIn('Hg', self.compound2)
+        
+    def test_contains_id_positive(self): 
+        self.assertIn('a9', self.compound2)
+        
+    def test_contains_id_negative(self):
+        self.assertNotIn('a9', self.compound1)
+    
+    def test__add_node_raises_KE(self): 
         self.assertRaises(KeyError,
                           self.compound1._add_node_,
                           *('a2', Chemistry.get_Element('H')))
                           
-    def test__add_node_2(self): 
+    def test__add_node_(self): 
         self.compound1._add_node_('a4', Chemistry.get_Element('H'))
         self.assertIn('a4', self.compound1.nodes())
     
-    def test__add_edge_1(self):
+    def test__add_edge_raises_KE(self):
+        self.compound1._add_edge_('b3', 'a1', 'a2', 
+                                  {'order':1, 'chirality':None})
         self.assertRaises(KeyError,
                           self.compound1._add_edge_,
                           *('b3', 'a1', 'a2', {'order':1, 'chirality':None}))
     
-    def test__add_edge_2(self):
+    def test__add_edge_(self):
         self.compound1._add_node_('a4', Chemistry.get_Element('H'))
         self.compound1._add_edge_('b1', 'a1', 'a4', 
                                   {'order':1, 'chirality':None})
         self.assertEqual(self.compound1['a1']['a4']['key'], "b1")
         
+    @unittest.expectedFailure
     def test_from_CML(self):
         self.assertEqual(
                 self.compound1, 
@@ -95,7 +137,67 @@ class test_Compound(unittest.TestCase):
                                      "/molecules/test_molecules/CML_1.cml"))
                           
     
+class test_linear_path_finding(unittest.TestCase):
+    
+    def setUp(self):
+        ## Water
+        self.compound1 = Chemistry.Compound(
+                                {"a1":"H", "a2":"H", "a3":"O"},
+                                {"b1":("a1", "a3", {'order': 1,  
+                                                    'chirality': None}), 
+                                 "b2":("a2", "a3", {'order': 1, 
+                                                    'chirality': None})},
+                                {"id":"Water"})
+        ## Ketone
+        self.compound2 = Chemistry.Compound(
+                                {"a1": "H", "a2": "H", "a3": "H", 
+                                 "a4": "H","a5": "H", "a6": "H", "a7": "C", 
+                                 "a8": "C", "a9": "C", "a10": "O"},
+                                {"b0": ("a1", "a7", {'order': 1, 
+                                                     'chirality': None}),
+                                 "b1": ("a2", "a7", {'order': 1, 
+                                                     'chirality': None}),
+                                 "b2": ("a3", "a7", {'order': 1,       
+                                                     'chirality': None}),
+                                 "b3": ("a4", "a9", {'order': 1, 
+                                                     'chirality': None}),
+                                 "b4": ("a5", "a9", {'order': 1, 
+                                                     'chirality': None}),
+                                 "b5": ("a6", "a9", {'order': 1, 
+                                                     'chirality': None}),
+                                 "b6": ("a7", "a8", {'order': 1, 
+                                                     'chirality': None}),
+                                 "b7": ("a9", "a8", {'order': 1, 
+                                                     'chirality': None}),
+                                 "b8": ("a8", "a10", {'order': 2,
+                                                      'chirality': None})},
+                                {})     
+              
+    def test_linear_path(self): 
+        self.assertEquals(self.compound1.path(('H', 'O')), 
+                          set([('a1', 'a3'), ('a2', 'a3')]))
         
+    def test_path_raises_TE(self):
+        with self.assertRaises(TypeError):
+            self.compound1.path(('H', 'O', 'H'),
+                                bonds=['1'])
+                          
+    def test_linear_path_varargs(self):
+        self.assertEquals(self.compound1.path(('H', 'O', 'H')),
+                          set([('a1', 'a3', 'a2'), ('a2', 'a3', 'a1')]))
+
+    def test_linear_path_with_bond_type(self):
+        self.assertEquals(self.compound1.path(('H', 'O'),
+                                              bonds=[{'order':1, 
+                                                      'chirality':None}]),
+                          set([('a1', 'a3'), ('a2', 'a3')]))
+                          
+    def test_linear_path_with_partial_bonds(self):         
+        self.assertEquals(self.compound2.path(('C', 'C', 'C'),
+                                              bonds=[{'order':1, 
+                                                      'chirality':None},
+                                                     None]),
+                          set([('a7', 'a8', 'a9'), ('a9', 'a8', 'a7')]))             
         
 
 if __name__ == '__main__':

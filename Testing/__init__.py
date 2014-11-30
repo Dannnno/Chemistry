@@ -46,7 +46,6 @@ try:
         try: 
             os.chdir(os.getcwd() + "/Testing")
         except Exception:
-            print 1
             os.chdir(cur_dir)
     finally:
         for path in os.listdir(os.getcwd()):
