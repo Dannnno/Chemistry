@@ -62,14 +62,15 @@ for path in os.listdir(os.getcwd()):
                     globals()[cut_path] = __import__(cut_path)
                     local_imports.add(globals()[cut_path])
                 except ImportError as e:
-                    print e
-                finally:
                     logging.warn(
                         "{} was not imported for doctesting".format(cut_path))
+            else:
+                local_imports.add(globals()[cut_path])
 
 map(big_suite.addTests, 
     map(doctest.DocTestSuite, local_imports))
         
 ## Finally runs the tests
-runner = unittest.TextTestRunner(sys.stdout, verbosity=1)
-runner.run(big_suite)
+with open("a.txt", 'w') as f:
+    runner = unittest.TextTestRunner(sys.stdout, verbosity=1)
+    runner.run(big_suite)

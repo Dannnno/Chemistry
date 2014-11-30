@@ -24,14 +24,14 @@ If not, see <http://opensource.org/licenses/MIT>
 """
 
 try:
-    from periodic_table2 import periodic_table
-    import periodic_table2 as pt
+    from periodic_table import periodic_table
+    import periodic_table as pt
 except ImportError:
-    import table_builder2
-    table_builder2.build_table()
-    del globals()['table_builder2']
-    from periodic_table2 import periodic_table
-    import periodic_table2 as pt
+    import table_builder
+    table_builder.build_table()
+    del globals()['table_builder']
+    from periodic_table import periodic_table
+    import periodic_table as pt
 finally:
     from collections import deque
     import json
@@ -39,7 +39,7 @@ finally:
     
     import networkx as nx
     
-    import CheML2 as cml
+    import CheML as cml
 
 def get_Element(symbol='C'):
     return {"symbol":symbol} #periodic_table[symbol]
@@ -56,17 +56,44 @@ class Compound(nx.Graph):
             parsed = cml.CMLParser(CML_file)
         return Compound(parsed.atoms,
                          parsed.bonds,
-                         {key: value
-                          for key, value in parsed.molecule.iteritems()
-                          if key not in ["atoms", "bonds"]})
+                         parsed.other)
+   
+    @classmethod
+    def json_serialize(cls, obj, as_str=False):
+        stringify_function = repr
+        d = {}
+        if as_str:
+            stringify_function = str
+        try:
+            if isinstance(obj, Compound):
+                for key, value in obj.__dict__.iteritems():
+                    if key in ['atoms', 'bonds', 'other_info']:
+                        d.update({key: value})
+                return d
+            else:
+                return obj.__dict__
+        except AttributeError:
+            return map(stringify_function, obj)
    
     def __init__(self, atoms, bonds, other_info={}):
         super(Compound, self).__init__()
         self.atoms = atoms
         self.bonds = bonds
-        self._add_nodes_from_(atoms)
-        self._add_edges_from_(bonds)
+        for key, (first, second, data) in self.bonds.items():
+            order = int(data['order'])
+            chirality = (None 
+                         if data['chirality'] in ['None', None]
+                         else data['chirality'])
+            self.bonds[key] = (first, second, 
+                              {'order': order, 'chirality': chirality})
+            
+        self._add_nodes_from_(self.atoms)
+        self._add_edges_from_(self.bonds)
         self.other_info = other_info
+        self.graph.update(self.other_info)
+        self.molecule = {'other_info': self.other_info, 
+                         'atoms': self.atoms,
+                         'bonds': self.bonds}
         
     def _add_nodes_from_(self, atoms):
         for key, atom in atoms.iteritems():
@@ -155,51 +182,26 @@ class Compound(nx.Graph):
             return tuple(so_far + (atom,) for atom in next_atom)
         else:
             ret_tuples = map(lambda x: 
-                                       self._get_path(x, 
-                                                      rest[1:],
-                                                      so_far),
-                                   next_atom)
-                                   
+                                self._get_path(
+                                    x, rest[1:], so_far),
+                             next_atom)    
             return ret_tuples
             
     def _get_path_with_bond(self, starting_point, rest, bonds, so_far=()):
         so_far += (starting_point,)
         
-        next_atom = self._get_next_with_bond(starting_point, so_far, bonds[0], rest[0])
-        
+        next_atom = self._get_next_with_bond(
+                            starting_point, so_far, bonds[0], rest[0])
         
         if len(rest) == 1:
             return tuple(so_far + (atom,) for atom in next_atom)
         else:
             ret_tuples = map(lambda x:
-                                self._get_path_with_bond(x, 
-                                                         rest[1:], 
-                                                         bonds[1:],
-                                                         so_far),
-                             next_atom)
-                             
+                                self._get_path_with_bond(
+                                    x, rest[1:], bonds[1:], so_far),
+                             next_atom)                             
             return ret_tuples
-            
-            
-        if rest:
-            paths = deque()
-            super_paths = deque()
-            for atom in starting_point:
-                paths.append(self._join_paths(
-                                so_far,
-                                (atom,) + self._get_next_with_bond(
-                                                atom,
-                                                so_far + (atom,),
-                                                bond=bonds[0],
-                                                next_=rest[0])))
-                                                
-            for path in paths:
-                super_paths.append(self._get_paths_with_bonds(
-                                    (path[-1],), rest[1:], bonds[1:], path))
-            return super_paths
-        else:
-            return so_far
-            
+                        
     def _join_paths(self, first, second):
         if first:
             if first[-1] == second[0]:
@@ -244,6 +246,9 @@ class Compound(nx.Graph):
                          ((next_ is not None and 
                            self.atoms[neighbor] == next_) or
                           (next_ is None)))
+                          
+    def to_CML(self, filename):
+        cml.CMLBuilder.from_Compound(self)
             
     def __contains__(self, key):
         if key in periodic_table:
@@ -254,7 +259,17 @@ class Compound(nx.Graph):
             except TypeError:
                 raise KeyError("Key {} not applicable".format(key))
             else:
-                return key in self.atoms or key in self.bonds
+                return key in self.atoms or key in self.bonds    
+                
+    def __str__(self):
+        return json.dumps(Compound.json_serialize(self, as_str=True), 
+                           sort_keys=True,
+                           indent=4)
+                                      
+    def __repr__(self):        
+        return json.dumps(Compound.json_serialize(self),
+                           sort_keys=True,
+                           indent=4)
                 
 
 if __name__ == '__main__':
@@ -262,6 +277,7 @@ if __name__ == '__main__':
                  {'b1':('a1', 'a2', {'order':1, 'chirality':None}), 
                   'b2':('a2', 'a3', {'order':1, 'chirality':None}),
                   'b3':('a3', 'a4', {'order':1, 'chirality':None})})
+    print a
     print a.path(('H', 'O', 'C'), bonds=[{'order':1,'chirality':None},
                                           {'order':1,'chirality':None}])
     print

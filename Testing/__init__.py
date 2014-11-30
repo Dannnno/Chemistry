@@ -24,9 +24,7 @@ If not, see <http://opensource.org/licenses/MIT>
 """
 
 from . import test_CML
-from . import test_CML2
-from . import test_compound_graphs
-from . import test_graphs3
+from . import test_compounds
 from . import test_reactions
 from . import test_periodic_helpers
 
@@ -56,8 +54,6 @@ try:
                     try:
                         globals()[cut_path] = __import__(cut_path)
                     except ImportError as e:
-                        print e
-                    finally:
                         logging.warn(
                             "{} was not imported for testing".format(cut_path))
 finally:

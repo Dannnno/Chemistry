@@ -28,13 +28,14 @@ try:
 except ImportError:
     import StringIO as IO
 finally:
-    import graphs3 as Chemistry
     import contextlib
     import doctest
     import os
     import sys
     import unittest
     
+    import compounds as Chemistry
+
 
 @contextlib.contextmanager
 def capture():
@@ -95,6 +96,28 @@ class test_Compound(unittest.TestCase):
     @classmethod
     def tearDownClass(cls): pass
     
+    def test_json_serializer_repr(self):
+        self.assertEqual(Chemistry.Compound.json_serialize(self.compound1),
+                         {'other_info': {'id': 'Water'}, 
+                          'atoms': {'a1': 'H', 
+                                    'a3': 'O', 
+                                    'a2': 'H'}, 
+                          'bonds': {'b1': ('a1', 'a3', 
+                                          {'chirality': None, 'order': 1}), 
+                                    'b2': ('a2', 'a3', 
+                                          {'chirality': None, 'order': 1})}})
+                                          
+    def test_json_serializer_str(self):
+        self.assertEqual(Chemistry.Compound.json_serialize(self.compound1, as_str=True),
+                         {'other_info': {'id': 'Water'}, 
+                          'atoms': {'a1': 'H', 
+                                    'a3': 'O', 
+                                    'a2': 'H'}, 
+                          'bonds': {'b1': ('a1', 'a3', 
+                                          {'chirality': None, 'order': 1}), 
+                                    'b2': ('a2', 'a3', 
+                                          {'chirality': None, 'order': 1})}})
+                                          
     def test_contains_element_positive(self): 
         self.assertIn('H', self.compound1)
         
@@ -129,12 +152,23 @@ class test_Compound(unittest.TestCase):
                                   {'order':1, 'chirality':None})
         self.assertEqual(self.compound1['a1']['a4']['key'], "b1")
         
-    @unittest.expectedFailure
-    def test_from_CML(self):
+    def test_from_CML(self):    
         self.assertEqual(
-                self.compound1, 
-                Chemistry.Compound.from_CML(os.getcwd() + 
-                                     "/molecules/test_molecules/CML_1.cml"))
+                self.compound1.molecule, 
+                Chemistry.Compound.from_CML(
+                        os.getcwd() + "/molecules/test_molecules/CML_1.cml")
+                    .molecule)
+                    
+    def test_to_CML(self):
+        from_cml = Chemistry.Compound.from_CML(
+                        os.getcwd() + "/molecules/test_molecules/CML_1.cml")
+        from_cml.to_CML(os.getcwd() + "/molecules/test_molecules/CML_1w.cml")
+        self.assertEqual(
+                from_cml.molecule, 
+                Chemistry.Compound.from_CML(
+                        os.getcwd() + "/molecules/test_molecules/CML_1w.cml")
+                    .molecule)
+        
                           
     
 class test_linear_path_finding(unittest.TestCase):

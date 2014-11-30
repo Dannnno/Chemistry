@@ -28,7 +28,7 @@ import json
 from collections import OrderedDict
 
 
-copyright = """
+copyright = """\"\"\"
 Copyright (c) 2014 Dan Obermiller
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -51,8 +51,21 @@ THE SOFTWARE.
 
 You should have received a copy of the MIT License along with this program.
 If not, see <http://opensource.org/licenses/MIT>
-"""
-        
+\"\"\"
+
+ENEG = "Electronegativity"
+GROUP = "Group"
+MP = "Melting Point"
+WEIGHT = "Weight"
+DENSITY = "Density"
+SYMB = "Symbol"
+ELEMENT = "Element"
+NUMBER = "Atomic Number"
+BP = "Boiling Point"
+HEAT = "Heat of ?"
+RAD = "Atomic Radius"
+OX = "Oxidation Number(s)"
+"""  
 
 def convert_type(cell, typ):
     """Credit to SO user Marius for (most of) this function
@@ -102,20 +115,20 @@ def str_to_list(a_stringy_list, mapped=None):
       
 def build_table():  
     with open("element_list.csv", 'r') as element_data, \
-        open("periodic_table.py", 'w') as periodic_table:
+        open("periodic_table2.py", 'w') as periodic_table:
             
         per_table = OrderedDict()
         element_reader = csv.reader(element_data)
-        element_reader.next()
+        header = element_reader.next()
         for i in range(118):
             tl = element_reader.next()
             col_types = [int, str, str, int, float, float, float,
                         float, float, float, float, str_to_list]
-            new_row = tuple(convert_type(cell, typ)
-                            for cell, typ in zip(tl, col_types))
+            new_row = dict(zip(header, tuple(convert_type(cell, typ)
+                            for cell, typ in zip(tl, col_types))))
             per_table[tl[1]] = new_row
         
-        periodic_table.write('"""' + copyright + '"""\n\n\n')
+        periodic_table.write(copyright + '\n\n')
         json_table = json.dumps(per_table, indent=4).split('\n')
         json_table[0] = "periodic_table = " + json_table[0]
         

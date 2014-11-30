@@ -23,7 +23,6 @@ You should have received a copy of the MIT License along with this program.
 If not, see <http://opensource.org/licenses/MIT>
 """
 
-## Constants for the periodic Table
 ENEG = "Electronegativity"
 GROUP = "Group"
 MP = "Melting Point"
