@@ -115,7 +115,7 @@ def str_to_list(a_stringy_list, mapped=None):
       
 def build_table():  
     with open("element_list.csv", 'r') as element_data, \
-        open("periodic_table2.py", 'w') as periodic_table:
+        open("periodic_table.py", 'w') as periodic_table:
             
         per_table = OrderedDict()
         element_reader = csv.reader(element_data)

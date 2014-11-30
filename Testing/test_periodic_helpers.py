@@ -75,7 +75,7 @@ if __name__ == '__main__':
         suites_list.append(suite)
 
     big_suite = unittest.TestSuite(suites_list)
-    big_suite.addTests(doctest.DocTestSuite(cg))
+    big_suite.addTests(doctest.DocTestSuite(tb))
 
     runner = unittest.TextTestRunner(sys.stdout, verbosity=1)
     runner.run(big_suite)
