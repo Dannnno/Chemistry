@@ -23,12 +23,6 @@ You should have received a copy of the MIT License along with this program.
 If not, see <http://opensource.org/licenses/MIT>
 """
 
-from . import test_CML
-from . import test_acid_base_reactions
-from . import test_base_reactions
-from . import test_compounds
-from . import test_periodic_helpers
-
 import os
 import logging
 import sys
@@ -40,6 +34,16 @@ logging.basicConfig(stream=sys.stdout,
                     filename=os.getcwd()+"/testLog.log",
                     level=logging.DEBUG)
 cur_dir = os.getcwd()
+
+try:
+    from . import test_CML
+    from . import test_acid_base_reactions
+    from . import test_base_reactions
+    from . import test_compounds
+    from . import test_periodic_helpers
+except ImportError as e:
+    logging.warn(e)
+
 try:
     try:
         os.chdir(os.getcwd() + "/desktop/programming/github/chemistry/Testing")

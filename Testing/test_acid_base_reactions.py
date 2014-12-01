@@ -33,30 +33,76 @@ finally:
     import unittest
     
     import compounds as Chemistry
+    from base_reactions import Acid, Base, Reaction, Conditions
     from reactions.acid_base import AcidBase
     
         
+class test_AcidBase(unittest.TestCase):
+    
+    @classmethod
+    def setUpClass(cls): pass
+    
+    @classmethod
+    def tearDownClass(cls): pass
+    
+    def setUp(self): 
+        self.compound1 = Chemistry.Compound(
+                                {"a1":"H", "a2":"O"},
+                                {"b1":("a1", "a2", {'order': 1,  
+                                                    'chirality': None})},
+                                {"id":"Hydroxide"})
+        self.compound2 = Chemistry.Compound(
+                                {"a1":"H", "a2":"H", "a3":"O", "a4":"H"},
+                                {"b1":("a1", "a3", {'order': 1,  
+                                                    'chirality': None}), 
+                                 "b2":("a2", "a3", {'order': 1, 
+                                                    'chirality': None}),
+                                 "b3":("a3", "a4", {'order': 1,
+                                                    'chirality': None})},
+                                {"id":"Hydronium"})
+        self.acid = Acid(self.compound2, 'a1', -1.74)
+        self.base = Base(self.compound1, 'a2', 16)
+        self.conditions = Conditions(**{'reactants': (self.acid, self.base)})
+    
+    def tearDown(self): pass
+    
+    def test_constructor_raises_TE1(self): 
+        with self.assertRaises(TypeError):
+            AcidBase(self.compound2, self.compound1, {})
+    
+    def test_constructor_raises_TE2(self): 
+        with self.assertRaises(TypeError):
+            AcidBase(self.acid, self.compound1, {})
+                          
+    def test_constructor_raises_TE3(self):
+        with self.assertRaises(TypeError):
+            AcidBase(self.acid, self.base, {})
+    
+    def test_constructor_raises_VE(self): 
+        with self.assertRaises(ValueError):
+            AcidBase(self.acid, self.base, 
+                     Conditions(**{'reactants': (self.compound1, 
+                                                 self.compound2)}))
+    
+    @unittest.expectedFailure
+    def test_good_constructor(self): 
+        with self.assertRaises(Exception):
+            AcidBase(self.acid, self.base, self.conditions)
     
 
 if __name__ == '__main__':
     import types
     
                           
-    test_classes_to_run = []
-    for key, value in globals().items():
-        if isinstance(value, (type, types.ClassType)):
-            if issubclass(value, unittest.TestCase):
-                test_classes_to_run.append(value)
+    test_classes_to_run = [value for key, value in globals().items()
+                           if (isinstance(value, (type, types.ClassType)) and
+                               issubclass(value, unittest.TestCase))]
 
     loader = unittest.TestLoader()
 
-    suites_list = []
-    for test_class in test_classes_to_run:
-        suite = loader.loadTestsFromTestCase(test_class)
-        suites_list.append(suite)
-
-    big_suite = unittest.TestSuite(suites_list)
-    big_suite.addTests(doctest.DocTestSuite(Chemistry))
+    big_suite = unittest.TestSuite(loader.loadTestsFromTestCase(test_class) 
+                                   for test_class in test_classes_to_run)
+    big_suite.addTests(doctest.DocTestSuite(Chemistry, AcidBase))
 
     runner = unittest.TextTestRunner(sys.stdout, verbosity=1)
     runner.run(big_suite)

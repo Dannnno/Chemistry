@@ -23,6 +23,7 @@ You should have received a copy of the MIT License along with this program.
 If not, see <http://opensource.org/licenses/MIT>
 """
 
+from copy import deepcopy
 import abc
 
 import numpy as np
@@ -32,11 +33,48 @@ import periodic_table as pt
 periodic_table = pt.periodic_table
 
 
-class Reactant(compounds.Compound): 
+class Reactant(object):
+    
+    @classmethod
+    def _compare_pkas(cls, acid_pka, base_pka):
+        raise NotImplementedError
+        
+    @classmethod
+    def make_Base(cls, basic_compound, pka=16, point='a1'):
+        if isinstance(basic_compound, Base):
+            return basic_compound
+        else:
+            try:
+                return Base(basic_compound, 16, 'a1')
+            except Exception as e:
+                print e
+        
+    @classmethod
+    def make_Acid(cls, acidic_compound, pka=16, point='a1'):
+        if isinstance(acidic_compound, Acid):
+            return acidic_compound
+        else:
+            try:
+                return Acid(acidic_compound, 16, 'a1')
+            except Exception as e:
+                print e
+        
+    @classmethod
+    def _new_key(cls, compound, atom=True):
+        if atom:
+            max_key = max(compound.atoms)
+            letter = 'a'
+        else:
+            max_key = max(compound.bonds)
+            letter = 'b'
+        number = int(max_key[1:])+1
+        return "{}{}".format(letter, number)
 
-    def __init__(self, atoms, bonds, other_info={}):
-        super(Reactant, self).__init__(atoms, bonds, other_info)
+    def __init__(self, compound, paths={}):
+        self._Compound = compound
         self.paths = dict() # { key: set() }
+        if paths:
+            self.add_paths(**paths)
         
     def add_paths(self, **paths):
         for reaction, path in paths.iteritems():
@@ -51,49 +89,63 @@ class Reactant(compounds.Compound):
         except KeyError:
             raise KeyError("{} paths haven't been found yet".format(reaction))
             
+    def _validate_pka(self, pka):
+        try:
+            self.__dict__['pka']
+        except KeyError:
+            self.pka = pka
+        else:
+            if pka != self.pka:
+                raise ValueError("pKa must equal {}".format(self.pka))
+                
+    def __getattr__(self, attr):
+        return getattr(self._Compound, attr)
+            
             
 class Acid(Reactant):
 
-    def __init__(self, atoms, bonds, acidic_point, pka, other_info={}):
-        super(Acid, self).__init__(atoms, bonds, other_info)
+    def __init__(self, compound, acidic_point, pka, paths={}):
+        super(Acid, self).__init__(compound, paths)
         self.acidic_point = acidic_point
-        self._validate_pka()
-                
-    def _validate_pka(self, pka):
-        try:
-            self.__dict__['pka']
-        except KeyError:
-            self.pka = pka
-        else:
-            if pka != self.pka:
-                raise ValueError("pKa must equal {}".format(self.pka))
+        self._validate_pka(pka)   
         
-            
-class Base(Reactant):
-    
-    def __init__(self, atoms, bonds, basic_point, pka, other_info={}):
-        self.basic_point = basic_point
-        self._validate_pka()
                 
-    def _validate_pka(self, pka):
-        try:
-            self.__dict__['pka']
-        except KeyError:
-            self.pka = pka
-        else:
-            if pka != self.pka:
-                raise ValueError("pKa must equal {}".format(self.pka))
+class Base(Reactant):
 
+    def __init__(self, compound, basic_point, pka, paths={}):
+        """The pka of a Base should be equal to that of its conjugate
+        acid
+        """
+        
+        super(Base, self).__init__(compound, paths)
+        self.conjugate = None
+        self.conjugate_acid = None
+        self.basic_point = basic_point
+        self._validate_pka(pka)  
+        self.to_conjugate_Acid()
+        
+    def to_conjugate_Acid(self):
+        self.conjugate = deepcopy(self._Compound)
+        a_key = Reactant._new_key(self.conjugate)
+        b_key = Reactant._new_key(self.conjugate, False)
+        hydrogen = compounds.get_Element('H')
+        self.conjugate._add_node_(a_key, hydrogen)
+        self.conjugate._add_edge_(b_key, a_key, self.basic_point)
+        self.conjugate_acid = Acid(self.conjugate, a_key, self.pka, self.paths)        
+        
 
-class Product(compounds.Compound): 
+class Product(object): 
     
-    def __init__(self, atoms, bonds, percentage, all_percentages, other_info={}):
-        super(Product, self).__init__(atoms, bonds, other_info)
+    def __init__(self, compound, percentage, all_percentages):
+        self._Compound = compound
         self.paths = dict() # { key: set() }
         self.major = (True 
                       if percentage >= np.mean(all_percentages) 
                       else False) 
         self.percentage = percentage
+        
+    def __getattr__(self, attr):
+        return getattr(self._Compound, attr)
 
 
 class Conditions(object): 
@@ -102,13 +154,19 @@ class Conditions(object):
         self.__dict__.update(conditions)
 
     def has_reactants(self):
-        return 'reactants' in self and self['reactants']     
+        return 'reactants' in self and self.reactants
         
-    def add_reactants(self, reactants):
+    def validate_reactants(self, *reactants):
         if self.has_reactants():
-            self['reactants'].extend(reactants)
+            return all(reactant in self.reactants for reactant in reactants)   
         else:
-            self['reactants'] = reactants   
+            return False
+        
+    def add_reactants(self, *reactants):
+        if self.has_reactants():
+            self.reactants.extend(reactants)
+        else:
+            self.reactants = reactants   
                         
     def __getitem__(self, key):
         return self.__dict__[key]
@@ -133,5 +191,26 @@ class Reaction(object):
         pass
         
 
+class ReactionError(Exception):
+    err_message = "There was an error with the reaction"
+    pka = """
+    AcidBase reaction between {} and {} failed because of pka difference {}
+    ({} to {})    
+    """
+    
+    def __init__(self, *args, **kwargs):
+        if 'pka' in kwargs:
+            self.err_message = ReactionError.pka.format(*kwargs['reactants']
+                                                        *kwargs['pka'])
+            
+    def __str__(self):
+        return self.err_message
+        
+    def __repr__(self):
+        return str(self)
+            
+        
+
 if __name__ == '__main__':
     pass
+    

@@ -25,10 +25,33 @@ If not, see <http://opensource.org/licenses/MIT>
 
 import compounds
 import base_reactions
+from base_reactions import Acid, Base, Reaction, Conditions
 
 
-class AcidBase(base_reactions.Reaction):
+class AcidBase(Reaction):
     
-    def __init__(self, other_info={}, *reactants, **conditions):
-        pass
+    def __init__(self, acid, base, conditions):
+        ## Validating the acid and base)
+        if not isinstance(acid, Acid):
+            raise TypeError("{} must be an Acid, is a {}"
+                                .format(acid, type(acid)))
+        if not isinstance(base, Base):
+            raise TypeError("{} must be an Base, is a {}"
+                                .format(base, type(base)))
+        self.acid = acid
+        self.base = base
+        
+        ## Validating the conditions
+        if not isinstance(conditions, Conditions):
+            raise TypeError("{} must be Conditions, is {}"
+                                .format(conditions, type(conditions)))
+        if not conditions.has_reactants():
+            conditions.add_reactants(acid, base) 
+        elif not conditions.validate_reactants(acid, base):
+            raise ValueError(
+                '\t'.join(["Condition must have the correct reactants",
+                           "has {} instead of",
+                           "{}"]).format(conditions.reactants, [acid, base]))
+        
+        self.conditions = conditions                    
         

@@ -111,7 +111,7 @@ class Compound(nx.Graph):
         else:
             raise KeyError("There is already an atom {}".format(key))
             
-    def _add_edge_(self, key, first, second, rest):
+    def _add_edge_(self, key, first, second, rest={}):
         try:
             self.edge[first][second]
         except KeyError:            

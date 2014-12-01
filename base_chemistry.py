@@ -30,7 +30,7 @@ import sys
 class MetaChemistry(type):
     
     def __new__(cls, clsname, base, dct, *args, **kwargs):
-        print cls, clsname, base, dct, args
+        print cls, clsname, base, dct, args, kwargs
         
         return super(MetaChemistry, cls).__new__(cls, clsname, base, dct)
         
@@ -47,18 +47,19 @@ def reactant_meta_class(clsname, base, dct, *args, **kwargs):
                                   *args, **kwargs)
                                   
 def acid_init(self, atoms, bonds, acidic_point, pka, other_info={}):
-    generic_init(self, Acid, atoms, bonds, acidic_point, pka, other_info)
-    self.acidic_point = self.point
-    
-    
+    generic_init(self, atoms, bonds, acidic_point, pka, other_info)
+    self.acidic_point = self.point 
+      
 def base_init(self, atoms, bonds, basic_point, pka, other_info={}):
-    generic_init(self, Base, atoms, bonds, basic_point, pka, other_info)
+    generic_init(self, atoms, bonds, basic_point, pka, other_info)
     self.basic_point = self.point
     
-def generic_init(self, type_, atoms, bonds, point, pka, other_info):
-    super(type_, self).__init__(atoms, bonds, other_info)
+def generic_init(self, atoms, bonds, point, pka, other_info):
+    self.atoms = atoms
+    self.bonds = bonds
+    self.other = other_info
     self.point = point
-    self._validate_pka()
+    self._validate_pka(pka)
     
 def _validate_pka(self, pka):
     try:
@@ -87,7 +88,13 @@ class Reactant(Chemistry):
     def __init__(self): 
         print self.__dict__
         
-        
-Chemistry(1)
-Reactant()
-make_Acid(1)
+
+if __name__ == '__main__':        
+    #Chemistry(1)
+    #Reactant()
+    a = make_Acid(None)
+    b = a(1, 2, 3, 4, 5)
+    print a
+    print type(a)
+    print b
+    print type(b)

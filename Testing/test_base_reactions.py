@@ -34,27 +34,115 @@ finally:
     
     import compounds as Chemistry
     import base_reactions
-        
+    from base_reactions import Base, Acid, Conditions, Reactant
     
-
+    
+class test_Reactant_utility_methods(unittest.TestCase):
+    
+    @classmethod
+    def setUpClass(cls): pass
+    
+    @classmethod
+    def tearDownClass(cls): pass
+    
+    def setUp(self): 
+        self.compound1 = Chemistry.Compound(
+                                {"a1":"H", "a2":"O"},
+                                {"b1":("a1", "a2", {'order': 1,  
+                                                    'chirality': None})},
+                                {"id":"Hydroxide"})
+        self.compound2 = Chemistry.Compound(
+                                {"a1":"H", "a2":"H", "a3":"O", "a4":"H"},
+                                {"b1":("a1", "a3", {'order': 1,  
+                                                    'chirality': None}), 
+                                 "b2":("a2", "a3", {'order': 1, 
+                                                    'chirality': None}),
+                                 "b3":("a3", "a4", {'order': 1,
+                                                    'chirality': None})},
+                                {"id":"Hydronium"})
+        self.acid = Acid(self.compound2, 'a1', -1.74)
+        self.base = Base(self.compound1, 'a2', 16)
+        self.conditions = Conditions(**{'reactants': (self.acid, self.base)})
+    
+    def tearDown(self): pass
+    
+    @unittest.skip('NYI')
+    def test__compare_pkas(self):
+        Reactant._compare_pkas(-1.74, 16)
+        
+    @unittest.expectedFailure
+    def test_make_Base(self):
+        self.assertEqual(Reactant.make_Base(self.compound1), self.base)
+        
+    @unittest.expectedFailure
+    def test_make_Acid(self):
+        self.assertEqual(Reactant.make_Acid(self.compound2), self.acid)
+        
+    def test__new_key1(self):
+        self.assertEqual('a3', Reactant._new_key(self.compound1))
+        
+    def test__new_key2(self):
+        self.assertEqual('a3', Reactant._new_key(self.base))
+        
+    def test__new_key3(self):
+        self.assertEqual('b2', Reactant._new_key(self.base, False))
+    
+    
+class test_Base(unittest.TestCase):
+    
+    @classmethod
+    def setUpClass(cls): pass
+    
+    @classmethod
+    def tearDownClass(cls): pass
+    
+    def setUp(self): 
+        self.compound1 = Chemistry.Compound(
+                                {"a1":"H", "a2":"O"},
+                                {"b1":("a1", "a2", {'order': 1,  
+                                                    'chirality': None})},
+                                {"id":"Hydroxide"})
+        self.compound2 = Chemistry.Compound(
+                                {"a1":"H", "a2":"H", "a3":"O", "a4":"H"},
+                                {"b1":("a1", "a3", {'order': 1,  
+                                                    'chirality': None}), 
+                                 "b2":("a2", "a3", {'order': 1, 
+                                                    'chirality': None}),
+                                 "b3":("a3", "a4", {'order': 1,
+                                                    'chirality': None})},
+                                {"id":"Hydronium"})
+        self.compound3 = Chemistry.Compound(
+                                {'a1':'H', 'a2':'O', 'a3':'H'},
+                                {'b1':('a1', 'a2', {'order':1,
+                                                    'chirality':None}), 
+                                 'b2':('a2', 'a3', {'order':1,
+                                                    'chirality':None})},
+                                {'id':"Water"})
+                                
+        self.acid = Acid(self.compound2, 'a1', -1.74)
+        self.base = Base(self.compound1, 'a2', 16)
+        self.conj_acid = Acid(self.compound3, 'a3', 16)
+        self.conditions = Conditions(**{'reactants': (self.acid, self.base)})
+    
+    def tearDown(self): pass    
+    
+    @unittest.expectedFailure
+    def test_to_conjugate_Acid(self):
+        self.assertEqual(self.base.conjugate_acid, self.conj_acid)
+    
+    
 if __name__ == '__main__':
     import types
     
                           
-    test_classes_to_run = []
-    for key, value in globals().items():
-        if isinstance(value, (type, types.ClassType)):
-            if issubclass(value, unittest.TestCase):
-                test_classes_to_run.append(value)
+    test_classes_to_run = [value for key, value in globals().items()
+                           if (isinstance(value, (type, types.ClassType)) and
+                               issubclass(value, unittest.TestCase))]
 
     loader = unittest.TestLoader()
 
-    suites_list = []
-    for test_class in test_classes_to_run:
-        suite = loader.loadTestsFromTestCase(test_class)
-        suites_list.append(suite)
-
-    big_suite = unittest.TestSuite(suites_list)
+    big_suite = unittest.TestSuite(loader.loadTestsFromTestCase(test_class) 
+                                   for test_class in test_classes_to_run)
     big_suite.addTests(doctest.DocTestSuite(Chemistry))
 
     runner = unittest.TextTestRunner(sys.stdout, verbosity=1)
