@@ -41,6 +41,7 @@ try:
     from . import test_base_reactions
     from . import test_compounds
     from . import test_periodic_helpers
+    from . import test_isomorphism
 except ImportError as e:
     logging.warn(e)
 

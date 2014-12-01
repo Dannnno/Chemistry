@@ -36,7 +36,6 @@ finally:
     import base_reactions
     from base_reactions import Base, Acid, Conditions, Reactant
     
-    
 class test_Reactant_utility_methods(unittest.TestCase):
     
     @classmethod
@@ -70,14 +69,6 @@ class test_Reactant_utility_methods(unittest.TestCase):
     def test__compare_pkas(self):
         Reactant._compare_pkas(-1.74, 16)
         
-    @unittest.expectedFailure
-    def test_make_Base(self):
-        self.assertEqual(Reactant.make_Base(self.compound1), self.base)
-        
-    @unittest.expectedFailure
-    def test_make_Acid(self):
-        self.assertEqual(Reactant.make_Acid(self.compound2), self.acid)
-        
     def test__new_key1(self):
         self.assertEqual('a3', Reactant._new_key(self.compound1))
         
@@ -86,7 +77,9 @@ class test_Reactant_utility_methods(unittest.TestCase):
         
     def test__new_key3(self):
         self.assertEqual('b2', Reactant._new_key(self.base, False))
-    
+        
+    # Tests of make_Base and make_Acid can be found in test_isomorphism.py
+            
     
 class test_Base(unittest.TestCase):
     
@@ -124,11 +117,10 @@ class test_Base(unittest.TestCase):
         self.conj_acid = Acid(self.compound3, 'a3', 16)
         self.conditions = Conditions(**{'reactants': (self.acid, self.base)})
     
-    def tearDown(self): pass    
-    
-    @unittest.expectedFailure
+    def tearDown(self): pass 
+        
     def test_to_conjugate_Acid(self):
-        self.assertEqual(self.base.conjugate_acid, self.conj_acid)
+        self.assertEqual(self.base.conjugate_acid, self.conj_acid)  
     
     
 if __name__ == '__main__':

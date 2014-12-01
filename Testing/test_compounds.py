@@ -117,18 +117,6 @@ class test_Compound(unittest.TestCase):
                                           {'chirality': None, 'order': 1}), 
                                     'b2': ('a2', 'a3', 
                                           {'chirality': None, 'order': 1})}})
-                                          
-    def test_contains_element_positive(self): 
-        self.assertIn('H', self.compound1)
-        
-    def test_contains_element_negative(self):
-        self.assertNotIn('Hg', self.compound2)
-        
-    def test_contains_id_positive(self): 
-        self.assertIn('a9', self.compound2)
-        
-    def test_contains_id_negative(self):
-        self.assertNotIn('a9', self.compound1)
     
     def test__add_node_raises_KE(self): 
         self.assertRaises(KeyError,

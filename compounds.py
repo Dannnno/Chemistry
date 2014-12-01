@@ -74,6 +74,17 @@ class Compound(nx.Graph):
                 return obj.__dict__
         except AttributeError:
             return map(stringify_function, obj)
+            
+    @classmethod
+    def node_matcher(cls, node1, node2):
+        try:
+            return node1['symbol'] == node2['symbol']
+        except KeyError:
+            return False
+        
+    @classmethod
+    def edge_matcher(cls, edge1, edge2):
+        return edge1 == edge2
    
     def __init__(self, atoms, bonds, other_info={}):
         super(Compound, self).__init__()
@@ -250,16 +261,16 @@ class Compound(nx.Graph):
     def to_CML(self, filename):
         cml.CMLBuilder.from_Compound(self)
             
-    def __contains__(self, key):
-        if key in periodic_table:
-            return key in self.atoms.values()
-        elif key[0] in ['a', 'b']:
-            try:
-                int(key[1:])
-            except TypeError:
-                raise KeyError("Key {} not applicable".format(key))
-            else:
-                return key in self.atoms or key in self.bonds    
+    #def __contains__(self, key):
+    #    if key in periodic_table:
+    #        return key in self.atoms.values()
+    #    elif key[0] in ['a', 'b']:
+    #        try:
+    #            int(key[1:])
+    #        except TypeError:
+    #            raise KeyError("Key {} not applicable".format(key))
+    #        else:
+    #            return key in self.atoms or key in self.bonds    
                 
     def __str__(self):
         return json.dumps(Compound.json_serialize(self, as_str=True), 
@@ -270,6 +281,17 @@ class Compound(nx.Graph):
         return json.dumps(Compound.json_serialize(self),
                            sort_keys=True,
                            indent=4)
+                           
+    def is_isomorphic(self, other):
+        return nx.is_isomorphic(self, other, 
+                                 node_match=Compound.node_matcher,
+                                 edge_match=Compound.edge_matcher)
+        
+    def __eq__(self, other):
+        return self.is_isomorphic(other)
+        
+    def __ne__(self, other):
+        return not self.is_isomorphic(other)
                 
 
 if __name__ == '__main__':

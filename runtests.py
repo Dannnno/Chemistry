@@ -71,6 +71,7 @@ map(big_suite.addTests,
     map(doctest.DocTestSuite, local_imports))
         
 ## Finally runs the tests
-with open("a.txt", 'w') as f:
+with open("a.txt", 'w') as f: 
     runner = unittest.TextTestRunner(sys.stdout, verbosity=1)
+    #runner = unittest.TextTestRunner(f, verbosity=1) 
     runner.run(big_suite)

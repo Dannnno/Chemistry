@@ -36,8 +36,11 @@ periodic_table = pt.periodic_table
 class Reactant(object):
     
     @classmethod
-    def _compare_pkas(cls, acid_pka, base_pka):
-        raise NotImplementedError
+    def _compare_pkas(cls, acid_pka, base_pka, thresholds={}):
+        if thresholds:
+            raise NotImplementedError
+        else:
+            pass
         
     @classmethod
     def make_Base(cls, basic_compound, pka=16, point='a1'):
@@ -99,7 +102,22 @@ class Reactant(object):
                 raise ValueError("pKa must equal {}".format(self.pka))
                 
     def __getattr__(self, attr):
-        return getattr(self._Compound, attr)
+        return getattr(self._Compound, attr)  
+        
+    def __eq__(self, other):
+        try:
+            return self._Compound == other._Compound
+        except AttributeError:
+            return self._Compound == other
+        
+    def __ne__(self, other):
+        return not self == other
+        
+    def __len__(self):
+        return len(self._Compound)
+        
+    def __getitem__(self, key):
+        return self._Compound.__getitem__(key)
             
             
 class Acid(Reactant):
