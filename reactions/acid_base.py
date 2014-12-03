@@ -25,12 +25,37 @@ If not, see <http://opensource.org/licenses/MIT>
 
 import compounds
 import base_reactions
-from base_reactions import Acid, Base, Reaction, Conditions
+from base_reactions import Acid, Base, Reaction, Conditions, Reactant
 
 
 class AcidBase(Reaction):
     
     def __init__(self, acid, base, conditions):
+        ## Validating the conditions
+        if not isinstance(conditions, Conditions):
+            raise TypeError("{} must be Conditions, is {}"
+                                .format(conditions, type(conditions)))
+                                
+        self.conditions = conditions
+        if not self.conditions['neutral']:
+            if self.conditions['acidic']:
+                results = Reactant._compare_pkas(acid, base, self.conditions)
+                if isinstance(results[0], Conditions): pass
+                elif isinstance(results[1], Conditions): pass
+                else: pass
+            elif self.conditions['basic']:
+                results = Reactant._compare_pkas(acid, base, self.conditions)
+                if isinstance(results[0], Conditions): pass
+                elif isinstance(results[1], Conditions): pass
+                else: pass
+            else:
+                raise ValueError("Non-neutral conditions must be basic or acidic")
+        else:
+            acid, base = Reactant._compare_pkas(acid, base)
+            
+        conditions_location = 1
+ 
+ 
         ## Validating the acid and base)
         if not isinstance(acid, Acid):
             raise TypeError("{} must be an Acid, is a {}"
@@ -41,17 +66,6 @@ class AcidBase(Reaction):
         self.acid = acid
         self.base = base
         
-        ## Validating the conditions
-        if not isinstance(conditions, Conditions):
-            raise TypeError("{} must be Conditions, is {}"
-                                .format(conditions, type(conditions)))
-        if not conditions.has_reactants():
-            conditions.add_reactants(acid, base) 
-        elif not conditions.validate_reactants(acid, base):
-            raise ValueError(
-                '\t'.join(["Condition must have the correct reactants",
-                           "has {} instead of",
-                           "{}"]).format(conditions.reactants, [acid, base]))
         
-        self.conditions = conditions                    
-        
+
+

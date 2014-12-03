@@ -30,7 +30,7 @@ import sys
 class MetaChemistry(type):
     
     def __new__(cls, clsname, base, dct, *args, **kwargs):
-        print cls, clsname, base, dct, args, kwargs
+        # print cls, clsname, base, dct, args, kwargs
         
         return super(MetaChemistry, cls).__new__(cls, clsname, base, dct)
         

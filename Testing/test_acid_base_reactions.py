@@ -78,16 +78,8 @@ class test_AcidBase(unittest.TestCase):
         with self.assertRaises(TypeError):
             AcidBase(self.acid, self.base, {})
     
-    def test_constructor_raises_VE(self): 
-        with self.assertRaises(ValueError):
-            AcidBase(self.acid, self.base, 
-                     Conditions(**{'reactants': (self.compound1, 
-                                                 self.base)}))
-    
-    @unittest.expectedFailure
     def test_good_constructor(self): 
-        with self.assertRaises(Exception):
-            AcidBase(self.acid, self.base, self.conditions)
+        AcidBase(self.acid, self.base, self.conditions)
     
 
 if __name__ == '__main__':

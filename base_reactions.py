@@ -36,11 +36,16 @@ periodic_table = pt.periodic_table
 class Reactant(object):
     
     @classmethod
-    def _compare_pkas(cls, acid_pka, base_pka, thresholds={}):
-        if thresholds:
-            raise NotImplementedError
-        else:
-            pass
+    def _compare_pkas(cls, comp1, comp2, conditions=None, thresholds={}):
+        """Returns an approximate product to reactant ratio based on the
+        pkas of the molecule.  Heavily customizable through the passage 
+        of threshold information (NYI)
+        """
+        tset = set([(comp1, comp1.pka), (comp2, comp2.pka)])
+        if conditions is not None:
+            tset.add((conditions, conditions.pka))
+            
+        return [item[0] for item in sorted(tset, key=lambda x: x[1])] 
         
     @classmethod
     def make_Base(cls, basic_compound, pka=16, point='a1'):
@@ -101,6 +106,12 @@ class Reactant(object):
             if pka != self.pka:
                 raise ValueError("pKa must equal {}".format(self.pka))
                 
+    def __str__(self):
+        return "{} of {}".format(self.__class__.__name__, self._Compound.__class__.__name__)
+        
+    def __repr__(self):
+        return str(self)
+    
     def __getattr__(self, attr):
         return getattr(self._Compound, attr)  
         
@@ -168,8 +179,12 @@ class Product(object):
 
 class Conditions(object): 
     
-    def __init__(self, **conditions):
+    def __init__(self, **conditions):        
+        self.acidic = True
+        self.pka = -1
+        self.basic = True
         self.__dict__.update(conditions)
+        self.neutral = not (self.acidic or self.basic)
 
     def has_reactants(self):
         return 'reactants' in self and self.reactants
@@ -197,6 +212,7 @@ class Reaction(object):
     paths = dict()
     
     @classmethod
+    @abc.abstractmethod
     def _parse_reactants(cls, *reactants):
         pass
         
