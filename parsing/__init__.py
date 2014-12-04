@@ -23,7 +23,6 @@ You should have received a copy of the MIT License along with this program.
 If not, see <http://opensource.org/licenses/MIT>
 """
 
-__all__ = ['test_acid_base_reactions', 'test_base_reactions', 'test_CML', 
-           'test_compounds', 'test_isomorphisms', 'test_periodic_helpers']
+__all__ = ['CheML']
 
 from . import *

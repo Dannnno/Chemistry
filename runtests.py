@@ -62,6 +62,7 @@ for path in os.listdir(os.getcwd()):
                     globals()[cut_path] = __import__(cut_path)
                     local_imports.add(globals()[cut_path])
                 except ImportError as e:
+                    print "{} was not imported for doctesting".format(cut_path)
                     logging.warn(
                         "{} was not imported for doctesting".format(cut_path))
             else:

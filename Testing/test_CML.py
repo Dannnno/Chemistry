@@ -27,9 +27,12 @@ import itertools
 import os
 import tempfile
 import unittest
+print os.getcwd()
 
-import CheML as cml
-import compounds as Chemistry
+#import Chemistry.parsing.CheML as cml
+#from Chemistry.parsing import CheML as cml
+import Chemistry
+from .. import compounds as Chemistry
 
 
 class test_cml_parser(unittest.TestCase):

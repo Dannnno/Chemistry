@@ -23,7 +23,42 @@ You should have received a copy of the MIT License along with this program.
 If not, see <http://opensource.org/licenses/MIT>
 """
 
-__all__ = ['test_acid_base_reactions', 'test_base_reactions', 'test_CML', 
-           'test_compounds', 'test_isomorphisms', 'test_periodic_helpers']
+import os
+from collections import deque
 
-from . import *
+                  
+def extract_files(start_dir=os.getcwd(), excludes=[]):
+    to_crawl = deque([filename 
+                      for filename in os.listdir(start_dir)
+                      if not filename.startswith('.') and
+                      not filename in excludes])
+    extracted = set()
+    
+    while to_crawl:
+        current = to_crawl.popleft()
+        
+        if current in extracted:
+            continue
+        
+        if os.path.isdir(current):
+            to_crawl.extendleft(
+                map(lambda x: os.path.join('', current, x),
+                    extract_files(os.path.join(start_dir, current))))
+            continue
+            
+        extracted.add(current)
+        
+    return filter(lambda x: x.endswith('.pyc'), extracted)
+    
+    
+def delete_files(files):
+    map(os.remove, files)
+    
+
+def make_clean(*except_):
+    delete_files(extract_files(excludes=except_))
+    
+    
+if __name__ == '__main__':
+    make_clean('docs')
+    
