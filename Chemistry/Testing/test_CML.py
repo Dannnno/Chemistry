@@ -108,6 +108,7 @@ class test_cml_builder(unittest.TestCase):
 
 if __name__ == '__main__':
     import types
+    import sys
     
                           
     test_classes_to_run = [value for key, value in globals().items()

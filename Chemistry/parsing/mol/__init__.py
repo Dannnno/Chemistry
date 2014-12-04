@@ -23,8 +23,4 @@ You should have received a copy of the MIT License along with this program.
 If not, see <http://opensource.org/licenses/MIT>
 """
 
-__all__ = ['test_acid_base_reactions', 'test_base_reactions', 'test_CML', 
-           'test_compounds', 'test_isomorphism', 'test_periodic_helpers',
-           'test_molv2000', 'test_molv3000', 'test_sdf']
-           
-from Chemistry.Testing import *
+__all__ = ["molv2000", "molv3000", "sdf"]

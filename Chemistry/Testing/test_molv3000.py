@@ -23,46 +23,57 @@ You should have received a copy of the MIT License along with this program.
 If not, see <http://opensource.org/licenses/MIT>
 """
 
-try:
-    import cStringIO as IO
-except ImportError:
-    import StringIO as IO
-finally:
-    import os
-    import sys
-    import unittest
+import itertools
+import os
+import tempfile
+import unittest
+
+from Chemistry import compounds
+from Chemistry.parsing.mol import molv3000
+
+
+class test_MolV3000(unittest.TestCase):
     
-    from Chemistry import table_builder as tb
+    @classmethod
+    def setUpClass(cls): pass
     
+    @classmethod
+    def tearDownClass(cls): pass    
     
-class test_helpers(unittest.TestCase):
+    def setUp(self): pass
+    
+    def tearDown(self): pass
+
+
+class test_MolV3000Parser(unittest.TestCase):
+    
+    @classmethod
+    def setUpClass(cls): pass
+    
+    @classmethod
+    def tearDownClass(cls): pass    
     
     def setUp(self): pass
     
     def tearDown(self): pass
     
-    def test_periodic_table(self):
-        cwd = os.getcwd()
-        try:
-            os.chdir(os.path.join(cwd, 'Chemistry'))
-            tb.build_table()
-        finally:
-            os.chdir(cwd)
-        from Chemistry import periodic_table
-        
-    def test_convert_type(self):
-        self.assertEqual(tb.convert_type('1', int), 1)
-        self.assertEqual(tb.convert_type('1.0', float), 1.0)
-        self.assertEqual(tb.convert_type('Hello', str), 'Hello')
-        self.assertEqual(tb.convert_type('[1,2,3]', tb.str_to_list), [1, 2, 3])
-     
-    def test_str_to_list(self):
-        self.assertEqual(tb.str_to_list('[1,2,3]'), ['1', '2', '3'])
-        self.assertEqual(tb.str_to_list('[1,2,3]', mapped=int), [1, 2, 3])
-
-
+    
+class test_MolV3000Builder(unittest.TestCase):
+    
+    @classmethod
+    def setUpClass(cls): pass
+    
+    @classmethod
+    def tearDownClass(cls): pass    
+    
+    def setUp(self): pass
+    
+    def tearDown(self): pass
+    
+    
 if __name__ == '__main__':
     import types
+    import sys
     
                           
     test_classes_to_run = [value for key, value in globals().items()

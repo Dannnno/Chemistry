@@ -23,3 +23,6 @@ Goals of this program:
 Current stage of development: Pre-Alpha  
 Current version: NA  
 Currently projected date of Alpha release: In a long time
+
+ctfile.pdf is the specification document for assorted data file types, downloaded
+from http://download.accelrys.com/freeware/ctfile-formats/ctfile-formats.zip

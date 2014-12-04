@@ -29,7 +29,6 @@ except ImportError:
     import StringIO as IO
 finally:
     import contextlib
-    import doctest
     import os
     import sys
     import unittest

@@ -28,7 +28,6 @@ try:
 except ImportError:
     import StringIO as IO
 finally:
-    import doctest
     import sys
     import unittest
     

@@ -23,8 +23,23 @@ You should have received a copy of the MIT License along with this program.
 If not, see <http://opensource.org/licenses/MIT>
 """
 
-__all__ = ['test_acid_base_reactions', 'test_base_reactions', 'test_CML', 
-           'test_compounds', 'test_isomorphism', 'test_periodic_helpers',
-           'test_molv2000', 'test_molv3000', 'test_sdf']
-           
-from Chemistry.Testing import *
+from Chemistry.parsing.mol import molv2000 as mol_
+
+
+class MolV3000(mol_.MolV2000):
+    
+    pass
+    
+    
+class MolV3000Parser(mol_.MolV2000Parser):
+    
+    pass
+    
+    
+class MolV3000Builder(mol_.MolV2000Builder):
+    
+    pass
+
+
+if __name__ == '__main__':
+    pass
