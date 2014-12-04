@@ -94,6 +94,7 @@ def convert_type(cell, typ):
     except (TypeError, ValueError):
         return "No_Data" # The nomiker I have chosen for missing data
         
+        
 def str_to_list(a_stringy_list, mapped=None):
     """Takes a string that looks like a list and makes it a list
     
@@ -112,6 +113,7 @@ def str_to_list(a_stringy_list, mapped=None):
     except ValueError: #Exception:
         ## print "Function %s couldn't be mapped to list " % str(mapped), the_list
         return the_list
+        
       
 def build_table():  
     with open("element_list.csv", 'r') as element_data, \
@@ -137,6 +139,7 @@ def build_table():
         
         for line in json_table:
             periodic_table.write(line + "\n")
+            
         
 if __name__ == "__main__":
     import os

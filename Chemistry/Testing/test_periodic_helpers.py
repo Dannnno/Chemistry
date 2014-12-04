@@ -31,7 +31,8 @@ finally:
     import doctest
     import sys
     import unittest
-    import table_builder as tb
+    
+    from Chemistry import table_builder as tb
     
     
 class test_helpers(unittest.TestCase):
@@ -61,21 +62,13 @@ if __name__ == '__main__':
     import types
     
                           
-    test_classes_to_run = []
-    for key, value in globals().items():
-        if isinstance(value, (type, types.ClassType)):
-            if issubclass(value, unittest.TestCase):
-                test_classes_to_run.append(value)
-
+    test_classes_to_run = [value for key, value in globals().items()
+                           if (isinstance(value, (type, types.ClassType)) and
+                               issubclass(value, unittest.TestCase))]
+                               
     loader = unittest.TestLoader()
-
-    suites_list = []
-    for test_class in test_classes_to_run:
-        suite = loader.loadTestsFromTestCase(test_class)
-        suites_list.append(suite)
-
-    big_suite = unittest.TestSuite(suites_list)
-    big_suite.addTests(doctest.DocTestSuite(tb))
-
+    big_suite = unittest.TestSuite(loader.loadTestsFromTestCase(test_class) 
+                                   for test_class in test_classes_to_run)
+                                   
     runner = unittest.TextTestRunner(sys.stdout, verbosity=1)
     runner.run(big_suite)

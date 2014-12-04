@@ -23,9 +23,9 @@ You should have received a copy of the MIT License along with this program.
 If not, see <http://opensource.org/licenses/MIT>
 """
 
-import compounds
-import base_reactions
-from base_reactions import Acid, Base, Reaction, Conditions, Reactant
+from Chemistry import compounds, base_reactions
+from Chemistry.base_reactions import Acid, Base, Reactant, \
+                                         Reaction, Conditions, Product
 
 
 class AcidBase(Reaction):
@@ -67,5 +67,5 @@ class AcidBase(Reaction):
         self.base = base
         
         
-
-
+    def react(self):
+        raise NotImplementedError

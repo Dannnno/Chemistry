@@ -24,14 +24,14 @@ If not, see <http://opensource.org/licenses/MIT>
 """
 
 try:
-    from periodic_table import periodic_table
-    import periodic_table as pt
+    from Chemistry.periodic_table import periodic_table
+    from Chemistry import periodic_table as pt
 except ImportError:
-    import table_builder
+    from Chemistry import table_builder
     table_builder.build_table()
     del globals()['table_builder']
-    from periodic_table import periodic_table
-    import periodic_table as pt
+    from Chemistry.periodic_table import periodic_table
+    from Chemistry import periodic_table as pt
 finally:
     from collections import deque
     import json
@@ -39,7 +39,8 @@ finally:
     
     import networkx as nx
     
-    from parsing import CheML as cml
+    from Chemistry.parsing import CheML as cml
+
 
 def get_Element(symbol='C'):
     return {"symbol":symbol} #periodic_table[symbol]

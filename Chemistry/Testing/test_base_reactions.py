@@ -32,9 +32,8 @@ finally:
     import sys
     import unittest
     
-    import compounds as Chemistry
-    import base_reactions
-    from base_reactions import Base, Acid, Conditions, Reactant
+    from Chemistry import compounds, base_reactions
+    from Chemistry.base_reactions import Base, Acid, Conditions, Reactant
 
     
 @unittest.skip('')    
@@ -47,12 +46,12 @@ class test_Reactant_utility_methods(unittest.TestCase):
     def tearDownClass(cls): pass
     
     def setUp(self): 
-        self.compound1 = Chemistry.Compound(
+        self.compound1 = compounds.Compound(
                                 {"a1":"H", "a2":"O"},
                                 {"b1":("a1", "a2", {'order': 1,  
                                                     'chirality': None})},
                                 {"id":"Hydroxide"})
-        self.compound2 = Chemistry.Compound(
+        self.compound2 = compounds.Compound(
                                 {"a1":"H", "a2":"H", "a3":"O", "a4":"H"},
                                 {"b1":("a1", "a3", {'order': 1,  
                                                     'chirality': None}), 
@@ -94,12 +93,12 @@ class test_Base(unittest.TestCase):
     def tearDownClass(cls): pass
     
     def setUp(self): 
-        self.compound1 = Chemistry.Compound(
+        self.compound1 = compounds.Compound(
                                 {"a1":"H", "a2":"O"},
                                 {"b1":("a1", "a2", {'order': 1,  
                                                     'chirality': None})},
                                 {"id":"Hydroxide"})
-        self.compound2 = Chemistry.Compound(
+        self.compound2 = compounds.Compound(
                                 {"a1":"H", "a2":"H", "a3":"O", "a4":"H"},
                                 {"b1":("a1", "a3", {'order': 1,  
                                                     'chirality': None}), 
@@ -108,7 +107,7 @@ class test_Base(unittest.TestCase):
                                  "b3":("a3", "a4", {'order': 1,
                                                     'chirality': None})},
                                 {"id":"Hydronium"})
-        self.compound3 = Chemistry.Compound(
+        self.compound3 = compounds.Compound(
                                 {'a1':'H', 'a2':'O', 'a3':'H'},
                                 {'b1':('a1', 'a2', {'order':1,
                                                     'chirality':None}), 
@@ -134,12 +133,10 @@ if __name__ == '__main__':
     test_classes_to_run = [value for key, value in globals().items()
                            if (isinstance(value, (type, types.ClassType)) and
                                issubclass(value, unittest.TestCase))]
-
+                               
     loader = unittest.TestLoader()
-
     big_suite = unittest.TestSuite(loader.loadTestsFromTestCase(test_class) 
                                    for test_class in test_classes_to_run)
-    big_suite.addTests(doctest.DocTestSuite(Chemistry))
-
+                                   
     runner = unittest.TextTestRunner(sys.stdout, verbosity=1)
     runner.run(big_suite)

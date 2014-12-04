@@ -34,7 +34,7 @@ finally:
     import sys
     import unittest
     
-    import compounds as Chemistry
+    from Chemistry import compounds
 
 
 @contextlib.contextmanager
@@ -56,7 +56,7 @@ class test_Compound(unittest.TestCase):
     
     def setUp(self): 
         ## Water
-        self.compound1 = Chemistry.Compound(
+        self.compound1 = compounds.Compound(
                                 {"a1":"H", "a2":"H", "a3":"O"},
                                 {"b1":("a1", "a3", {'order': 1,  
                                                     'chirality': None}), 
@@ -64,7 +64,7 @@ class test_Compound(unittest.TestCase):
                                                     'chirality': None})},
                                 {"id":"Water"})
         ## Ketone
-        self.compound2 = Chemistry.Compound(
+        self.compound2 = compounds.Compound(
                                 {"a1": "H", "a2": "H", "a3": "H", 
                                  "a4": "H","a5": "H", "a6": "H", "a7": "C", 
                                  "a8": "C", "a9": "C", "a10": "O"},
@@ -97,7 +97,7 @@ class test_Compound(unittest.TestCase):
     def tearDownClass(cls): pass
     
     def test_json_serializer_repr(self):
-        self.assertEqual(Chemistry.Compound.json_serialize(self.compound1),
+        self.assertEqual(compounds.Compound.json_serialize(self.compound1),
                          {'other_info': {'id': 'Water'}, 
                           'atoms': {'a1': 'H', 
                                     'a3': 'O', 
@@ -108,7 +108,7 @@ class test_Compound(unittest.TestCase):
                                           {'chirality': None, 'order': 1})}})
                                           
     def test_json_serializer_str(self):
-        self.assertEqual(Chemistry.Compound.json_serialize(self.compound1, as_str=True),
+        self.assertEqual(compounds.Compound.json_serialize(self.compound1, as_str=True),
                          {'other_info': {'id': 'Water'}, 
                           'atoms': {'a1': 'H', 
                                     'a3': 'O', 
@@ -121,10 +121,10 @@ class test_Compound(unittest.TestCase):
     def test__add_node_raises_KE(self): 
         self.assertRaises(KeyError,
                           self.compound1._add_node_,
-                          *('a2', Chemistry.get_Element('H')))
+                          *('a2', compounds.get_Element('H')))
                           
     def test__add_node_(self): 
-        self.compound1._add_node_('a4', Chemistry.get_Element('H'))
+        self.compound1._add_node_('a4', compounds.get_Element('H'))
         self.assertIn('a4', self.compound1.nodes())
     
     def test__add_edge_raises_KE(self):
@@ -135,7 +135,7 @@ class test_Compound(unittest.TestCase):
                           *('b3', 'a1', 'a2', {'order':1, 'chirality':None}))
     
     def test__add_edge_(self):
-        self.compound1._add_node_('a4', Chemistry.get_Element('H'))
+        self.compound1._add_node_('a4', compounds.get_Element('H'))
         self.compound1._add_edge_('b1', 'a1', 'a4', 
                                   {'order':1, 'chirality':None})
         self.assertEqual(self.compound1['a1']['a4']['key'], "b1")
@@ -143,27 +143,31 @@ class test_Compound(unittest.TestCase):
     def test_from_CML(self):    
         self.assertEqual(
                 self.compound1.molecule, 
-                Chemistry.Compound.from_CML(
-                        os.getcwd() + "/molecules/test_molecules/CML_1.cml")
-                    .molecule)
+                compounds.Compound.from_CML(os.path.join(
+                                                os.getcwd(), "Chemistry", 
+                                                "molecules", "test_molecules", 
+                                                "CML_1.cml")).molecule)
                     
     def test_to_CML(self):
-        from_cml = Chemistry.Compound.from_CML(
-                        os.getcwd() + "/molecules/test_molecules/CML_1.cml")
-        from_cml.to_CML(os.getcwd() + "/molecules/test_molecules/CML_1w.cml")
+        from_cml = compounds.Compound.from_CML(os.path.join(os.getcwd(), 
+                                               "Chemistry", "molecules", 
+                                               "test_molecules", "CML_1.cml"))
+        from_cml.to_CML(os.path.join(os.getcwd(),  "Chemistry", "molecules", 
+                                     "test_molecules", "CML_1_w.cml"))
         self.assertEqual(
                 from_cml.molecule, 
-                Chemistry.Compound.from_CML(
-                        os.getcwd() + "/molecules/test_molecules/CML_1w.cml")
-                    .molecule)
-        
-                          
+                compounds.Compound.from_CML(os.path.join(os.getcwd(), 
+                                                         "Chemistry", 
+                                                         "molecules", 
+                                                         "test_molecules", 
+                                                         "CML_1.cml")).molecule)
+                           
     
 class test_linear_path_finding(unittest.TestCase):
     
     def setUp(self):
         ## Water
-        self.compound1 = Chemistry.Compound(
+        self.compound1 = compounds.Compound(
                                 {"a1":"H", "a2":"H", "a3":"O"},
                                 {"b1":("a1", "a3", {'order': 1,  
                                                     'chirality': None}), 
@@ -171,7 +175,7 @@ class test_linear_path_finding(unittest.TestCase):
                                                     'chirality': None})},
                                 {"id":"Water"})
         ## Ketone
-        self.compound2 = Chemistry.Compound(
+        self.compound2 = compounds.Compound(
                                 {"a1": "H", "a2": "H", "a3": "H", 
                                  "a4": "H","a5": "H", "a6": "H", "a7": "C", 
                                  "a8": "C", "a9": "C", "a10": "O"},
@@ -226,21 +230,13 @@ if __name__ == '__main__':
     import types
     
                           
-    test_classes_to_run = []
-    for key, value in globals().items():
-        if isinstance(value, (type, types.ClassType)):
-            if issubclass(value, unittest.TestCase):
-                test_classes_to_run.append(value)
-
+    test_classes_to_run = [value for key, value in globals().items()
+                           if (isinstance(value, (type, types.ClassType)) and
+                               issubclass(value, unittest.TestCase))]
+                               
     loader = unittest.TestLoader()
-
-    suites_list = []
-    for test_class in test_classes_to_run:
-        suite = loader.loadTestsFromTestCase(test_class)
-        suites_list.append(suite)
-
-    big_suite = unittest.TestSuite(suites_list)
-    big_suite.addTests(doctest.DocTestSuite(Chemistry))
-
+    big_suite = unittest.TestSuite(loader.loadTestsFromTestCase(test_class) 
+                                   for test_class in test_classes_to_run)
+                                   
     runner = unittest.TextTestRunner(sys.stdout, verbosity=1)
     runner.run(big_suite)

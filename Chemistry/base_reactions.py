@@ -28,12 +28,12 @@ import abc
 
 import numpy as np
 
-import compounds
-import periodic_table as pt
+from Chemistry import compounds
+from Chemistry import periodic_table as pt
 periodic_table = pt.periodic_table
 
 
-class Reactant(object):
+class Reactant(object): 
     
     @classmethod
     def _compare_pkas(cls, comp1, comp2, conditions=None, thresholds={}):
@@ -209,16 +209,8 @@ class Conditions(object):
 
 
 class Reaction(object):
-    paths = dict()
-    
-    @classmethod
-    @abc.abstractmethod
-    def _parse_reactants(cls, *reactants):
-        pass
-        
-    @abc.abstractmethod
-    def _eval_paths(self):
-        pass
+
+    __metaclass__ = abc.ABCMeta    
         
     @abc.abstractmethod
     def react(self):

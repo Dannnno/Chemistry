@@ -23,6 +23,45 @@ You should have received a copy of the MIT License along with this program.
 If not, see <http://opensource.org/licenses/MIT>
 """
 
-__all__ = ['CheML']
 
-from . import *
+"""
+This is the master __init__ file for the Chemistry repository.  File structure
+should look something like
+
+    Chemistry\
+        docs\
+            stuff
+        molecules\
+            test_molecules\
+                *.cml
+            *.cml
+        parsing\
+            __init__.py
+            CheML.py
+        reactions\
+            __init__.py
+            acid_base.py
+        Testing\
+            __init__.py
+            test_*.py 
+        LICENSE
+        README.md
+        element_list.csv
+        __init__.py ## This file ##
+        base_chemistry.py
+        base_reactions.py
+        compounds.py
+        make_clean.py
+        periodic_table.py
+        runtests.py
+        table_builder.py
+        
+There may be assorted *.txt *.log files lying around that just haven't been cleaned up yet
+"""
+
+__all__ = ['base_reactions', 'compounds', 'periodic_table', 'table_builder',
+           'parsing', 'reactions']
+
+__version__ = 0.0 ## pre-release
+
+__author__ = ["Dan Obermiller"]

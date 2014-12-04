@@ -27,19 +27,16 @@ import itertools
 import os
 import tempfile
 import unittest
-print os.getcwd()
 
-#import Chemistry.parsing.CheML as cml
-#from Chemistry.parsing import CheML as cml
-import Chemistry
-from .. import compounds as Chemistry
+from Chemistry import compounds
+from Chemistry.parsing import CheML as cml
 
 
 class test_cml_parser(unittest.TestCase):
     primary = os.getcwd()
     
     def setUp(self):
-        os.chdir(self.primary + "/molecules/test_molecules")
+        os.chdir(os.path.join(self.primary, "Chemistry", "molecules", "test_molecules"))
         self.molecule = {'atoms': {'a1': 'H',
                                    'a2': 'H',
                                    'a3': 'O'},
@@ -63,7 +60,7 @@ class test_cml_builder(unittest.TestCase):
     primary = os.getcwd()
     
     def setUp(self):
-        os.chdir(self.primary + "/molecules/test_molecules")
+        os.chdir(os.path.join(self.primary, "Chemistry", "molecules", "test_molecules"))
         with open('CML_1.cml', 'r') as cml_file:
             self.molecule = cml.CMLParser(cml_file)
             cml_file.seek(0)
@@ -96,7 +93,7 @@ class test_cml_builder(unittest.TestCase):
         
     def test_from_Compound(self):
         Builder = cml.CMLBuilder.from_Compound(
-                    Chemistry.Compound.from_CML("CML_1.cml"))
+                    compounds.Compound.from_CML("CML_1.cml"))
                                                  
         with tempfile.NamedTemporaryFile(
                                           mode='r+',
@@ -105,5 +102,21 @@ class test_cml_builder(unittest.TestCase):
                                          ) as tfile:
             Builder.to_file(tfile)
             tfile.seek(0)
-            self.assertEqual(Chemistry.Compound.from_CML("CML_1.cml").molecule,
-                             Chemistry.Compound.from_CML(tfile).molecule)
+            self.assertEqual(compounds.Compound.from_CML("CML_1.cml").molecule,
+                             compounds.Compound.from_CML(tfile).molecule)
+
+
+if __name__ == '__main__':
+    import types
+    
+                          
+    test_classes_to_run = [value for key, value in globals().items()
+                           if (isinstance(value, (type, types.ClassType)) and
+                               issubclass(value, unittest.TestCase))]
+                               
+    loader = unittest.TestLoader()
+    big_suite = unittest.TestSuite(loader.loadTestsFromTestCase(test_class) 
+                                   for test_class in test_classes_to_run)
+                                   
+    runner = unittest.TextTestRunner(sys.stdout, verbosity=1)
+    runner.run(big_suite)

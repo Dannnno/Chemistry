@@ -23,4 +23,5 @@ You should have received a copy of the MIT License along with this program.
 If not, see <http://opensource.org/licenses/MIT>
 """
 
-from . import acid_base
+import distutils
+import setup
