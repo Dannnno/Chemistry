@@ -1,4 +1,3 @@
-"""
 Copyright (c) 2014 Dan Obermiller
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -21,17 +20,6 @@ THE SOFTWARE.
 
 You should have received a copy of the MIT License along with this program.
 If not, see <http://opensource.org/licenses/MIT>
-"""
 
-import make_clean
-import runtests
-
-
-make_clean.make_clean()
-runtests.main()
-make_clean.make_clean()
-
-#import Chemistry.parsing.mol.molv2000 as mol
-#a = mol.MolV2000('')
-#a._parse_counts_line('  6  6  0  0  0  0  0  0  0  0  1 V2000')
+Notes taken from ctfile.pdf
 

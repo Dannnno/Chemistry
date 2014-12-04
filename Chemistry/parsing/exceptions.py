@@ -1,5 +1,4 @@
-"""
-Copyright (c) 2014 Dan Obermiller
+"""Copyright (c) 2014 Dan Obermiller
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -23,15 +22,18 @@ You should have received a copy of the MIT License along with this program.
 If not, see <http://opensource.org/licenses/MIT>
 """
 
-import make_clean
-import runtests
 
-
-make_clean.make_clean()
-runtests.main()
-make_clean.make_clean()
-
-#import Chemistry.parsing.mol.molv2000 as mol
-#a = mol.MolV2000('')
-#a._parse_counts_line('  6  6  0  0  0  0  0  0  0  0  1 V2000')
-
+class ParsingException(Exception):
+    message = "An error occured while parsing {} file"
+    
+    
+    def __init__(self, msg=message, filetype="CML"):
+        self.filetype = filetype
+        self.message = msg.format(self.filetype)
+        
+    def __str__(self):
+        return self.message
+        
+    def __repr__(self):
+        return str(self)
+        

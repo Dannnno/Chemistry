@@ -43,6 +43,14 @@ class test_MolV3000(unittest.TestCase):
     def setUp(self): pass
     
     def tearDown(self): pass
+    
+    @unittest.expectedFailure
+    def test_to2000(self):
+        self.fail("NYI")
+        
+    @unittest.expectedFailure
+    def test_from2000(self):
+        self.fail("NYI")
 
 
 class test_MolV3000Parser(unittest.TestCase):
