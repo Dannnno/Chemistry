@@ -74,11 +74,11 @@ class MolV2000(object):
     
     def __init__(self, molfile, from_string=False):
         if from_string:
-            self.moldata = IO.StringIO(molfile)
+            self._moldata = IO.StringIO(molfile)
         elif isinstance(molfile, basestring):
             try:
                 with open(molfile, 'r') as f:
-                    self.moldata = IO.StringIO(f.read())
+                    self._moldata = IO.StringIO(f.read())
             except IOError:
                 raise ParsingException(
                     ' '.join(["MolV2000 given {}, wasn't a valid file",
@@ -86,13 +86,19 @@ class MolV2000(object):
                                "then pass the kwarg `from_string=True"])
                             .format(molfile))
         elif hasattr(molfile, "read"):
-            self.moldata = IO.StringIO(molfile.read())
+            self._moldata = IO.StringIO(molfile.read())
         else:
             raise TypeError(
                 "MolV2000 must be given something it can read data from")
                 
+    def __getattr__(self, attr):
+        return getattr(self._moldata, attr)
+                
     def parse(self):
         MolV2000Parser(self)
+        self.other = {k:v for k, v in vars(self).iteritems()
+                      if k not in ['atoms', 'bonds'] and
+                      not k.startswith('_')}
                 
     def __str__(self):
         if hasattr(self, "title"):
@@ -125,7 +131,7 @@ class MolV2000Parser(object):
             self._molfile.__setattr__(attr, value)
         
     def parse_file(self):
-        lines = self.moldata.readlines()
+        lines = self.readlines()
         self._parse_header(lines[:3])
         self._parse_body(lines[3:])
         
@@ -197,22 +203,35 @@ class MolV2000Parser(object):
                     (\s+[-.0-9]+){,12} # matches the series of values                            
                                       """, re.X)
         self.atoms = {}
+        self._atoms = {}
         for i, line in enumerate(lines, 1):
             match = properly_formed.match(line)
             if match:
                 atom = line.split()
-                self.atoms['a{}'.format(i)] = atom                
+                self.atoms['a{}'.format(i)] = {'coords': 
+                                                    map(float, [atom.pop(0),
+                                                                atom.pop(0),
+                                                                atom.pop(0)]),                   
+                                               'symbol': atom.pop(0)}
+                # I don't know what all this stuff means yet, so I won't
+                # bother doing anything with it
+                self._atoms['a{}'.format(i)] = atom           
             else:
                 raise ParsingException("Malformed atom text")
         
     def _parse_bond_block(self, lines):
         properly_formed = re.compile(r"(\s+[0-9]+){,7}")
         self.bonds = {}
+        self._bonds = {}
         for i, line in enumerate(lines, 1):
             match = properly_formed.match(line)
             if match:
                 bond = line.split()
-                self.bonds['b{}'.format(i)] = bond                
+                self.bonds['b{}'.format(i)] = ('a{}'.format(bond.pop(0)),
+                                               'a{}'.format(bond.pop(0)),
+                                               {'order': int(bond.pop(0)),
+                                                'chirality': None})
+                self._bonds['b{}'.format(i)] = bond                                               
             else:
                 raise ParsingException("Malformed bond text")
     
@@ -235,6 +254,10 @@ class MolV2000Parser(object):
     
     
 class MolV2000Builder(object):
+    
+    @classmethod
+    def from_Compound(cls, compound):
+        raise NotImplementedError
     
     def __str__(self):
         return "MolV2000 Builder"

@@ -45,7 +45,6 @@ args = parser.parse_args()
 if args.runtests:                
     make_clean.make_clean()
     runtests.main()
-    make_clean.make_clean()
 elif args.debug: ## This is just whatever I'm debugging/playing with at the moment
     import Chemistry.parsing.mol.molv2000 as mol
     import json
@@ -72,6 +71,7 @@ elif args.debug: ## This is just whatever I'm debugging/playing with at the mome
     a.parse()
     d = copy(vars(a))
     d.pop('moldata')
-    #print json.dumps(d, indent=4)
+    d.pop('other')
+    print json.dumps(d, indent=4)
 else:
     raise NotImplementedError("I don't have a functional program yet...")

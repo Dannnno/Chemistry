@@ -28,9 +28,6 @@ try:
 except ImportError:
     import StringIO as IO
 finally:
-    import itertools
-    import os
-    import tempfile
     import unittest
     
     from Chemistry import compounds
@@ -44,7 +41,7 @@ class test_MolV2000(unittest.TestCase):
         cls.moldata = IO.StringIO(""" benzene
  ACD/Labs0812062058
  
-  6  6  0  0  0  0  0  0  0  0  1 V2000
+ 6  6  0  0  0  0  0  0  0  0  1 V2000
     1.9050   -0.7932    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
     1.9050   -2.1232    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
     0.7531   -0.1282    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
@@ -87,22 +84,28 @@ class test_MolV2000(unittest.TestCase):
     def test_atom_block(self):
         map(self.assertEqual, [self.parsed_molfile.atoms['a{}'.format(i)] 
                                for i in xrange(1, 7)],
-                              ["1.9050   -0.7932    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0".split(),
-                               "1.9050   -2.1232    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0".split(),
-                               "0.7531   -0.1282    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0".split(),
-                               "0.7531   -2.7882    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0".split(),
-                               "-0.3987   -0.7932    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0".split(),
-                               "-0.3987   -2.1232    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0".split()])
+                              [{'coords': [1.9050, -0.7932, 0.0000],
+                                'symbol': 'C'},
+                               {'coords': [1.9050, -2.1232, 0.0000],
+                                'symbol': 'C'},
+                               {'coords': [0.7531, -0.1282, 0.0000],
+                                'symbol': 'C'},
+                               {'coords': [0.7531, -2.7882, 0.0000],
+                                'symbol': 'C'},
+                               {'coords': [-0.3987, -0.7932, 0.0000],
+                                'symbol': 'C'},
+                               {'coords': [-0.3987, -2.1232, 0.0000],
+                                'symbol': 'C'}])
         
     def test_bond_block(self):
         map(self.assertEqual, [self.parsed_molfile.bonds['b{}'.format(i)] 
                                for i in xrange(1, 7)],
-                              ["2  1  1  0  0  0  0".split(),
-                               "3  1  2  0  0  0  0".split(),
-                               "4  2  2  0  0  0  0".split(),
-                               "5  3  1  0  0  0  0".split(),
-                               "6  4  1  0  0  0  0".split(),
-                               "6  5  2  0  0  0  0".split()])
+                              [("a2", "a1", {'order': 1, 'chirality': None}),
+                               ('a3', 'a1', {'order': 2, 'chirality': None}),
+                               ('a4', 'a2', {'order': 2, 'chirality': None}),
+                               ('a5', 'a3', {'order': 1, 'chirality': None}),
+                               ('a6', 'a4', {'order': 1, 'chirality': None}),
+                               ('a6', 'a5', {'order': 2, 'chirality': None})])
         
     @unittest.expectedFailure
     def test_atom_list_block(self):
@@ -118,11 +121,11 @@ class test_MolV2000(unittest.TestCase):
     def tearDown(self): pass
     
     @unittest.expectedFailure
-    def test_to3000(self):
+    def test_to_3000(self):
         self.fail("NYI")
         
     @unittest.expectedFailure
-    def test_from3000(self):
+    def test_from_3000(self):
         self.fail("NYI")
 
 

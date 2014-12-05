@@ -36,7 +36,8 @@ class test_cml_parser(unittest.TestCase):
     primary = os.getcwd()
     
     def setUp(self):
-        os.chdir(os.path.join(self.primary, "Chemistry", "molecules", "test_molecules"))
+        os.chdir(os.path.join(self.primary, "Chemistry", "Testing", 
+                              "test_molecules", "CML"))
         self.molecule = {'atoms': {'a1': 'H',
                                    'a2': 'H',
                                    'a3': 'O'},
@@ -60,7 +61,8 @@ class test_cml_builder(unittest.TestCase):
     primary = os.getcwd()
     
     def setUp(self):
-        os.chdir(os.path.join(self.primary, "Chemistry", "molecules", "test_molecules"))
+        os.chdir(os.path.join(self.primary, "Chemistry", "Testing", 
+                              "test_molecules", "CML"))
         with open('CML_1.cml', 'r') as cml_file:
             self.molecule = cml.CMLParser(cml_file)
             cml_file.seek(0)

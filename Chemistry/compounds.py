@@ -40,6 +40,7 @@ finally:
     import networkx as nx
     
     from Chemistry.parsing import CheML as cml
+    from Chemistry.parsing.mol import molv2000, molv3000
 
 
 def get_Element(symbol='C'):
@@ -58,6 +59,17 @@ class Compound(nx.Graph):
         return Compound(parsed.atoms,
                          parsed.bonds,
                          parsed.other)
+                         
+    @classmethod
+    def from_molfile(cls, molfile, from_v3000=False):      
+        try:
+            with open(molfile, 'r') as mol_in:
+                mol = molv2000.MolV2000(mol_in)
+                mol.parse()
+        except TypeError:
+                mol = molv2000.MolV2000(molfile)
+                mol.parse()
+        return Compound(mol.atoms, mol.bonds, mol.other)
    
     @classmethod
     def json_serialize(cls, obj, as_str=False):
@@ -261,6 +273,12 @@ class Compound(nx.Graph):
                           
     def to_CML(self, filename):
         cml.CMLBuilder.from_Compound(self)
+        
+    def to_molfile(self, filename, to_v3000=False):
+        if to_v3000:
+            raise NotImplementedError("No support for v3000 yet")
+        else:
+            molv2000.MolV2000Builder.from_Compound(self)
             
     #def __contains__(self, key):
     #    if key in periodic_table:

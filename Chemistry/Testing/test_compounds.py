@@ -139,28 +139,93 @@ class test_Compound(unittest.TestCase):
                                   {'order':1, 'chirality':None})
         self.assertEqual(self.compound1['a1']['a4']['key'], "b1")
         
+
+class test_from_files(unittest.TestCase):
+    
+    def setUp(self): 
+        ## Water
+        self.compound1 = compounds.Compound(
+                                {"a1":"H", "a2":"H", "a3":"O"},
+                                {"b1":("a1", "a3", {'order': 1,  
+                                                    'chirality': None}), 
+                                 "b2":("a2", "a3", {'order': 1, 
+                                                    'chirality': None})},
+                                {"id":"Water"})
+                                
     def test_from_CML(self):    
         self.assertEqual(
                 self.compound1.molecule, 
                 compounds.Compound.from_CML(os.path.join(
                                                 os.getcwd(), "Chemistry", 
-                                                "molecules", "test_molecules", 
-                                                "CML_1.cml")).molecule)
+                                                "Testing", "test_molecules", 
+                                                "CML", "CML_1.cml")).molecule)
                     
     def test_to_CML(self):
-        from_cml = compounds.Compound.from_CML(os.path.join(os.getcwd(), 
-                                               "Chemistry", "molecules", 
-                                               "test_molecules", "CML_1.cml"))
-        from_cml.to_CML(os.path.join(os.getcwd(),  "Chemistry", "molecules", 
-                                     "test_molecules", "CML_1_w.cml"))
+        from_cml = compounds.Compound.from_CML(os.path.join(
+                                                    os.getcwd(), 
+                                                    "Chemistry", "Testing", 
+                                                    "test_molecules", "CML", 
+                                                    "CML_1.cml"))
+        from_cml.to_CML(os.path.join(os.getcwd(), "Chemistry", "Testing", 
+                                     "test_molecules", "CML"))
         self.assertEqual(
                 from_cml.molecule, 
-                compounds.Compound.from_CML(os.path.join(os.getcwd(), 
-                                                         "Chemistry", 
-                                                         "molecules", 
-                                                         "test_molecules", 
-                                                         "CML_1.cml")).molecule)
+                compounds.Compound.from_CML(os.path.join(os.path.join(
+                                                    os.getcwd(), 
+                                                    "Chemistry", "Testing", 
+                                                    "test_molecules", "CML", 
+                                                    "CML_1.cml"))).molecule)
                            
+    def test_from_molv2000(self):
+        self.assertEqual(
+                self.compound1.molecule, 
+                compounds.Compound.from_molfile(os.path.join(
+                                                   os.getcwd(), "Chemistry", 
+                                                   "Testing", "test_molecules", 
+                                                   "mol", "mol_1.mol")).molecule)
+              
+    def test_to_molv2000(self):
+        from_cml = compounds.Compound.from_molfile(os.path.join(
+                                                   os.getcwd(), "Chemistry", 
+                                                   "Testing", "test_molecules", 
+                                                   "mol", "mol_1.mol"))
+        from_cml.to_molfile(os.path.join(os.getcwd(), "Chemistry", "Testing",
+                                         "test_molecules", "mol", "mol_1w.mol"))
+        self.assertEqual(
+                from_cml.molecule, 
+                compounds.Compound.from_molfile(
+                            os.path.join(os.getcwd(), "Chemistry", "Testing",
+                                         "test_molecules", "mol", "mol_1w.mol"))
+                    .molecule)
+                                                    
+    @unittest.expectedFailure
+    def test_from_molv3000(self):
+        self.assertEqual(
+                self.compound1.molecule, 
+                compounds.Compound.from_molfile(os.path.join(
+                                                   os.getcwd(), "Chemistry", 
+                                                   "Testing", "test_molecules", 
+                                                   "mol", "mol_2.mol"),
+                                                from_v3000=True).molecule)
+     
+    @unittest.expectedFailure
+    def test_to_molv3000(self):
+        from_cml = compounds.Compound.from_molfile(os.path.join(
+                                                   os.getcwd(), "Chemistry", 
+                                                   "Testing", "test_molecules", 
+                                                   "mol", "mol_2.mol"),
+                                                   from_v3000=True)
+        from_cml.to_molfile(os.path.join(os.getcwd(), "Chemistry", "Testing",
+                                         "test_molecules", "mol", "mol_2w.mol"),
+                            to_v3000=True)
+        self.assertEqual(
+                from_cml.molecule, 
+                compounds.Compound.from_molfile(
+                            os.path.join(os.getcwd(), "Chemistry", "Testing",
+                                         "test_molecules", "mol", "mol_2w.mol"),
+                            from_v3000=True)
+                    .molecule)
+                                                    
     
 class test_linear_path_finding(unittest.TestCase):
     
