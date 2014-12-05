@@ -33,20 +33,20 @@ from Chemistry import periodic_table as pt
 periodic_table = pt.periodic_table
 
 
-class Reactant(object): 
-    
+class Reactant(object):
+
     @classmethod
     def _compare_pkas(cls, comp1, comp2, conditions=None, thresholds={}):
         """Returns an approximate product to reactant ratio based on the
-        pkas of the molecule.  Heavily customizable through the passage 
+        pkas of the molecule.  Heavily customizable through the passage
         of threshold information (NYI)
         """
         tset = set([(comp1, comp1.pka), (comp2, comp2.pka)])
         if conditions is not None:
             tset.add((conditions, conditions.pka))
-            
-        return [item[0] for item in sorted(tset, key=lambda x: x[1])] 
-        
+
+        return [item[0] for item in sorted(tset, key=lambda x: x[1])]
+
     @classmethod
     def make_Base(cls, basic_compound, pka=16, point='a1'):
         if isinstance(basic_compound, Base):
@@ -56,7 +56,7 @@ class Reactant(object):
                 return Base(basic_compound, 16, 'a1')
             except Exception as e:
                 print e
-        
+
     @classmethod
     def make_Acid(cls, acidic_compound, pka=16, point='a1'):
         if isinstance(acidic_compound, Acid):
@@ -66,7 +66,7 @@ class Reactant(object):
                 return Acid(acidic_compound, 16, 'a1')
             except Exception as e:
                 print e
-        
+
     @classmethod
     def _new_key(cls, compound, atom=True):
         if atom:
@@ -83,20 +83,20 @@ class Reactant(object):
         self.paths = dict() # { key: set() }
         if paths:
             self.add_paths(**paths)
-        
+
     def add_paths(self, **paths):
         for reaction, path in paths.iteritems():
             if reaction in self.paths:
                 self.paths[reaction].add(path)
             else:
                 self.paths[reaction] = set([path])
-                
+
     def get_paths(self, reaction):
         try:
             return self.paths[reaction]
         except KeyError:
             raise KeyError("{} paths haven't been found yet".format(reaction))
-            
+
     def _validate_pka(self, pka):
         try:
             self.__dict__['pka']
@@ -105,54 +105,54 @@ class Reactant(object):
         else:
             if pka != self.pka:
                 raise ValueError("pKa must equal {}".format(self.pka))
-                
+
     def __str__(self):
         return "{} of {}".format(self.__class__.__name__, self._Compound.__class__.__name__)
-        
+
     def __repr__(self):
         return str(self)
-    
+
     def __getattr__(self, attr):
-        return getattr(self._Compound, attr)  
-        
+        return getattr(self._Compound, attr)
+
     def __eq__(self, other):
         try:
             return self._Compound == other._Compound
         except AttributeError:
             return self._Compound == other
-        
+
     def __ne__(self, other):
         return not self == other
-        
+
     def __len__(self):
         return len(self._Compound)
-        
+
     def __getitem__(self, key):
         return self._Compound.__getitem__(key)
-            
-            
+
+
 class Acid(Reactant):
 
     def __init__(self, compound, acidic_point, pka, paths={}):
         super(Acid, self).__init__(compound, paths)
         self.acidic_point = acidic_point
-        self._validate_pka(pka)   
-        
-                
+        self._validate_pka(pka)
+
+
 class Base(Reactant):
 
     def __init__(self, compound, basic_point, pka, paths={}):
         """The pka of a Base should be equal to that of its conjugate
         acid
         """
-        
+
         super(Base, self).__init__(compound, paths)
         self.conjugate = None
         self.conjugate_acid = None
         self.basic_point = basic_point
-        self._validate_pka(pka)  
+        self._validate_pka(pka)
         self.to_conjugate_Acid()
-        
+
     def to_conjugate_Acid(self):
         self.conjugate = deepcopy(self._Compound)
         a_key = Reactant._new_key(self.conjugate)
@@ -160,26 +160,26 @@ class Base(Reactant):
         hydrogen = compounds.get_Element('H')
         self.conjugate._add_node_(a_key, hydrogen)
         self.conjugate._add_edge_(b_key, a_key, self.basic_point)
-        self.conjugate_acid = Acid(self.conjugate, a_key, self.pka, self.paths)        
-        
+        self.conjugate_acid = Acid(self.conjugate, a_key, self.pka, self.paths)
 
-class Product(object): 
-    
+
+class Product(object):
+
     def __init__(self, compound, percentage, all_percentages):
         self._Compound = compound
         self.paths = dict() # { key: set() }
-        self.major = (True 
-                      if percentage >= np.mean(all_percentages) 
-                      else False) 
+        self.major = (True
+                      if percentage >= np.mean(all_percentages)
+                      else False)
         self.percentage = percentage
-        
+
     def __getattr__(self, attr):
         return getattr(self._Compound, attr)
 
 
-class Conditions(object): 
-    
-    def __init__(self, **conditions):        
+class Conditions(object):
+
+    def __init__(self, **conditions):
         self.acidic = True
         self.pka = -1
         self.basic = True
@@ -188,55 +188,54 @@ class Conditions(object):
 
     def has_reactants(self):
         return 'reactants' in self and self.reactants
-        
+
     def validate_reactants(self, *reactants):
         if self.has_reactants():
-            return all(reactant in self.reactants for reactant in reactants)   
+            return all(reactant in self.reactants for reactant in reactants)
         else:
             return False
-        
+
     def add_reactants(self, *reactants):
         if self.has_reactants():
             self.reactants.extend(reactants)
         else:
-            self.reactants = reactants   
-                        
+            self.reactants = reactants
+
     def __getitem__(self, key):
         return self.__dict__[key]
-        
+
     def __contains__(self, key):
         return key in self.__dict__
 
 
 class Reaction(object):
 
-    __metaclass__ = abc.ABCMeta    
-        
+    __metaclass__ = abc.ABCMeta
+
     @abc.abstractmethod
     def react(self):
         pass
-        
+
 
 class ReactionError(Exception):
     err_message = "There was an error with the reaction"
     pka = """
     AcidBase reaction between {} and {} failed because of pka difference {}
-    ({} to {})    
+    ({} to {})
     """
-    
+
     def __init__(self, *args, **kwargs):
         if 'pka' in kwargs:
             self.err_message = ReactionError.pka.format(*kwargs['reactants']
                                                         *kwargs['pka'])
-            
+
     def __str__(self):
         return self.err_message
-        
+
     def __repr__(self):
         return str(self)
-            
-        
+
+
 
 if __name__ == '__main__':
     pass
-    

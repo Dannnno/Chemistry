@@ -29,13 +29,13 @@ from Chemistry.base_reactions import Acid, Base, Reactant, \
 
 
 class AcidBase(Reaction):
-    
+
     def __init__(self, acid, base, conditions):
         ## Validating the conditions
         if not isinstance(conditions, Conditions):
             raise TypeError("{} must be Conditions, is {}"
                                 .format(conditions, type(conditions)))
-                                
+
         self.conditions = conditions
         if not self.conditions['neutral']:
             if self.conditions['acidic']:
@@ -52,10 +52,10 @@ class AcidBase(Reaction):
                 raise ValueError("Non-neutral conditions must be basic or acidic")
         else:
             acid, base = Reactant._compare_pkas(acid, base)
-            
+
         conditions_location = 1
- 
- 
+
+
         ## Validating the acid and base)
         if not isinstance(acid, Acid):
             raise TypeError("{} must be an Acid, is a {}"
@@ -65,7 +65,7 @@ class AcidBase(Reaction):
                                 .format(base, type(base)))
         self.acid = acid
         self.base = base
-        
-        
+
+
     def react(self):
         raise NotImplementedError

@@ -27,17 +27,17 @@ from Chemistry.parsing.mol import molv2000 as mol_
 
 
 class MolV3000(mol_.MolV2000):
-    
+
     pass
-    
-    
+
+
 class MolV3000Parser(mol_.MolV2000Parser):
-    
+
     pass
-    
-    
+
+
 class MolV3000Builder(mol_.MolV2000Builder):
-    
+
     pass
 
 

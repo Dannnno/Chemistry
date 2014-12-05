@@ -25,15 +25,14 @@ If not, see <http://opensource.org/licenses/MIT>
 
 class ParsingException(Exception):
     message = "An error occured while parsing {} file"
-    
-    
+
+
     def __init__(self, msg=message, filetype="CML"):
         self.filetype = filetype
         self.message = msg.format(self.filetype)
-        
+
     def __str__(self):
         return self.message
-        
+
     def __repr__(self):
         return str(self)
-        

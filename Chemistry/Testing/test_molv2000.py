@@ -29,18 +29,18 @@ except ImportError:
     import StringIO as IO
 finally:
     import unittest
-    
+
     from Chemistry import compounds
     from Chemistry.parsing.mol import molv2000 as mol
 
 
 class test_MolV2000(unittest.TestCase):
-    
+
     @classmethod
-    def setUpClass(cls): 
+    def setUpClass(cls):
         cls.moldata = IO.StringIO(""" benzene
  ACD/Labs0812062058
- 
+
  6  6  0  0  0  0  0  0  0  0  1 V2000
     1.9050   -0.7932    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
     1.9050   -2.1232    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
@@ -58,31 +58,31 @@ class test_MolV2000(unittest.TestCase):
 """)
         cls.parsed_molfile = mol.MolV2000(cls.moldata)
         cls.parsed_molfile.parse()
-    
+
     @classmethod
-    def tearDownClass(cls): pass    
-    
+    def tearDownClass(cls): pass
+
     def setUp(self):
         pass
-        
+
     def test_version(self):
         self.assertEqual(self.parsed_molfile.version, 'V2000')
-        
+
     def test_header(self):
         map(self.assertEqual, (self.parsed_molfile.title,
                                self.parsed_molfile.info,
                                self.parsed_molfile.comments),
                               ('benzene', 'ACD/Labs0812062058', None))
-        
+
     def test_counts(self):
         self.assertEqual(self.parsed_molfile.counts,
                          {'aaa': '6', 'xxx': '0', 'bbb': '6', 'sss': '0',
                           'mmm': '1', 'ppp': '0', 'lll': '0', 'vvvvvv': 'V2000',
                           'fff': '0', 'iii': '0', 'rrr': '0', 'ccc': '0'})
-                         
-        
+
+
     def test_atom_block(self):
-        map(self.assertEqual, [self.parsed_molfile.atoms['a{}'.format(i)] 
+        map(self.assertEqual, [self.parsed_molfile.atoms['a{}'.format(i)]
                                for i in xrange(1, 7)],
                               [{'coords': [1.9050, -0.7932, 0.0000],
                                 'symbol': 'C'},
@@ -96,9 +96,9 @@ class test_MolV2000(unittest.TestCase):
                                 'symbol': 'C'},
                                {'coords': [-0.3987, -2.1232, 0.0000],
                                 'symbol': 'C'}])
-        
+
     def test_bond_block(self):
-        map(self.assertEqual, [self.parsed_molfile.bonds['b{}'.format(i)] 
+        map(self.assertEqual, [self.parsed_molfile.bonds['b{}'.format(i)]
                                for i in xrange(1, 7)],
                               [("a2", "a1", {'order': 1, 'chirality': None}),
                                ('a3', 'a1', {'order': 2, 'chirality': None}),
@@ -106,54 +106,54 @@ class test_MolV2000(unittest.TestCase):
                                ('a5', 'a3', {'order': 1, 'chirality': None}),
                                ('a6', 'a4', {'order': 1, 'chirality': None}),
                                ('a6', 'a5', {'order': 2, 'chirality': None})])
-        
+
     @unittest.expectedFailure
     def test_atom_list_block(self):
         self.assertEqual(self.parsed_molfile.atom_list, {})
-        
+
     @unittest.expectedFailure
     def test_stext_block(self):
         self.assertEqual(self.parsed_molfile.stext, {})
-        
+
     def test_properties_block(self):
         self.assertEqual(self.parsed_molfile.properties, {})
-    
+
     def tearDown(self): pass
-    
+
     @unittest.expectedFailure
     def test_to_3000(self):
         self.fail("NYI")
-        
+
     @unittest.expectedFailure
     def test_from_3000(self):
         self.fail("NYI")
 
 
 class test_MolV2000Builder(unittest.TestCase):
-    
+
     @classmethod
     def setUpClass(cls): pass
-    
+
     @classmethod
-    def tearDownClass(cls): pass    
-    
+    def tearDownClass(cls): pass
+
     def setUp(self): pass
-    
+
     def tearDown(self): pass
-    
-    
+
+
 if __name__ == '__main__':
     import types
     import sys
-    
-                          
+
+
     test_classes_to_run = [value for key, value in globals().items()
                            if (isinstance(value, (type, types.ClassType)) and
                                issubclass(value, unittest.TestCase))]
-                               
+
     loader = unittest.TestLoader()
-    big_suite = unittest.TestSuite(loader.loadTestsFromTestCase(test_class) 
+    big_suite = unittest.TestSuite(loader.loadTestsFromTestCase(test_class)
                                    for test_class in test_classes_to_run)
-                                   
+
     runner = unittest.TextTestRunner(sys.stdout, verbosity=1)
     runner.run(big_suite)

@@ -27,17 +27,17 @@ from Chemistry.parsing.mol import molv2000, molv3000
 
 
 class SDF(object):
-    
+
     pass
 
 
 class SDFParser(object):
-    
+
     pass
-    
-    
+
+
 class SDFBuilder(object):
-    
+
     pass
 
 

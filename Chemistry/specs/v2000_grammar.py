@@ -31,7 +31,7 @@ except ImportError:
 benzene = """
  benzene
  ACD/Labs0812062058
- 
+
   6  6  0  0  0  0  0  0  0  0  1 V2000
     1.9050   -0.7932    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
     1.9050   -2.1232    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
@@ -55,7 +55,7 @@ def tokenize(molfile):
             return _tokenize(f)
     except TypeError:
         return _tokenize(molfile)
-        
+
 
 def _tokenize(file_):
     #text = file_.read()
@@ -63,7 +63,7 @@ def _tokenize(file_):
     #file_.seek(0)
     for line in file_:
         print line
-        
+
 
 if __name__ == '__main__':
     tokenize(IO.StringIO(benzene))

@@ -34,7 +34,7 @@ from Chemistry import Testing
 
 class _DocTester(object):
     visited = {}
-    
+
     def __init__(self):
         self.cwd = os.getcwd()
         try:
@@ -42,7 +42,7 @@ class _DocTester(object):
             self.inner()
         finally:
             os.chdir(self.cwd)
-    
+
     def inner(self, path=None):
         if path is None:
             path = os.getcwd()
@@ -64,7 +64,7 @@ def load_unit_tests():
                 if issubclass(aclass, unittest.TestCase):
                     suites_list.append(loader.loadTestsFromTestCase(aclass))
             except TypeError: continue
-                
+
     big_suite = unittest.TestSuite(suites_list)
     return big_suite
 
@@ -74,12 +74,12 @@ def load_doc_tests(big_suite):
     tester = _DocTester()
     cwd = os.getcwd()
     try:
-        for file_, path in tester.visited.iteritems(): 
+        for file_, path in tester.visited.iteritems():
             try:
                 p = path[:path.rfind(os.sep)]
                 sys.path[0] = p
                 module = __import__(file_)
-                big_suite.addTest(doctest.DocTestSuite(module))         
+                big_suite.addTest(doctest.DocTestSuite(module))
             except ImportError as e:
                 print e
     finally:
@@ -87,9 +87,9 @@ def load_doc_tests(big_suite):
         del sys.path[0]
 
     return big_suite
-        
 
-def main(use_stream=True, stream=sys.stdout, 
+
+def main(use_stream=True, stream=sys.stdout,
          file_=None, verb=1):
     test_suite = load_unit_tests()
     test_suite = load_doc_tests(test_suite)
@@ -99,22 +99,22 @@ def main(use_stream=True, stream=sys.stdout,
     else:
         runner = unittest.TextTestRunner(file_, verbosity=verb)
         runner.run(test_suite)
-        
-        
+
+
 if __name__ == '__main__':
     import argparse
-    
+
     parser = argparse.ArgumentParser(
                         description="Runs the unit and doc tests of Chemistry")
-    parser.add_argument('-f', '--filename', dest='file_', 
+    parser.add_argument('-f', '--filename', dest='file_',
                         default='test_results.log',
                         help="Filename of optional file.")
     parser.add_argument('-v', '--verbosity', dest='verb',
-                        type=int, choices=[1, 2], 
+                        type=int, choices=[1, 2],
                         default=1, help="Verbosity of the test output.")
     parser.add_argument('-u', '--stream', dest='use_stream',
                         action='store_false', default=True,
                         help="Whether or not to use std.out or a file")
-    
+
     args = parser.parse_args()
     main(**vars(args))

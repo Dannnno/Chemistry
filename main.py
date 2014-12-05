@@ -24,34 +24,43 @@ If not, see <http://opensource.org/licenses/MIT>
 """
 
 import argparse
-import StringIO as IO
-
-import make_clean
-import runtests
 
 
 parser = argparse.ArgumentParser(description="Runs the Chemistry simulator")
 parser.add_argument(
-                '-t', '--runtests', dest='runtests', 
+                '-t', '--runtests', dest='runtests',
                 default=False, action='store_true',
-                help='Signals that the tests, not the program, should be run')       
+                help='Signals that the tests, not the program, should be run')
 parser.add_argument(
                 '-d', '--debugging', dest='debug',
                 default=False, action='store_true',
                 help="'".join(['Signals that specific content I',
                                'm working on debugging should be run']))
+parser.add_argument(
+                '-c', '--clean', dest='clean',
+                default=False, action='store_true',
+                help='Signals that the directory should get cleaned up')
 args = parser.parse_args()
 
-if args.runtests:                
-    make_clean.make_clean()
+if args.clean:
+    from make_clean import make_clean
+    from strip_whitespace import strip_whitespace
+
+    make_clean()
+    strip_whitespace()
+if args.runtests:
+    import runtests
+
     runtests.main()
 elif args.debug: ## This is just whatever I'm debugging/playing with at the moment
+    import StringIO
     import Chemistry.parsing.mol.molv2000 as mol
     import json
     from copy import copy
-    benzene = IO.StringIO(""" benzene
+
+    benzene = StringIO.StringIO(""" benzene
  ACD/Labs0812062058
- 
+
   6  6  0  0  0  0  0  0  0  0  1 V2000
     1.9050   -0.7932    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
     1.9050   -2.1232    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0

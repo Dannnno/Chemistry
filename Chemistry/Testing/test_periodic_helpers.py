@@ -31,16 +31,16 @@ finally:
     import os
     import sys
     import unittest
-    
+
     from Chemistry import table_builder as tb
-    
-    
+
+
 class test_helpers(unittest.TestCase):
-    
+
     def setUp(self): pass
-    
+
     def tearDown(self): pass
-    
+
     def test_periodic_table(self):
         cwd = os.getcwd()
         try:
@@ -49,13 +49,13 @@ class test_helpers(unittest.TestCase):
         finally:
             os.chdir(cwd)
         from Chemistry import periodic_table
-        
+
     def test_convert_type(self):
         self.assertEqual(tb.convert_type('1', int), 1)
         self.assertEqual(tb.convert_type('1.0', float), 1.0)
         self.assertEqual(tb.convert_type('Hello', str), 'Hello')
         self.assertEqual(tb.convert_type('[1,2,3]', tb.str_to_list), [1, 2, 3])
-     
+
     def test_str_to_list(self):
         self.assertEqual(tb.str_to_list('[1,2,3]'), ['1', '2', '3'])
         self.assertEqual(tb.str_to_list('[1,2,3]', mapped=int), [1, 2, 3])
@@ -63,15 +63,15 @@ class test_helpers(unittest.TestCase):
 
 if __name__ == '__main__':
     import types
-    
-                          
+
+
     test_classes_to_run = [value for key, value in globals().items()
                            if (isinstance(value, (type, types.ClassType)) and
                                issubclass(value, unittest.TestCase))]
-                               
+
     loader = unittest.TestLoader()
-    big_suite = unittest.TestSuite(loader.loadTestsFromTestCase(test_class) 
+    big_suite = unittest.TestSuite(loader.loadTestsFromTestCase(test_class)
                                    for test_class in test_classes_to_run)
-                                   
+
     runner = unittest.TextTestRunner(sys.stdout, verbosity=1)
     runner.run(big_suite)

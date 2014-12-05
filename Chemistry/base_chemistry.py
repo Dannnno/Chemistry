@@ -28,39 +28,39 @@ import sys
 
 
 class MetaChemistry(type):
-    
+
     def __new__(cls, clsname, base, dct, *args, **kwargs):
         # print cls, clsname, base, dct, args, kwargs
-        
+
         return super(MetaChemistry, cls).__new__(cls, clsname, base, dct)
-        
-        
+
+
 class Chemistry(object):
-    
+
     __metaclass__ = MetaChemistry
-    
+
     def __init__(self, input1):
         print input1
-        
+
 def reactant_meta_class(clsname, base, dct, *args, **kwargs):
-    return MetaChemistry.__new__(MetaChemistry, clsname, base, dct, 
+    return MetaChemistry.__new__(MetaChemistry, clsname, base, dct,
                                   *args, **kwargs)
-                                  
+
 def acid_init(self, atoms, bonds, acidic_point, pka, other_info={}):
     generic_init(self, atoms, bonds, acidic_point, pka, other_info)
-    self.acidic_point = self.point 
-      
+    self.acidic_point = self.point
+
 def base_init(self, atoms, bonds, basic_point, pka, other_info={}):
     generic_init(self, atoms, bonds, basic_point, pka, other_info)
     self.basic_point = self.point
-    
+
 def generic_init(self, atoms, bonds, point, pka, other_info):
     self.atoms = atoms
     self.bonds = bonds
     self.other = other_info
     self.point = point
     self._validate_pka(pka)
-    
+
 def _validate_pka(self, pka):
     try:
         self.__dict__['pka']
@@ -69,10 +69,10 @@ def _validate_pka(self, pka):
     else:
         if self.pka != pka:
             raise ValueError('pKa must be {}, not {}'.format(self.pka, pka))
-                                  
+
 def make_Acid(dct):
     return reactant_meta_class("Acid", (Reactant, Chemistry),
-                                   {'__module__': __name__, 
+                                   {'__module__': __name__,
                                     '__metaclass__': make_Acid,
                                     '__init__': acid_init,
                                     'atoms': {},
@@ -80,16 +80,16 @@ def make_Acid(dct):
                                     'pka': None,
                                     'acidic_point': None,
                                     '_validate_pka': _validate_pka})
-        
-class Reactant(Chemistry):
-    
-    __metaclass__ = reactant_meta_class
-    
-    def __init__(self): 
-        print self.__dict__
-        
 
-if __name__ == '__main__':        
+class Reactant(Chemistry):
+
+    __metaclass__ = reactant_meta_class
+
+    def __init__(self):
+        print self.__dict__
+
+
+if __name__ == '__main__':
     #Chemistry(1)
     #Reactant()
     a = make_Acid(None)

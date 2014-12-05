@@ -33,64 +33,64 @@ from Chemistry.parsing.mol import molv3000
 
 
 class test_MolV3000(unittest.TestCase):
-    
+
     @classmethod
     def setUpClass(cls): pass
-    
+
     @classmethod
-    def tearDownClass(cls): pass    
-    
+    def tearDownClass(cls): pass
+
     def setUp(self): pass
-    
+
     def tearDown(self): pass
-    
+
     @unittest.expectedFailure
     def test_to2000(self):
         self.fail("NYI")
-        
+
     @unittest.expectedFailure
     def test_from2000(self):
         self.fail("NYI")
 
 
 class test_MolV3000Parser(unittest.TestCase):
-    
+
     @classmethod
     def setUpClass(cls): pass
-    
+
     @classmethod
-    def tearDownClass(cls): pass    
-    
+    def tearDownClass(cls): pass
+
     def setUp(self): pass
-    
+
     def tearDown(self): pass
-    
-    
+
+
 class test_MolV3000Builder(unittest.TestCase):
-    
+
     @classmethod
     def setUpClass(cls): pass
-    
+
     @classmethod
-    def tearDownClass(cls): pass    
-    
+    def tearDownClass(cls): pass
+
     def setUp(self): pass
-    
+
     def tearDown(self): pass
-    
-    
+
+
 if __name__ == '__main__':
     import types
     import sys
-    
-                          
+
+
     test_classes_to_run = [value for key, value in globals().items()
                            if (isinstance(value, (type, types.ClassType)) and
                                issubclass(value, unittest.TestCase))]
-                               
+
     loader = unittest.TestLoader()
-    big_suite = unittest.TestSuite(loader.loadTestsFromTestCase(test_class) 
+    big_suite = unittest.TestSuite(loader.loadTestsFromTestCase(test_class)
                                    for test_class in test_classes_to_run)
-                                   
+
     runner = unittest.TextTestRunner(sys.stdout, verbosity=1)
     runner.run(big_suite)
