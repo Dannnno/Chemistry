@@ -29,43 +29,63 @@ from Chemistry.base_reactions import Acid, Base, Reactant, \
 
 
 class AcidBase(Reaction):
+    _conditions = None
+    _acid, _base = (), ()
+    _acidic_point, _basic_point = (), ()
 
-    def __init__(self, acid, base, conditions):
-        ## Validating the conditions
-        if not isinstance(conditions, Conditions):
-            raise TypeError("{} must be Conditions, is {}"
-                                .format(conditions, type(conditions)))
-
-        self.conditions = conditions
-        if not self.conditions['neutral']:
-            if self.conditions['acidic']:
-                results = Reactant._compare_pkas(acid, base, self.conditions)
-                if isinstance(results[0], Conditions): pass
-                elif isinstance(results[1], Conditions): pass
-                else: pass
-            elif self.conditions['basic']:
-                results = Reactant._compare_pkas(acid, base, self.conditions)
-                if isinstance(results[0], Conditions): pass
-                elif isinstance(results[1], Conditions): pass
-                else: pass
-            else:
-                raise ValueError("Non-neutral conditions must be basic or acidic")
-        else:
-            acid, base = Reactant._compare_pkas(acid, base)
-
-        conditions_location = 1
-
-
-        ## Validating the acid and base)
-        if not isinstance(acid, Acid):
-            raise TypeError("{} must be an Acid, is a {}"
-                                .format(acid, type(acid)))
-        if not isinstance(base, Base):
-            raise TypeError("{} must be an Base, is a {}"
-                                .format(base, type(base)))
+    def __init__(self, acid, base, cond):
+        self.conditions = cond
         self.acid = acid
         self.base = base
 
+    @property
+    def conditions(self):
+        return self._conditions
+
+    @conditions.setter
+    def conditions(self, cond):
+        if isinstance(cond, dict):
+            self.conditions = Conditions(cond)
+        elif isinstance(cond, Conditions):
+            self._conditions = cond
+        else:
+            raise TypeError("Conditions must be a Conditions object")
+
+    @property
+    def acid(self):
+        return self._acid
+
+    @acid.setter
+    def acid(self, acid_):
+        if self.conditions.acidic:
+            if self.conditions.pka < acid_.pka:
+                self._acid = (self.conditions.pka_molecule, False)
+            else:
+                self._acid = (acid_, True)
+        else:
+            self._acid = (acid_, True)
+
+    @property
+    def base(self):
+        return self._base
+
+    @base.setter
+    def base(self, base_):
+        if self.conditions.basic:
+            if self.conditions.pka > base_.pka:
+                self._base = (self.conditions.pka_molecule, False)
+            else:
+                self._base = (base_, True)
+        else:
+            self._base = (base_, True)
+
+    @property
+    def acidic_point(self):
+        return self._acidic_point
+
+    @property
+    def basic_point(self):
+        return self._basic_point
 
     def react(self):
         raise NotImplementedError

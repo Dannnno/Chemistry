@@ -46,10 +46,12 @@ class test_AcidBase(unittest.TestCase):
 
     def setUp(self):
         self.compound1 = compounds.Compound(
-                                {"a1":"H", "a2":"O"},
-                                {"b1":("a1", "a2", {'order': 1,
+                                {"a1":"H", "a2":"H", "a3":"O"},
+                                {"b1":("a1", "a3", {'order': 1,
+                                                    'chirality': None}),
+                                 "b2":("a2", "a3", {'order': 1,
                                                     'chirality': None})},
-                                {"id":"Hydroxide"})
+                                {"id":"Water"})
         self.compound2 = compounds.Compound(
                                 {"a1":"H", "a2":"H", "a3":"O", "a4":"H"},
                                 {"b1":("a1", "a3", {'order': 1,
@@ -59,26 +61,69 @@ class test_AcidBase(unittest.TestCase):
                                  "b3":("a3", "a4", {'order': 1,
                                                     'chirality': None})},
                                 {"id":"Hydronium"})
-        self.acid = Acid(self.compound2, 'a1', -1.74)
-        self.base = Base(self.compound1, 'a2', 16)
-        self.conditions = Conditions(**{'reactants': (self.acid, self.base)})
+        self.acid1 = Acid(self.compound2, 'a1', -1.74)
+        self.base1 = Base(self.compound1, 'a2', -1.74)
+        self.conditions1 = Conditions({})
+        self.acidbase1 = AcidBase(self.acid1, self.base1, self.conditions1)
+
+        self.hydroiodic = Acid(compounds.Compound(
+                                {"a1":"H", "a2":"I"},
+                                {"b1":("a1", "a2", {'order': 1,
+                                                    'chirality': None})},
+                                {"id":"Hydroiodic acid"}), 'a1', -10)
+        self.conditions2 = Conditions({'pka': -10, 'acidic':True,
+                                       'pka_molecule': self.hydroiodic})
+        self.acidbase2 = AcidBase(self.acid1, self.base1, self.conditions2)
+
+        self.hydroxide = Base(compounds.Compound(
+                                {"a1":"H", "a2":"O", "a3":"Na"},
+                                {"b1":("a1", "a2", {'order': 1,
+                                                    'chirality': None}),
+                                 "b2":("a2", "a3", {'order': 1,
+                                                    'chirality': None})},
+                                {"id":"Sodium Hydroxide"}), 'a2', 15.7)
+        self.conditions3 = Conditions({'pka': -1.74, 'basic':True,
+                                       'pka_molecule': self.hydroxide})
+        self.acidbase3 = AcidBase(self.acid1, self.base1, self.conditions3)
+
 
     def tearDown(self): pass
 
-    def test_constructor_raises_TE1(self):
-        with self.assertRaises(TypeError):
-            AcidBase(self.compound2, self.compound1, {})
+    def test_constructor_not_raises_TE1(self):
+        AcidBase(self.compound2, self.compound1, {})
 
-    def test_constructor_raises_TE2(self):
-        with self.assertRaises(TypeError):
-            AcidBase(self.acid, self.compound1, {})
+    def test_constructor_not_raises_TE2(self):
+        AcidBase(self.acid1, self.base1, self.conditions1)
 
-    def test_constructor_raises_TE3(self):
+    def test_constructor_raises_TE(self):
         with self.assertRaises(TypeError):
-            AcidBase(self.acid, self.base, {})
+            AcidBase(self.compound2, self.compound1, [])
 
-    def test_good_constructor(self):
-        AcidBase(self.acid, self.base, self.conditions)
+    def test_get_acid1(self):
+        self.assertEqual(self.acidbase1.acid, (self.acid1, True))
+
+    def test_get_acid2(self):
+        self.assertEqual(self.acidbase2.acid,
+                         (self.conditions2.pka_molecule, False))
+
+    def test_get_base1(self):
+        self.assertEqual(self.acidbase1.base, (self.base1, True))
+
+    def test_get_base2(self):
+        self.assertEqual(self.acidbase3.base,
+                         (self.conditions3.pka_molecule, False))
+
+    def test_get_basic_point1(self):
+        self.assertEqual(self.acidbase1.basic_point, ('a2', True))
+
+    def test_get_basic_point2(self):
+        self.assertEqual(self.acidbase3.basic_point, ('a2', False))
+
+    def test_get_acidic_point1(self):
+        self.assertEqual(self.acidbase1.acidic_point, ('a1', True))
+
+    def test_get_acidic_point2(self):
+        self.assertEqual(self.acidbase2.acidic_point, ('a1', False))
 
 
 if __name__ == '__main__':

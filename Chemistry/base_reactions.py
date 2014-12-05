@@ -37,15 +37,7 @@ class Reactant(object):
 
     @classmethod
     def _compare_pkas(cls, comp1, comp2, conditions=None, thresholds={}):
-        """Returns an approximate product to reactant ratio based on the
-        pkas of the molecule.  Heavily customizable through the passage
-        of threshold information (NYI)
-        """
-        tset = set([(comp1, comp1.pka), (comp2, comp2.pka)])
-        if conditions is not None:
-            tset.add((conditions, conditions.pka))
-
-        return [item[0] for item in sorted(tset, key=lambda x: x[1])]
+        raise NotImplementedError
 
     @classmethod
     def make_Base(cls, basic_compound, pka=16, point='a1'):
@@ -147,20 +139,19 @@ class Base(Reactant):
         """
 
         super(Base, self).__init__(compound, paths)
-        self.conjugate = None
         self.conjugate_acid = None
         self.basic_point = basic_point
         self._validate_pka(pka)
         self.to_conjugate_Acid()
 
     def to_conjugate_Acid(self):
-        self.conjugate = deepcopy(self._Compound)
-        a_key = Reactant._new_key(self.conjugate)
-        b_key = Reactant._new_key(self.conjugate, False)
+        conjugate = deepcopy(self._Compound)
+        a_key = Reactant._new_key(conjugate)
+        b_key = Reactant._new_key(conjugate, False)
         hydrogen = compounds.get_Element('H')
-        self.conjugate._add_node_(a_key, hydrogen)
-        self.conjugate._add_edge_(b_key, a_key, self.basic_point)
-        self.conjugate_acid = Acid(self.conjugate, a_key, self.pka, self.paths)
+        conjugate._add_node_(a_key, hydrogen)
+        conjugate._add_edge_(b_key, a_key, self.basic_point)
+        self.conjugate_acid = Acid(conjugate, a_key, self.pka, self.paths)
 
 
 class Product(object):
@@ -178,34 +169,42 @@ class Product(object):
 
 
 class Conditions(object):
+    acidic = False
+    basic = False
+    _neutral = True
+    pka = 16
+    pka_molecule = None
+    other_molecules = [compounds.Compound(
+                                    {"a1":"H", "a2":"O", "a3":"H"},
+                                    {"b1":("a1", "a2", {'order': 1,
+                                                        'chirality': None}),
+                                    "b2":("a2", "a3", {'order': 1,
+                                                        'chirality': None})},
+                                    {"id":"Water"})]
 
-    def __init__(self, **conditions):
-        self.acidic = True
-        self.pka = -1
-        self.basic = True
-        self.__dict__.update(conditions)
-        self.neutral = not (self.acidic or self.basic)
+    def __init__(self, conditions):
+        if (('acidic' in conditions or 'basic' in conditions) and
+            ('pka' not in conditions or 'pka_molecule' not in conditions)):
+            raise ValueError(''.join(["If conditions are non-neutral the pka",
+                                        "must be specified as well as the",
+                                        "molecule in question"]))
 
-    def has_reactants(self):
-        return 'reactants' in self and self.reactants
+        for k, v in conditions.iteritems():
+            setattr(self, k, v)
+        self._neutral = not (self.acidic or self.basic)
 
-    def validate_reactants(self, *reactants):
-        if self.has_reactants():
-            return all(reactant in self.reactants for reactant in reactants)
-        else:
-            return False
-
-    def add_reactants(self, *reactants):
-        if self.has_reactants():
-            self.reactants.extend(reactants)
-        else:
-            self.reactants = reactants
-
-    def __getitem__(self, key):
-        return self.__dict__[key]
+    @property
+    def neutral(self):
+        return self._neutral
 
     def __contains__(self, key):
         return key in self.__dict__
+
+    def __str__(self):
+        return "Reaction conditions"
+
+    def __repr__(self):
+        return str(self)
 
 
 class Reaction(object):
@@ -234,7 +233,6 @@ class ReactionError(Exception):
 
     def __repr__(self):
         return str(self)
-
 
 
 if __name__ == '__main__':

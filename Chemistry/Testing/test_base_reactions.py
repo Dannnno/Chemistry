@@ -60,7 +60,7 @@ class test_Reactant_utility_methods(unittest.TestCase):
                                 {"id":"Hydronium"})
         self.acid = Acid(self.compound2, 'a1', -1.74)
         self.base = Base(self.compound1, 'a2', 16)
-        self.conditions = Conditions(**{'reactants': (self.acid, self.base)})
+        self.conditions = Conditions({})
 
     def tearDown(self): pass
 
@@ -118,7 +118,7 @@ class test_Base(unittest.TestCase):
         self.acid = Acid(self.compound2, 'a1', -1.74)
         self.base = Base(self.compound1, 'a2', 16)
         self.conj_acid = Acid(self.compound3, 'a3', 16)
-        self.conditions = Conditions(**{'reactants': (self.acid, self.base)})
+        self.conditions = Conditions({})
 
     def tearDown(self): pass
 
