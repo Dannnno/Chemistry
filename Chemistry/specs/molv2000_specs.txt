@@ -54,4 +54,4 @@ Lines	Section	                Description
 4		                Counts line: 6 atoms, 6 bonds, ..., V2000 standard
 5-10		                Atom block (1 line for each atom): x, y, z, element, etc.
 11-16		                Bond block (1 line for each bond): 1st atom, 2nd atom, type, etc.
-17		                Properties block (empty)
+17		                Properties block (just M END)

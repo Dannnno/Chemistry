@@ -117,4 +117,4 @@ if __name__ == '__main__':
                         help="Whether or not to use std.out or a file")
     
     args = parser.parse_args()
-    main(**args.__dict__)
+    main(**vars(args))

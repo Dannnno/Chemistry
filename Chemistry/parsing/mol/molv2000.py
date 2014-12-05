@@ -23,7 +23,14 @@ You should have received a copy of the MIT License along with this program.
 If not, see <http://opensource.org/licenses/MIT>
 """
 
-from Chemistry.parsing.exceptions import ParsingException
+try:
+    import cStringIO as IO
+except ImportError:
+    import StringIO as IO
+finally:
+    import re
+    
+    from Chemistry.parsing.exceptions import ParsingException
 
 
 class MolV2000(object):
@@ -33,7 +40,7 @@ class MolV2000(object):
     1: Title
     2: Software produced by
     3: Comment line
-    Lines 4: are the ctab block.  It can generally be split into a few sections:
+    Lines 4: are the ctab block.  It can be split into a few sections:
         Counts line
         Atom block
         Bond block
@@ -65,7 +72,90 @@ class MolV2000(object):
                       'ppp': 'obsolete',
                       'iii': 'obsolete'}
     
-    def __init__(self, molfile): pass
+    def __init__(self, molfile, from_string=False):
+        if from_string:
+            self.moldata = IO.StringIO(molfile)
+        elif isinstance(molfile, basestring):
+            try:
+                with open(molfile, 'r') as f:
+                    self.moldata = IO.StringIO(f.read())
+            except IOError:
+                raise ParsingException(
+                    ' '.join(["MolV2000 given {}, wasn't a valid file",
+                               "\nIf you would like to parse a string",
+                               "then pass the kwarg `from_string=True"])
+                            .format(molfile))
+        elif hasattr(molfile, "read"):
+            self.moldata = IO.StringIO(molfile.read())
+        else:
+            raise TypeError(
+                "MolV2000 must be given something it can read data from")
+                
+    def parse(self):
+        MolV2000Parser(self)
+                
+    def __str__(self):
+        if hasattr(self, "title"):
+            return "MolV2000 data representing {}".format(self.title)
+        else:
+            return "MolV2000 data object"
+            
+    def __repr__(self):
+        return str(self)
+    
+
+class MolV2000Parser(object):
+    
+    def __init__(self, molv2000):
+        if not isinstance(molv2000, MolV2000):
+            self._molfile = MolV2000(molv2000)
+        else:
+            self._molfile = molv2000
+        self.parse_file()
+        
+    def __getattr__(self, attr):
+        return getattr(self._molfile, attr)
+        
+    def __setattr__(self, attr, value):
+        if attr in ['_molfile']:
+            exec("self.__dict__['{}'] = value".format(attr), 
+                 globals(), 
+                 locals())
+        else:
+            self._molfile.__setattr__(attr, value)
+        
+    def parse_file(self):
+        lines = self.moldata.readlines()
+        self._parse_header(lines[:3])
+        self._parse_body(lines[3:])
+        
+    def _parse_header(self, lines):
+        if len(lines) != 3:
+            raise ParsingException(
+                "Header must have three lines, not {}".format(len(lines)))
+        
+        self.title = lines[0].strip()
+        self.info = lines[1].strip()
+        self.comments = (lines[2].strip() if lines[2].strip() else None)
+        
+    def _parse_body(self, lines):
+        line_start, line_end = 0, 1
+        self._parse_counts_line(lines[0])
+        
+        line_start, line_end = line_end, line_end + int(self.counts['aaa'])
+        self._parse_atom_block(lines[line_start:line_end])
+        
+        line_start, line_end = line_end, line_end + int(self.counts['bbb'])
+        self._parse_bond_block(lines[line_start:line_end])
+        
+        line_start, line_end = line_end, line_end + int(self.counts['lll'])
+        self._parse_atom_list_block(lines[line_start:line_end])
+        
+        line_start, line_end = line_end, line_end + int(self.counts['sss'])
+        self._parse_stext_block(lines[line_start:line_end])
+        
+        line_start, line_end = line_end, line_end + int(self.counts['mmm'])
+        self._parse_properties_block(lines[line_start:line_end])
     
     def _parse_counts_line(self, line):
         """ The counts line has the general form of
@@ -93,27 +183,65 @@ class MolV2000(object):
                 self.counts[sequence] = line[i:].strip()
                 raise StopIteration
             i+= len(sequence)
-            
-        for key in MolV2000._counts_format:
-            print "{}|{}|".format(key, self.counts[key])
         
-        self._version = self.counts['vvvvvv']
-        if not self._version == MolV2000.version:
+        self.version = self.counts['vvvvvv']
+        if not self.version == MolV2000.version:
             raise ParsingException(
-                "{{}} file is in {} not {}".format(self._version,
+                "{{}} file is in {} not {}".format(self.version,
                                                    MolV2000.version))
+                                                   
+    def _parse_atom_block(self, lines):
+        properly_formed = re.compile(r"""
+                    (\s+[-.0-9]+){3} # matches the X, Y, and Z coordinates
+                    \s+[A-Z]{1}[a-z]{,2} # matches the chemical symbol
+                    (\s+[-.0-9]+){,12} # matches the series of values                            
+                                      """, re.X)
+        self.atoms = {}
+        for i, line in enumerate(lines, 1):
+            match = properly_formed.match(line)
+            if match:
+                atom = line.split()
+                self.atoms['a{}'.format(i)] = atom                
+            else:
+                raise ParsingException("Malformed atom text")
+        
+    def _parse_bond_block(self, lines):
+        properly_formed = re.compile(r"(\s+[0-9]+){,7}")
+        self.bonds = {}
+        for i, line in enumerate(lines, 1):
+            match = properly_formed.match(line)
+            if match:
+                bond = line.split()
+                self.bonds['b{}'.format(i)] = bond                
+            else:
+                raise ParsingException("Malformed bond text")
     
+    def _parse_atom_list_block(self, lines):
+        if lines:
+            raise NotImplementedError("I don't know how to parse these")
     
-class MolV2000Parser(object):
+    def _parse_stext_block(self, lines): 
+        if lines:
+            raise NotImplementedError("I don't know how to parse these")
     
-    pass
+    def _parse_properties_block(self, lines):
+        self.properties = {}
+        line_end = re.compile(r"\s*M\s*END")
+        for i, line in enumerate(lines, 1):
+            if line_end.match(line):
+                return
+            else:
+                self.properties['p{}'.format(i)] = line
     
     
 class MolV2000Builder(object):
     
-    pass
+    def __str__(self):
+        return "MolV2000 Builder"
+        
+    def __repr__(self):
+        return str(self)
 
 
 if __name__ == '__main__':
-    a = MolV2000('')
-    a._parse_counts_line('v30000')
+    pass
