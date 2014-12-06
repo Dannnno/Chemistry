@@ -28,15 +28,16 @@ import os
 import tempfile
 import unittest
 
-import CheML as cml
-import compounds as Chemistry
+from Chemistry import compounds
+from Chemistry.parsing import CheML as cml
 
 
 class test_cml_parser(unittest.TestCase):
     primary = os.getcwd()
-    
+
     def setUp(self):
-        os.chdir(self.primary + "/molecules/test_molecules")
+        os.chdir(os.path.join(self.primary, "Chemistry", "Testing",
+                              "test_molecules", "CML"))
         self.molecule = {'atoms': {'a1': 'H',
                                    'a2': 'H',
                                    'a3': 'O'},
@@ -45,7 +46,7 @@ class test_cml_parser(unittest.TestCase):
                                    'b2': ('a2', 'a3', {'order': 1,
                                                        'chirality': None})},
                          'other_info': {'id': 'Water'}}
-        
+
     def test_parse(self):
         with open('CML_1.cml', 'r') as CML_file:
             Parser = cml.CMLParser(CML_file)
@@ -54,47 +55,48 @@ class test_cml_parser(unittest.TestCase):
 
     def tearDown(self):
         os.chdir(self.primary)
-        
-        
-class test_cml_builder(unittest.TestCase): 
+
+
+class test_cml_builder(unittest.TestCase):
     primary = os.getcwd()
-    
+
     def setUp(self):
-        os.chdir(self.primary + "/molecules/test_molecules")
+        os.chdir(os.path.join(self.primary, "Chemistry", "Testing",
+                              "test_molecules", "CML"))
         with open('CML_1.cml', 'r') as cml_file:
             self.molecule = cml.CMLParser(cml_file)
             cml_file.seek(0)
             self.cml = cml_file.read()
-        self.Builder1 = cml.CMLBuilder( 
+        self.Builder1 = cml.CMLBuilder(
                 {'atoms': {'a1': 'H',
                            'a2': 'H',
                            'a3': 'O'},
-                 'bonds': {'b1': ['a1', 'a3', {'order':1, 
+                 'bonds': {'b1': ['a1', 'a3', {'order':1,
                                                'chirality': None}],
-                           'b2': ['a2', 'a3', {'order':1, 
+                           'b2': ['a2', 'a3', {'order':1,
                                                'chirality': None}]},
                  'other_info': {'id': 'Water'}})
         self.Builder2 = cml.CMLBuilder(self.molecule.molecule)
-        
+
     def test_to_file(self):
         with tempfile.NamedTemporaryFile(mode='w+', suffix='.cml',
                                          dir=self.primary) as tfile:
             self.Builder1.to_file(tfile)
             tfile.seek(0)
             Builder3 = cml.CMLBuilder(cml.CMLParser(tfile).molecule)
-            self.assertEqual(str(self.Builder1), str(Builder3))                    
-            
+            self.assertEqual(str(self.Builder1), str(Builder3))
+
     def test_build(self):
         for line1, line2 in itertools.izip(
                                             str(self.Builder1).split('\n'),
                                             self.cml.split('\n')
                                            ):
             self.assertEqual(line1.lstrip(), line2.lstrip())
-        
+
     def test_from_Compound(self):
         Builder = cml.CMLBuilder.from_Compound(
-                    Chemistry.Compound.from_CML("CML_1.cml"))
-                                                 
+                    compounds.Compound.from_CML("CML_1.cml"))
+
         with tempfile.NamedTemporaryFile(
                                           mode='r+',
                                           suffix='.cml',
@@ -102,5 +104,22 @@ class test_cml_builder(unittest.TestCase):
                                          ) as tfile:
             Builder.to_file(tfile)
             tfile.seek(0)
-            self.assertEqual(Chemistry.Compound.from_CML("CML_1.cml").molecule,
-                             Chemistry.Compound.from_CML(tfile).molecule)
+            self.assertEqual(compounds.Compound.from_CML("CML_1.cml").molecule,
+                             compounds.Compound.from_CML(tfile).molecule)
+
+
+if __name__ == '__main__':
+    import types
+    import sys
+
+
+    test_classes_to_run = [value for key, value in globals().items()
+                           if (isinstance(value, (type, types.ClassType)) and
+                               issubclass(value, unittest.TestCase))]
+
+    loader = unittest.TestLoader()
+    big_suite = unittest.TestSuite(loader.loadTestsFromTestCase(test_class)
+                                   for test_class in test_classes_to_run)
+
+    runner = unittest.TextTestRunner(sys.stdout, verbosity=1)
+    runner.run(big_suite)

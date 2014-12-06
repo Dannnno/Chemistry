@@ -65,22 +65,22 @@ BP = "Boiling Point"
 HEAT = "Heat of ?"
 RAD = "Atomic Radius"
 OX = "Oxidation Number(s)"
-"""  
+"""
 
 def convert_type(cell, typ):
     """Credit to SO user Marius for (most of) this function
     http://stackoverflow.com/a/25498445/3076272
 
     Takes a string and a function that the string should be represented as,
-    if possible.  
-    
+    if possible.
+
     >>> convert_type('4', int)
     4
     >>> convert_type('4.0', float)
     4.0
     >>> convert_type('[1,2,3]', str_to_list)
     [1, 2, 3]
-    
+
     If the function can't be applied to that string then it returns
     "No_Data"
     >>> convert_type('No Data', int)
@@ -93,18 +93,19 @@ def convert_type(cell, typ):
         return typ(cell)
     except (TypeError, ValueError):
         return "No_Data" # The nomiker I have chosen for missing data
-        
+
+
 def str_to_list(a_stringy_list, mapped=None):
     """Takes a string that looks like a list and makes it a list
-    
+
     >>> str_to_list("[1,2,3]")
     ['1', '2', '3']
-    
+
     If a function to be mapped is provided it will attempt to do so
     >>> str_to_list("[1,2,3]", mapped=int)
     [1, 2, 3]
     """
-    
+
     the_list = a_stringy_list[1:-1].split(",")
     try:
         # Fun fact, mapping 'None' to a list just returns the list
@@ -112,11 +113,12 @@ def str_to_list(a_stringy_list, mapped=None):
     except ValueError: #Exception:
         ## print "Function %s couldn't be mapped to list " % str(mapped), the_list
         return the_list
-      
-def build_table():  
+
+
+def build_table():
     with open("element_list.csv", 'r') as element_data, \
         open("periodic_table.py", 'w') as periodic_table:
-            
+
         per_table = OrderedDict()
         element_reader = csv.reader(element_data)
         header = element_reader.next()
@@ -127,17 +129,18 @@ def build_table():
             new_row = dict(zip(header, tuple(convert_type(cell, typ)
                             for cell, typ in zip(tl, col_types))))
             per_table[tl[1]] = new_row
-        
+
         periodic_table.write(copyright + '\n\n')
         json_table = json.dumps(per_table, indent=4).split('\n')
         json_table[0] = "periodic_table = " + json_table[0]
-        
+
         for i in range(1, len(json_table)):
             json_table[i] = "               " + json_table[i]
-        
+
         for line in json_table:
             periodic_table.write(line + "\n")
-        
+
+
 if __name__ == "__main__":
     import os
     #print os.getcwd()

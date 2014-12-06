@@ -28,30 +28,34 @@ try:
 except ImportError:
     import StringIO as IO
 finally:
-    import doctest
+    import os
     import sys
     import unittest
-    import table_builder as tb
-    
-    
+
+    from Chemistry import table_builder as tb
+
+
 class test_helpers(unittest.TestCase):
-    
+
     def setUp(self): pass
-    
+
     def tearDown(self): pass
-    
-    @unittest.expectedFailure
+
     def test_periodic_table(self):
-        ## Also tests table_builder.build_table()
-        tb.build_table()
-        self.assertRaises(ImportError, __import__, "periodic_table")
-        
+        cwd = os.getcwd()
+        try:
+            os.chdir(os.path.join(cwd, 'Chemistry'))
+            tb.build_table()
+        finally:
+            os.chdir(cwd)
+        from Chemistry import periodic_table
+
     def test_convert_type(self):
         self.assertEqual(tb.convert_type('1', int), 1)
         self.assertEqual(tb.convert_type('1.0', float), 1.0)
         self.assertEqual(tb.convert_type('Hello', str), 'Hello')
         self.assertEqual(tb.convert_type('[1,2,3]', tb.str_to_list), [1, 2, 3])
-     
+
     def test_str_to_list(self):
         self.assertEqual(tb.str_to_list('[1,2,3]'), ['1', '2', '3'])
         self.assertEqual(tb.str_to_list('[1,2,3]', mapped=int), [1, 2, 3])
@@ -59,23 +63,15 @@ class test_helpers(unittest.TestCase):
 
 if __name__ == '__main__':
     import types
-    
-                          
-    test_classes_to_run = []
-    for key, value in globals().items():
-        if isinstance(value, (type, types.ClassType)):
-            if issubclass(value, unittest.TestCase):
-                test_classes_to_run.append(value)
+
+
+    test_classes_to_run = [value for key, value in globals().items()
+                           if (isinstance(value, (type, types.ClassType)) and
+                               issubclass(value, unittest.TestCase))]
 
     loader = unittest.TestLoader()
-
-    suites_list = []
-    for test_class in test_classes_to_run:
-        suite = loader.loadTestsFromTestCase(test_class)
-        suites_list.append(suite)
-
-    big_suite = unittest.TestSuite(suites_list)
-    big_suite.addTests(doctest.DocTestSuite(tb))
+    big_suite = unittest.TestSuite(loader.loadTestsFromTestCase(test_class)
+                                   for test_class in test_classes_to_run)
 
     runner = unittest.TextTestRunner(sys.stdout, verbosity=1)
     runner.run(big_suite)

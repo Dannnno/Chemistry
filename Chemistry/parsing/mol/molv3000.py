@@ -23,38 +23,23 @@ You should have received a copy of the MIT License along with this program.
 If not, see <http://opensource.org/licenses/MIT>
 """
 
-from . import test_CML
-from . import test_compounds
-from . import test_reactions
-from . import test_periodic_helpers
-
-import os
-import logging
-import sys
+from Chemistry.parsing.mol import molv2000 as mol_
 
 
-logging.basicConfig(stream=sys.stdout, 
-                    filename=os.getcwd()+"/testLog.log",
-                    level=logging.DEBUG)
-cur_dir = os.getcwd()
-try:
-    try:
-        os.chdir(os.getcwd() + "/desktop/programming/github/chemistry/Testing")
-    except Exception:
-        try: 
-            os.chdir(os.getcwd() + "/Testing")
-        except Exception:
-            os.chdir(cur_dir)
-    finally:
-        for path in os.listdir(os.getcwd()):
-            if (path.startswith('test_') and 
-                (path.endswith('.py') or path.endswith('.pyc'))):
-                cut_path = path.split('.')[0]
-                if cut_path not in globals():
-                    try:
-                        globals()[cut_path] = __import__(cut_path)
-                    except ImportError as e:
-                        logging.warn(
-                            "{} was not imported for testing".format(cut_path))
-finally:
-    os.chdir(cur_dir)
+class MolV3000(mol_.MolV2000):
+
+    pass
+
+
+class MolV3000Parser(mol_.MolV2000Parser):
+
+    pass
+
+
+class MolV3000Builder(mol_.MolV2000Builder):
+
+    pass
+
+
+if __name__ == '__main__':
+    pass
