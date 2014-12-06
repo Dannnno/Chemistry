@@ -31,10 +31,6 @@ from Chemistry import compounds
 class Reactant(object):
 
     @classmethod
-    def _compare_pkas(cls, comp1, comp2, conditions=None, thresholds={}):
-        raise NotImplementedError
-
-    @classmethod
     def make_Base(cls, basic_compound, pka=16, point='a1'):
         if isinstance(basic_compound, Base):
             return basic_compound
@@ -128,6 +124,9 @@ class Acid(Reactant):
         super(Acid, self).__init__(compound, paths)
         self.acidic_point = acidic_point
         self._validate_pka(pka)
+        
+    def to_conjugate_base(self, *args, **kwargs):
+        raise NotImplementedError
 
 
 class Base(Reactant):
@@ -154,6 +153,24 @@ class Base(Reactant):
         except KeyError:
             conjugate.other_info['id'] = "Unknown acid"
         return Acid(conjugate, a_key, self.pka, self.paths)
+        
+        
+class LewisAcid(Acid): pass
+
+
+class LewisBase(Base): pass
+
+
+class BronstedAcid(Acid): pass
+
+
+class BronstedBase(Base): pass
+
+
+class Electrophile(Reactant): pass
+
+
+class Nucleophile(Reactant): pass
 
 
 if __name__ == '__main__':

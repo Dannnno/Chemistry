@@ -82,9 +82,9 @@ def convert_type(cell, typ):
     [1, 2, 3]
 
     If the function can't be applied to that string then it returns
-    "No_Data"
-    >>> convert_type('No Data', int)
-    'No_Data'
+    None
+    >>> convert_type('No Data', int) is None
+    True
     """
 
     try:
@@ -92,7 +92,7 @@ def convert_type(cell, typ):
             return typ(cell, mapped=int)
         return typ(cell)
     except (TypeError, ValueError):
-        return "No_Data" # The nomiker I have chosen for missing data
+        return None
 
 
 def str_to_list(a_stringy_list, mapped=None):
@@ -110,8 +110,9 @@ def str_to_list(a_stringy_list, mapped=None):
     try:
         # Fun fact, mapping 'None' to a list just returns the list
         return map(mapped, the_list)
-    except ValueError: #Exception:
-        ## print "Function %s couldn't be mapped to list " % str(mapped), the_list
+    except ValueError:
+        if the_list[0] is None:
+            return None
         return the_list
 
 
@@ -138,7 +139,7 @@ def build_table():
             json_table[i] = "               " + json_table[i]
 
         for line in json_table:
-            periodic_table.write(line + "\n")
+            periodic_table.write(line.replace('null', 'None') + "\n")
 
 
 if __name__ == "__main__":

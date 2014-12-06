@@ -65,14 +65,6 @@ class test_Reactant_utility_methods(unittest.TestCase):
 
     def tearDown(self): pass
 
-    @unittest.skip('NYI')
-    def test__compare_pkas1(self):
-        self.assertEqual((1, 0), Reactant._compare_pkas(-1.74, 16))
-
-    @unittest.skip('NYI')
-    def test__compare_pkas2(self):
-        self.assertEqual((10**(4-1), 1), Reactant._compare_pkas(4, 1))
-
     def test__new_key1(self):
         self.assertEqual('a3', Reactant._new_key(self.compound1))
 
