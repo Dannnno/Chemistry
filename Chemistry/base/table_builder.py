@@ -142,7 +142,4 @@ def build_table():
 
 
 if __name__ == "__main__":
-    import os
-    #print os.getcwd()
-    #os.chdir(os.getcwd() + "/desktop/programming/github/chemistry")
     build_table()

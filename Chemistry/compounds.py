@@ -24,14 +24,14 @@ If not, see <http://opensource.org/licenses/MIT>
 """
 
 try:
-    from Chemistry.periodic_table import periodic_table
-    from Chemistry import periodic_table as pt
+    from Chemistry.base.periodic_table import periodic_table
+    from Chemistry.base import periodic_table as pt
 except ImportError:
-    from Chemistry import table_builder
+    from Chemistry.base import table_builder
     table_builder.build_table()
     del globals()['table_builder']
-    from Chemistry.periodic_table import periodic_table
-    from Chemistry import periodic_table as pt
+    from Chemistry.base.periodic_table import periodic_table
+    from Chemistry.base import periodic_table as pt
 finally:
     from collections import deque
     import json

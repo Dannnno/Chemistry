@@ -32,8 +32,9 @@ finally:
     import unittest
 
     from Chemistry import compounds
-    from Chemistry.reactions.base_reactions import \
-                            Acid, Base, Conditions, Product, Products
+    from Chemistry.base.reactants import  Acid, Base
+    from Chemistry.base.products import Product, Products
+    from Chemistry.reactions.base_reactions import Conditions
     from Chemistry.reactions.acid_base import AcidBase
     from Chemistry.reactions.exceptions import NoReactionError
 

@@ -32,8 +32,8 @@ finally:
     import unittest
 
     from Chemistry import compounds
-    from Chemistry.reactions.base_reactions import \
-            Base, Acid, Conditions, Reactant
+    from Chemistry.base.reactants import Base, Acid, Reactant
+    from Chemistry.reactions.base_reactions import Conditions
 
 
 class test_Reactant_utility_methods(unittest.TestCase):
@@ -124,7 +124,7 @@ class test_Base(unittest.TestCase):
     def tearDown(self): pass
 
     def test_to_conjugate_Acid(self):
-        self.assertEqual(self.base.conjugate_acid, self.conj_acid)
+        self.assertEqual(self.base.to_conjugate_acid(), self.conj_acid)
 
 
 if __name__ == '__main__':

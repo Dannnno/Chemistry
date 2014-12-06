@@ -32,7 +32,7 @@ finally:
     import sys
     import unittest
 
-    from Chemistry import table_builder as tb
+    from Chemistry.base import table_builder as tb
 
 
 class test_helpers(unittest.TestCase):
@@ -44,11 +44,11 @@ class test_helpers(unittest.TestCase):
     def test_periodic_table(self):
         cwd = os.getcwd()
         try:
-            os.chdir(os.path.join(cwd, 'Chemistry'))
+            os.chdir(os.path.join(cwd, 'Chemistry', 'base'))
             tb.build_table()
         finally:
             os.chdir(cwd)
-        from Chemistry import periodic_table
+        from Chemistry.base import periodic_table
 
     def test_convert_type(self):
         self.assertEqual(tb.convert_type('1', int), 1)

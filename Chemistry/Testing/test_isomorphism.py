@@ -32,8 +32,8 @@ finally:
     import unittest
 
     from Chemistry import compounds
-    from Chemistry.reactions.base_reactions import \
-            Base, Acid, Conditions, Reactant
+    from Chemistry.reactions.base_reactions import Conditions
+    from Chemistry.base.reactants import Base, Acid, Reactant
 
 
 class test_isomorphisms(unittest.TestCase):

@@ -26,8 +26,9 @@ If not, see <http://opensource.org/licenses/MIT>
 from copy import deepcopy
 
 from Chemistry import compounds
-from Chemistry.reactions.base_reactions import \
-        Reactant, Reaction, Conditions, Product, Products, EquilibriumProducts
+from Chemistry.reactions.base_reactions import Reaction, Conditions
+from Chemistry.base.reactants import Reactant
+from Chemistry.base.products import Product, Products, EquilibriumProducts
 from Chemistry.reactions.exceptions import NoReactionError
 
 
@@ -109,14 +110,15 @@ class AcidBase(Reaction):
         new_base_key = Reactant._new_key(base)
         new_base_bond_key = Reactant._new_key(base, False)
 
-        conjugate_acid = base._Compound
-        conjugate_acid._add_node_(new_base_key, compounds.get_Element(symbol))
-        conjugate_acid._add_edge_(new_base_bond_key, self.base[1], new_base_key)
-        try:
-            conjugate_acid.other_info['id'] = \
-                    "Conjugate acid of {}".format(base.other_info['id'])
-        except KeyError:
-            conjugate_acid.other_info['id'] = "Unknown acid"
+        conjugate_acid = base.to_conjugate_acid()
+        #_Compound
+        #conjugate_acid._add_node_(new_base_key, compounds.get_Element(symbol))
+        #conjugate_acid._add_edge_(new_base_bond_key, self.base[1], new_base_key)
+        #try:
+        #    conjugate_acid.other_info['id'] = \
+        #            "Conjugate acid of {}".format(base.other_info['id'])
+        #except KeyError:
+        #    conjugate_acid.other_info['id'] = "Unknown acid"
 
         other = acid.other_info
         try:
