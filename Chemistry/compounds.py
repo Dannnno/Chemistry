@@ -101,8 +101,8 @@ class Compound(nx.Graph):
 
     def __init__(self, atoms, bonds, other_info={}):
         super(Compound, self).__init__()
-        self.atoms = atoms
-        self.bonds = bonds
+        self.atoms = {}
+        self.bonds = {}
         for key, (first, second, data) in self.bonds.items():
             order = int(data['order'])
             chirality = (None
@@ -111,8 +111,8 @@ class Compound(nx.Graph):
             self.bonds[key] = (first, second,
                               {'order': order, 'chirality': chirality})
 
-        self._add_nodes_from_(self.atoms)
-        self._add_edges_from_(self.bonds)
+        self._add_nodes_from_(atoms)
+        self._add_edges_from_(bonds)
         self.other_info = other_info
         self.graph.update(self.other_info)
         self.molecule = {'other_info': self.other_info,
@@ -129,19 +129,21 @@ class Compound(nx.Graph):
 
     def _add_node_(self, key, atom):
         try:
-            self.node[key]
+            _ = self.atoms[key]
         except KeyError:
             self.add_node(key, **atom)
+            self.atoms[key] = atom['symbol']
         else:
             raise KeyError("There is already an atom {}".format(key))
 
     def _add_edge_(self, key, first, second, rest={}):
         try:
-            self.edge[first][second]
+            _ = self.bonds[key]
         except KeyError:
             d = {'order':1, 'chirality':None}
             d.update(rest)
             self.add_edge(first, second, key=key, **d)
+            self.bonds[key] = first, second, d
         else:
             raise KeyError("There is already a bond {}".format(key))
 
@@ -279,17 +281,6 @@ class Compound(nx.Graph):
             raise NotImplementedError("No support for v3000 yet")
         else:
             molv2000.MolV2000Builder.from_Compound(self)
-
-    #def __contains__(self, key):
-    #    if key in periodic_table:
-    #        return key in self.atoms.values()
-    #    elif key[0] in ['a', 'b']:
-    #        try:
-    #            int(key[1:])
-    #        except TypeError:
-    #            raise KeyError("Key {} not applicable".format(key))
-    #        else:
-    #            return key in self.atoms or key in self.bonds
 
     def __str__(self):
         return json.dumps(Compound.json_serialize(self, as_str=True),

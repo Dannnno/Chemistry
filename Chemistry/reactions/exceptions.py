@@ -21,46 +21,29 @@ THE SOFTWARE.
 
 You should have received a copy of the MIT License along with this program.
 If not, see <http://opensource.org/licenses/MIT>
-"""
+"""        
+        
+class ReactionError(Exception):
+    err_message = "There was an error with the reaction"
+    pka = """
+    AcidBase reaction between {} and {} failed because of pka difference {}
+    ({} to {})
+    """
 
-import os
-from collections import deque
+    def __init__(self, *args, **kwargs):
+        if 'pka' in kwargs:
+            self.err_message = ReactionError.pka.format(*kwargs['reactants']
+                                                        *kwargs['pka'])
 
+    def __str__(self):
+        return self.err_message
 
-endings = ['.pyc']
+    def __repr__(self):
+        return str(self)
+        
 
-
-def extract_files(start_dir=os.getcwd(), excludes=[]):
-    to_crawl = deque([filename
-                      for filename in os.listdir(start_dir)
-                      if not filename.startswith('.') and
-                      not filename in excludes])
-    extracted = set()
-
-    while to_crawl:
-        current = to_crawl.popleft()
-
-        if current in extracted:
-            continue
-
-        if os.path.isdir(current):
-            to_crawl.extendleft(
-                map(lambda x: os.path.join('', current, x),
-                    extract_files(os.path.join(start_dir, current))))
-            continue
-
-        extracted.add(current)
-
-    return filter(lambda x: any(x.endswith(i) for i in endings), extracted)
-
-
-def delete_files(files):
-    map(os.remove, files)
-
-
-def make_clean(*except_):
-    delete_files(extract_files(excludes=except_))
-
-
-if __name__ == '__main__':
-    make_clean('docs')
+class NoReactionError(ReactionError):
+    err_message = "No reaction occured"
+    
+    def __init__(self, msg=err_message):
+        super(NoReactionError, self).__init__(msg)

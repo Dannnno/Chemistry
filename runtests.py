@@ -22,14 +22,34 @@ THE SOFTWARE.
 You should have received a copy of the MIT License along with this program.
 If not, see <http://opensource.org/licenses/MIT>
 """
+try:
+    import cStringIO as StringIO
+except ImportError:
+    import StringIO
+finally:
+    import contextlib
+    import doctest
+    import inspect
+    import os
+    import sys
+    import unittest
 
-import doctest
-import inspect
-import os
-import sys
-import unittest
+    from Chemistry import Testing
 
-from Chemistry import Testing
+
+@contextlib.contextmanager
+def capture():
+    oldout, olderr = sys.stdout, sys.stderr
+
+    try:
+        out=[StringIO.StringIO(), StringIO.StringIO()]
+        sys.stdout, sys.stderr = out
+        yield out
+
+    finally:
+        sys.stdout, sys.stderr = oldout, olderr
+        out[0] = out[0].getvalue()
+        out[1] = out[1].getvalue()
 
 
 class _DocTester(object):
@@ -97,8 +117,10 @@ def main(use_stream=True, stream=sys.stdout,
         runner = unittest.TextTestRunner(stream, verbosity=verb)
         runner.run(test_suite)
     else:
-        runner = unittest.TextTestRunner(file_, verbosity=verb)
-        runner.run(test_suite)
+        #with capture():
+            with open(file_, 'w') as f:
+                runner = unittest.TextTestRunner(f, verbosity=verb)
+                runner.run(test_suite)
 
 
 if __name__ == '__main__':
@@ -107,8 +129,11 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(
                         description="Runs the unit and doc tests of Chemistry")
     parser.add_argument('-f', '--filename', dest='file_',
-                        default='test_results.log',
+                        default='testresults.log',
                         help="Filename of optional file.")
+    parser.add_argument('--f', dest='file_', action='store_const',
+                        const='testresults.log',
+                        help='Use default filename for output')
     parser.add_argument('-v', '--verbosity', dest='verb',
                         type=int, choices=[1, 2],
                         default=1, help="Verbosity of the test output.")

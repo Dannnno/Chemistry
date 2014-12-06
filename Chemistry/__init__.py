@@ -59,8 +59,8 @@ should look something like
 There may be assorted *.txt *.log files lying around that just haven't been cleaned up yet
 """
 
-__all__ = ['base_reactions', 'compounds', 'periodic_table', 'table_builder',
-           'parsing', 'reactions']
+__all__ = ['compounds', 'periodic_table', 'table_builder', 'parsing',
+           'reactions']
 
 __version__ = 0.0 ## pre-release
 

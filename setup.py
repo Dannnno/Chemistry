@@ -23,5 +23,13 @@ You should have received a copy of the MIT License along with this program.
 If not, see <http://opensource.org/licenses/MIT>
 """
 
-import distutils
-import setup
+from distutils.core import setup
+
+setup(name='Chemistry',
+      version='0.0',
+      description='A CAOS tool written in Python',
+      author='Dan Obermiller',
+      author_email='dannnno16@gmail.com',
+      url='https://github.com/dannnno/chemistry',
+      ext_package='Chemistry'
+     )

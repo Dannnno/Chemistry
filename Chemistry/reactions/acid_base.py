@@ -23,17 +23,19 @@ You should have received a copy of the MIT License along with this program.
 If not, see <http://opensource.org/licenses/MIT>
 """
 
-from Chemistry import compounds, base_reactions
-from Chemistry.base_reactions import Acid, Base, Reactant, \
-                                         Reaction, Conditions, Product
+from copy import deepcopy
+
+from Chemistry import compounds
+from Chemistry.reactions.base_reactions import \
+        Reactant, Reaction, Conditions, Product, Products, EquilibriumProducts
+from Chemistry.reactions.exceptions import NoReactionError
 
 
 class AcidBase(Reaction):
     _conditions = None
-    _acid, _base = (), ()
-    _acidic_point, _basic_point = (), ()
 
     def __init__(self, acid, base, cond):
+        self._acid, self._base = (), ()
         self.conditions = cond
         self.acid = acid
         self.base = base
@@ -59,11 +61,12 @@ class AcidBase(Reaction):
     def acid(self, acid_):
         if self.conditions.acidic:
             if self.conditions.pka < acid_.pka:
-                self._acid = (self.conditions.pka_molecule, False)
+                self._acid = (self.conditions.pka_molecule,
+                              self.conditions.pka_location)
             else:
-                self._acid = (acid_, True)
+                self._acid = (acid_, acid_.acidic_point)
         else:
-            self._acid = (acid_, True)
+            self._acid = (acid_, acid_.acidic_point)
 
     @property
     def base(self):
@@ -73,19 +76,65 @@ class AcidBase(Reaction):
     def base(self, base_):
         if self.conditions.basic:
             if self.conditions.pka > base_.pka:
-                self._base = (self.conditions.pka_molecule, False)
+                self._base = (self.conditions.pka_molecule,
+                              self.conditions.pka_location)
             else:
-                self._base = (base_, True)
+                self._base = (base_, base_.basic_point)
         else:
-            self._base = (base_, True)
+            self._base = (base_, base_.basic_point)
 
-    @property
-    def acidic_point(self):
-        return self._acidic_point
+    def _equilibrium(self):
+        pka1, pka2 = self.acid[0].pka, self.base[0].pka
+        diff = pka1-pka2
+        if diff == 0:
+            raise NoReactionError("These two molecules have identical pka")
+        elif diff < 0:
+            if abs(diff) > 10:
+                return (1, 0)
+            else:
+                return (10**abs(diff), 1)
+        else:
+            if diff > 10:
+                return 0, 1
+            else:
+                return (1, 10**diff)
 
-    @property
-    def basic_point(self):
-        return self._basic_point
+    def _calculate_products(self):
+        conjugate_acid = None
+        conjugate_base = None
+        salt = None # NYI
+
+        acid, base = deepcopy(self.acid[0]), deepcopy(self.base[0])
+        symbol = acid.node[self.acid[1]]['symbol']
+        new_base_key = Reactant._new_key(base)
+        new_base_bond_key = Reactant._new_key(base, False)
+
+        conjugate_acid = base._Compound
+        conjugate_acid._add_node_(new_base_key, compounds.get_Element(symbol))
+        conjugate_acid._add_edge_(new_base_bond_key, self.base[1], new_base_key)
+        try:
+            conjugate_acid.other_info['id'] = \
+                    "Conjugate acid of {}".format(base.other_info['id'])
+        except KeyError:
+            conjugate_acid.other_info['id'] = "Unknown acid"
+
+        other = acid.other_info
+        try:
+            other['id'] = "Conjugate base of {}".format(acid.other_info['id'])
+        except KeyError:
+            other['id'] = "Unknown Base"
+        conjugate_base = compounds.Compound(
+                            *self._remove_node(acid, self.acid[1]),
+                            other_info=other)
+        return ((Product(conjugate_acid, 50),
+                  Product(conjugate_base, 50),
+                  Product(salt, 0)),
+                 (Product(None, 0),))
 
     def react(self):
-        raise NotImplementedError
+        product_ratio, reactant_ratio = self._equilibrium()
+        major, minor = self._calculate_products()
+        if reactant_ratio == 0:
+            return Products(major, minor)
+        else:
+            return EquilibriumProducts(major, minor)

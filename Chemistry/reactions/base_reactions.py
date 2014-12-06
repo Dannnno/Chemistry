@@ -25,12 +25,9 @@ If not, see <http://opensource.org/licenses/MIT>
 
 from copy import deepcopy
 import abc
-
-import numpy as np
+import types
 
 from Chemistry import compounds
-from Chemistry import periodic_table as pt
-periodic_table = pt.periodic_table
 
 
 class Reactant(object):
@@ -45,7 +42,7 @@ class Reactant(object):
             return basic_compound
         else:
             try:
-                return Base(basic_compound, 16, 'a1')
+                return Base(basic_compound, point, pka)
             except Exception as e:
                 print e
 
@@ -55,7 +52,7 @@ class Reactant(object):
             return acidic_compound
         else:
             try:
-                return Acid(acidic_compound, 16, 'a1')
+                return Acid(acidic_compound, point, pka)
             except Exception as e:
                 print e
 
@@ -155,17 +152,105 @@ class Base(Reactant):
 
 
 class Product(object):
+    _compound = None
 
-    def __init__(self, compound, percentage, all_percentages):
-        self._Compound = compound
-        self.paths = dict() # { key: set() }
-        self.major = (True
-                      if percentage >= np.mean(all_percentages)
-                      else False)
+    def __init__(self, comp, percentage):
+        self._compound = comp
         self.percentage = percentage
 
     def __getattr__(self, attr):
-        return getattr(self._Compound, attr)
+        return getattr(self._compound, attr)
+
+    def __eq__(self, other):
+        try:
+            return self._compound == other._compound
+        except AttributeError:
+            return self._compound == other
+
+    def __str__(self):
+        return str(self._compound)
+
+    def __repr__(self):
+        return str(self)
+
+
+class Products(object):
+
+    def __init__(self, maj, min_):
+        self._major, self._minor = (), ()
+        self.major = maj
+        self.minor = min_
+
+    @property
+    def major(self):
+        return self._major
+
+    @major.setter
+    def major(self, products):
+        if not isinstance(products, types.NoneType):
+            for prod in products:
+                if isinstance(prod, Product):
+                    if isinstance(prod._compound, types.NoneType):
+                        continue
+                    self._major += (prod,)
+                elif isinstance(prod, types.NoneType):
+                    continue
+                else:
+                    raise TypeError(
+                            "Should be a Product, not a {}".format(type(prod)))
+        else:
+            return
+
+    @property
+    def minor(self):
+        return self._minor
+
+    @minor.setter
+    def minor(self, products):
+        if not isinstance(products, types.NoneType):
+            for prod in products:
+                if isinstance(prod, Product):
+                    if isinstance(prod._compound, types.NoneType):
+                        continue
+                    self._minor += (prod,)
+                elif isinstance(prod, types.NoneType):
+                    continue
+                else:
+                    raise TypeError(
+                            "Should be a Product, not a {}".format(type(prod)))
+        else:
+            return
+
+    def __eq__(self, other):
+        return False
+
+    def __ne__(self, other):
+        return not self == other
+
+
+class EquilibriumProducts(object):
+    _reactants = None
+    _products = None
+
+    def __init__(self, reactants, products):
+        self.reactants = reactants
+        self.products = products
+
+    @property
+    def products(self):
+        return self._products
+
+    @products.setter
+    def products(self, prod):
+        self._products = Products(*prod)
+
+    @property
+    def reactants(self):
+        return self._reactants
+
+    @reactants.setter
+    def reactants(self, reactant):
+        self._reactants = reactant
 
 
 class Conditions(object):
@@ -174,23 +259,28 @@ class Conditions(object):
     _neutral = True
     pka = 16
     pka_molecule = None
-    other_molecules = [compounds.Compound(
-                                    {"a1":"H", "a2":"O", "a3":"H"},
-                                    {"b1":("a1", "a2", {'order': 1,
-                                                        'chirality': None}),
-                                    "b2":("a2", "a3", {'order': 1,
-                                                        'chirality': None})},
-                                    {"id":"Water"})]
+    pka_location = ''
 
     def __init__(self, conditions):
+        if 'acidic' in conditions and 'basic' in conditions:
+            raise ValueError(' '.join(['A molecule is either acidic',
+                                         'or basic, not both']))
         if (('acidic' in conditions or 'basic' in conditions) and
-            ('pka' not in conditions or 'pka_molecule' not in conditions)):
-            raise ValueError(''.join(["If conditions are non-neutral the pka",
-                                        "must be specified as well as the",
-                                        "molecule in question"]))
-
+                any(item not in conditions
+                    for item in ['pka', 'pka_molecule', 'pka_location'])):
+            raise ValueError(' '.join(["If conditions aren't neutral the pka",
+                                         "must be specified as well as the",
+                                         "molecule in question and the",
+                                         "specific location (key)"]))
+        if 'acidic' in conditions:
+            self.acidic = conditions['acidic']
+            self.basic = not self.acidic
+        elif 'basic' in conditions:
+            self.basic = conditions['basic']
+            self.acidic = not self.basic
         for k, v in conditions.iteritems():
-            setattr(self, k, v)
+            if not k in ['acidic', 'basic']:
+                setattr(self, k, v)
         self._neutral = not (self.acidic or self.basic)
 
     @property
@@ -215,24 +305,33 @@ class Reaction(object):
     def react(self):
         pass
 
+    @classmethod
+    def _remove_node(cls, compound, rem_key):
+        compound.atoms.pop(rem_key)
+        compound.remove_node(rem_key)
 
-class ReactionError(Exception):
-    err_message = "There was an error with the reaction"
-    pka = """
-    AcidBase reaction between {} and {} failed because of pka difference {}
-    ({} to {})
-    """
+        for k, v in compound.bonds.items():
+            if v[0] not in compound.atoms or v[1] not in compound.atoms:
+                compound.bonds.pop(k)
 
-    def __init__(self, *args, **kwargs):
-        if 'pka' in kwargs:
-            self.err_message = ReactionError.pka.format(*kwargs['reactants']
-                                                        *kwargs['pka'])
+        a_ref = cls._rebuild_dict(compound.atoms, 'a')
+        new_atoms, new_bonds = {}, {}
 
-    def __str__(self):
-        return self.err_message
+        for atom in compound.node:
+            new_atoms[a_ref[atom]] = compound.node[atom]['symbol']
 
-    def __repr__(self):
-        return str(self)
+        for i, (first, second) in enumerate(compound.edges(), 1):
+            endpoints = tuple(sorted((a_ref[first], a_ref[second])))
+            rest = ({k:v for k, v in compound.edge[first][second].iteritems()
+                     if k != 'key'},)
+            new_bonds['b{}'.format(i)] = endpoints + rest
+
+        return new_atoms, new_bonds
+
+    @staticmethod
+    def _rebuild_dict(dict_, letter):
+        return {key:'{}{}'.format(letter, i)
+                 for i, key in enumerate(sorted(dict_), 1)}
 
 
 if __name__ == '__main__':

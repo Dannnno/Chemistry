@@ -135,9 +135,9 @@ class test_Compound(unittest.TestCase):
 
     def test__add_edge_(self):
         self.compound1._add_node_('a4', compounds.get_Element('H'))
-        self.compound1._add_edge_('b1', 'a1', 'a4',
+        self.compound1._add_edge_('b3', 'a1', 'a4',
                                   {'order':1, 'chirality':None})
-        self.assertEqual(self.compound1['a1']['a4']['key'], "b1")
+        self.assertEqual(self.compound1['a1']['a4']['key'], "b3")
 
 
 class test_from_files(unittest.TestCase):
