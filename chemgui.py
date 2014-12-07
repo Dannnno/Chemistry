@@ -32,45 +32,52 @@ from kivy.graphics.context_instructions import Color
 from kivy.uix.button import Button
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.popup import Popup
 from kivy.uix.widget import Widget
 from kivy.properties import StringProperty, ObjectProperty, NumericProperty,\
                                ListProperty
-from kivy.logger import Logger
+
+from Chemistry.base.periodic_table import periodic_table as pt
 
 
 mode = 'Element'
 element = 'C'
 order = 1
 chirality = None
+app = None
 
 
 class Element(Widget):
     
+    label_ = ObjectProperty()
     color = '[color=3333ff]{}[/color]'
     _text = StringProperty(color.format('C'))
     key = StringProperty('a1')
-    size = ListProperty([10, 10])
     pos = ListProperty([0, 0])
     size_hint = ListProperty([None, None])
     
     def __init__(self, key, symb, pos, **kwargs):
         super(Element, self).__init__(**kwargs)
         self.key = key
-        with self.canvas:
+        with self.canvas.before:
             self.pos = pos
             self.text = symb
-            
+            self.label_.text = self.text
+        self.canvas.ask_update()
+        print self.color
+        
     @property
     def text(self):
         return self._text
         
     @text.setter
-    def text(self, symb):
-        self._text = self.color.format(symb)
+    def text(self, element):
+        self._text = self.color.format(element)
     
     def update(self):
         if mode == 'Element':
-            self.text = element
+            self._text = element
+            self.label_.text = self._text
             self.canvas.ask_update()
             return True
         else:
@@ -94,7 +101,7 @@ class Bond(Widget):
     
     def __init__(self, first, second, order, chirality=None, **kwargs): 
         super(Bond, self).__init__(**kwargs)
-        x1, y1 = first.pos
+        x1, y1, x2, y2 = first.pos
         x2, y2 = second.pos
         x1, x2 = ((x1+12, x2-2) if x1<x2 else (x1-2, x2+12))
         y1, y2 = y1+5, y2+5
@@ -109,10 +116,14 @@ class Bond(Widget):
             elif order == 2:
                 Line(points=[x1, y1+2, x2, y2+2], width=1)
                 Line(points=[x1, y1-2, x2, y2-2], width=1)
-            else:
+            elif order == 3:
                 Line(points=[x1, y1+2, x2, y2+2], width=1)
                 Line(points=[x1, y1, x2, y2], width=1)
                 Line(points=[x1, y1-2, x2, y2-2], width=1)
+            else:
+                raise ValueError(
+                        "order's state must be 1, 2, or 3 (not {})"
+                            .format(order))
 
     @property
     def order(self):
@@ -168,6 +179,7 @@ class LabTable(FloatLayout):
             return True
             
     def add_element(self, touch):
+        global element
         key = 'a{}'.format(self.acount)
         with self.canvas:
             self.element_locs[key] = touch.pos
@@ -177,13 +189,10 @@ class LabTable(FloatLayout):
         self.acount += 1
         
     def add_bond(self, touch):
-        print self.first, self.second
-        try:
-            print touch, self.first, self.second
-        except AttributeError: pass
         if self.first:
             self.second = self.compare_touch(touch)
             if isinstance(self.second, Element): 
+                global order
                 key = 'b{}'.format(self.bcount)
                 with self.canvas:
                     self.bond_locs[key] = touch.pos
@@ -218,6 +227,14 @@ class ButtonBar(Widget):
     
     pass
     
+
+class PeriodicTable(BoxLayout): 
+    
+    def on_touch_down(self, touch):
+        if not self.collide_point(*touch.pos):
+            app._popup.dismiss()
+            return True
+        super(PeriodicTable, self).on_touch_down(touch)
     
 class ElementMode(Button):
     
@@ -250,11 +267,7 @@ class ChargeMode(Button):
         mode = 'Charge'
     
     
-class ElementSelector(Button):
-    
-    def callback(self):
-        global mode
-        mode = 'Selector'
+class ElementSelector(Button): pass        
         
         
 class React(Button):
@@ -265,15 +278,28 @@ class React(Button):
     
 class Workbench(BoxLayout):
     
-    pass    
+    pass
     
     
 class ChemApp(App):
     
     def build(self):
-        app = Workbench()
-        return app
-
+        global app
+        app = self
+        widget = Workbench()
+        return widget
+        
+    def popup(self):
+        self._popup = Popup(title='Periodic Table', content=PeriodicTable(),
+                      size_hint=(.8, .8))    
+        self._popup.open()
+        
+    def element(self, symbol):
+        global element
+        element = symbol
+        print element, symbol
+        self._popup.dismiss()
+                      
         
 if __name__ == '__main__':
     ChemApp().run()

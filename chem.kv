@@ -1,4 +1,26 @@
 #: kivy 1.8.0
+#Copyright (c) 2014 Dan Obermiller
+#
+#Permission is hereby granted, free of charge, to any person obtaining a copy
+#of this software and associated documentation files (the "Software"), to deal
+#in the Software without restriction, including without limitation the rights
+#to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+#copies of the Software, and to permit persons to whom the Software is
+#furnished to do so, subject to the following conditions:
+#
+#The above copyright notice and this permission notice shall be included in
+#all copies or substantial portions of the Software.
+#
+#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+#IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+#FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+#AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+#LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+#OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+#THE SOFTWARE.
+#
+#You should have received a copy of the MIT License along with this program.
+#If not, see <http://opensource.org/licenses/MIT>
 
 
 <ElementMode>:
@@ -42,7 +64,7 @@
     
 <ElementSelector>:
     text: 'Periodic Table'
-    on_press: self.callback()
+    on_press: app.popup()
     
     
 <React>:
@@ -59,11 +81,12 @@
         Rectangle:
             size: root.size
             pos: root.pos
-            
+    label_: lab.__self__
     Label:
+        id: lab
         pos: root.pos
         size: root.size
-        text: root.text
+        text: self.text
         markup: True
         
         
@@ -121,5 +144,721 @@
         LabTable:    
             size_hint: .7, 1
         
-        #TextWindow:
-        #    size_hint: .3, 1
+        
+<PeriodicTable>:
+    GridLayout:
+        size: root.size
+        pos: root.pos
+        rows: 9
+        
+        BoxLayout:
+            Button:
+                text: 'H'
+                on_press: app.element('H')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'He'
+                on_press: app.element('He')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+        BoxLayout:
+            Button:
+                text: 'Li'
+                on_press: app.element('Li')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Be'
+                on_press: app.element('Be')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'B'
+                on_press: app.element('B')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'C'
+                on_press: app.element('C')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'N'
+                on_press: app.element('N')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'O'
+                on_press: app.element('O')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'F'
+                on_press: app.element('F')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Ne'
+                on_press: app.element('Ne')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+        BoxLayout
+            Button:
+                text: 'Na'
+                on_press: app.element('Na')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Mg'
+                on_press: app.element('Mg')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Al'
+                on_press: app.element('Al')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Si'
+                on_press: app.element('Si')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'P'
+                on_press: app.element('P')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'S'
+                on_press: app.element('S')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Cl'
+                on_press: app.element('Cl')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Ar'
+                on_press: app.element('Ar')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'K'
+                on_press: app.element('K')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+        BoxLayout:
+            Button:
+                text: 'Ca'
+                on_press: app.element('Ca')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Sc'
+                on_press: app.element('Sc')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Ti'
+                on_press: app.element('Ti')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'V'
+                on_press: app.element('V')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Cr'
+                on_press: app.element('Cr')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Mn'
+                on_press: app.element('Mn')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Fe'
+                on_press: app.element('Fe')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Co'
+                on_press: app.element('Co')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Ni'
+                on_press: app.element('Ni')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Cu'
+                on_press: app.element('Cu')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Zn'
+                on_press: app.element('Zn')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Ga'
+                on_press: app.element('Ga')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Ge'
+                on_press: app.element('Ge')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'As'
+                on_press: app.element('As')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Se'
+                on_press: app.element('Se')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Br'
+                on_press: app.element('Br')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Kr'
+                on_press: app.element('Kr')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+        BoxLayout
+            Button:
+                text: 'Rb'
+                on_press: app.element('Rb')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Sr'
+                on_press: app.element('Sr')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Y'
+                on_press: app.element('Y')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Zr'
+                on_press: app.element('Zr')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Nb'
+                on_press: app.element('Nb')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Mo'
+                on_press: app.element('Mo')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Tc'
+                on_press: app.element('Tc')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Ru'
+                on_press: app.element('Ru')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Rh'
+                on_press: app.element('Rh')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Pd'
+                on_press: app.element('Pd')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Ag'
+                on_press: app.element('Ag')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Cd'
+                on_press: app.element('Cd')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'In'
+                on_press: app.element('In')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Sn'
+                on_press: app.element('Sn')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Sb'
+                on_press: app.element('Sb')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Te'
+                on_press: app.element('Te')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'I'
+                on_press: app.element('I')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Xe'
+                on_press: app.element('Xe')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+        BoxLayout:
+            Button:
+                text: 'Cs'
+                on_press: app.element('Cs')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Ba'
+                on_press: app.element('Ba')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Ho'
+                on_press: app.element('Ho')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Er'
+                on_press: app.element('Er')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Tm'
+                on_press: app.element('Tm')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Yb'
+                on_press: app.element('Yb')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Lu'
+                on_press: app.element('Lu')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Hf'
+                on_press: app.element('Hf')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Ta'
+                on_press: app.element('Ta')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'W'
+                on_press: app.element('W')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Re'
+                on_press: app.element('Re')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Os'
+                on_press: app.element('Os')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Ir'
+                on_press: app.element('Ir')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Pt'
+                on_press: app.element('Pt')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Au'
+                on_press: app.element('Au')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Hg'
+                on_press: app.element('Hg')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Tl'
+                on_press: app.element('Tl')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Pb'
+                on_press: app.element('Pb')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Bi'
+                on_press: app.element('Bi')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Po'
+                on_press: app.element('Po')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'At'
+                on_press: app.element('At')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Rn'
+                on_press: app.element('Rn')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+
+        BoxLayout:
+            Button:
+                text: 'Fr'
+                on_press: app.element('Fr')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Ra'
+                on_press: app.element('Ra')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+                
+            Button:
+                text: 'Rf'
+                on_press: app.element('Rf')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Db'
+                on_press: app.element('Db')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Sg'
+                on_press: app.element('Sg')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Bh'
+                on_press: app.element('Bh')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Hs'
+                on_press: app.element('Hs')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Mt'
+                on_press: app.element('Mt')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Ds'
+                on_press: app.element('Ds')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Rg'
+                on_press: app.element('Rg')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Cn'
+                on_press: app.element('Cn')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Uut'
+                on_press: app.element('Uut')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Fl'
+                on_press: app.element('Fl')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Uup'
+                on_press: app.element('Uup')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Lv'
+                on_press: app.element('Lv')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Uus'
+                on_press: app.element('Uus')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Uuo'
+                on_press: app.element('Uuo')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+
+        BoxLayout:
+            Button:
+                text: 'La'
+                on_press: app.element('La')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Ce'
+                on_press: app.element('Ce')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Pr'
+                on_press: app.element('Pr')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Nd'
+                on_press: app.element('Nd')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Pm'
+                on_press: app.element('Pm')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Sm'
+                on_press: app.element('Sm')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Eu'
+                on_press: app.element('Eu')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Gd'
+                on_press: app.element('Gd')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Tb'
+                on_press: app.element('Tb')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Dy'
+                on_press: app.element('Dy')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+        BoxLayout:
+            Button:
+                text: 'Ac'
+                on_press: app.element('Ac')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Th'
+                on_press: app.element('Th')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Pa'
+                on_press: app.element('Pa')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'U'
+                on_press: app.element('U')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Np'
+                on_press: app.element('Np')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Pu'
+                on_press: app.element('Pu')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Am'
+                on_press: app.element('Am')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Cm'
+                on_press: app.element('Cm')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Bk'
+                on_press: app.element('Bk')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Cf'
+                on_press: app.element('Cf')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Es'
+                on_press: app.element('Es')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Fm'
+                on_press: app.element('Fm')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Md'
+                on_press: app.element('Md')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'No'
+                on_press: app.element('No')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
+    
+            Button:
+                text: 'Lr'
+                on_press: app.element('Lr')
+                background_color: 1, 0, 0, 1
+                size: 50, 80
