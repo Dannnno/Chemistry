@@ -32,14 +32,12 @@ parser.add_argument(
                 default=False, action='store_true',
                 help='Signals that the tests, not the program, should be run')
 parser.add_argument(
-                '-d', '--debugging', dest='debug',
-                default=False, action='store_true',
-                help="'".join(['Signals that specific content I',
-                               '\'m working on debugging should be run']))
-parser.add_argument(
                 '-c', '--clean', dest='clean',
                 default=False, action='store_true',
                 help='Signals that the directory should get cleaned up')
+parser.add_argument(
+                '-g', '--gui', dest='gui', default=False, action='store_true',
+                help='Runs the GUI')
 args = parser.parse_args()
 
 if args.clean:
@@ -49,11 +47,17 @@ if args.clean:
     make_clean()
     strip_whitespace()
 
-if args.runtests:
+if args.gui:
+    import os
+    import subprocess
+    
+    subprocess.call('C:\Users\Dan\Downloads\kivy\kivy.bat {}'
+                        .format(os.path.join(os.path.dirname(
+                                                os.path.abspath(__file__)),
+                                             'chemgui.py')), shell=True)
+elif args.runtests:
     import runtests
 
     runtests.main()
-elif args.debug: ## This is just whatever I'm debugging/playing with at the moment
+else: ## Whatever I'm trying at the moment
     pass
-else:
-    raise NotImplementedError("I don't have a functional program yet...")

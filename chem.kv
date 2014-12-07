@@ -1,0 +1,119 @@
+#: kivy 1.8.0
+
+<ElementMode>:
+    text: 'Element'
+    on_press: self.callback()
+    
+    
+<BondMode>:
+    BoxLayout:
+        size: root.size
+        pos: root.pos
+        orientation: 'vertical'
+        
+        Button:
+            text: 'Bond'
+            on_press: root.callback()
+        
+        BoxLayout:
+            size: self.size
+            pos: self.pos
+            orientation: 'horizontal'
+            
+            Order:
+            Chirality:        
+    
+
+<Order>:
+    text: 'Order'
+    on_press: self.callback() 
+    
+
+<Chirality>:
+    text: "Chirality"
+    on_press: self.callback()
+    
+    
+<ChargeMode>:
+    text: 'Charge'
+    on_press: self.callback()
+    
+    
+<ElementSelector>:
+    text: 'Periodic Table'
+    on_press: self.callback()
+    
+    
+<React>:
+    text: 'Reaction'
+    on_press: self.callback()
+
+
+<Element>:
+    canvas.before:
+        Color:
+            rgba: 1, 0, 0, 1
+        Rectangle:
+            size: self.size
+            pos: self.pos
+            
+    Label:
+        pos: root.pos
+        size: self.size
+        text: root.symbol
+        
+
+<LabTable>:
+    canvas:
+        Color:
+            rgba: 1, 1, 1, 1
+        Rectangle:
+            pos: root.pos
+            size: self.size
+            
+            
+<TextWindow>:
+    canvas:
+        Color:
+            rgba: 0, 0, 0, 0
+        Rectangle:
+            pos: root.pos
+            size: self.size
+            
+            
+<ButtonBar>:
+    BoxLayout:
+        size: root.size
+        pos: root.pos
+        orientation: 'horizontal'
+        
+        ElementMode:
+
+        ElementSelector:
+
+        BondMode:
+        
+        ChargeMode:     
+        
+        React:       
+
+
+<Workbench>:
+    BoxLayout:
+        size: root.size
+        pos: root.pos
+        orientation: 'vertical'
+        
+        ButtonBar:
+            size_hint: 1, .1
+        
+        BoxLayout:
+            size: self.size
+            pos: self.pos
+            orientation: 'horizontal'
+    
+            LabTable:    
+                size_hint: .7, 1
+            
+            TextWindow:
+                size_hint: .3, 1
