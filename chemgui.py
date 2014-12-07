@@ -27,84 +27,187 @@ import kivy
 kivy.require('1.8.0')
 
 from kivy.app import App
+from kivy.graphics.vertex_instructions import Line
+from kivy.graphics.context_instructions import Color
 from kivy.uix.button import Button
+from kivy.uix.floatlayout import FloatLayout
+from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.widget import Widget
-from kivy.properties import \
-    StringProperty, ObjectProperty, NumericProperty, ListProperty
+from kivy.properties import StringProperty, ObjectProperty, NumericProperty,\
+                               ListProperty
 from kivy.logger import Logger
-
-from Chemistry.base import periodic_table as pt
 
 
 mode = 'Element'
 element = 'C'
 order = 1
+chirality = None
 
 
 class Element(Widget):
     
-    symbol = StringProperty('C')
-    size = (10, 10)
+    color = '[color=3333ff]{}[/color]'
+    _text = StringProperty(color.format('C'))
+    key = StringProperty('a1')
+    size = ListProperty([10, 10])
     pos = ListProperty([0, 0])
+    size_hint = ListProperty([None, None])
     
-    def __init__(self, value, pos):
-        self.symbol = value
-        self.pos = pos
+    def __init__(self, key, symb, pos, **kwargs):
+        super(Element, self).__init__(**kwargs)
+        self.key = key
+        with self.canvas:
+            self.pos = pos
+            self.text = symb
+            
+    @property
+    def text(self):
+        return self._text
+        
+    @text.setter
+    def text(self, symb):
+        self._text = self.color.format(symb)
     
-    def update(self, value):
-        self.symbol = value
+    def update(self):
+        if mode == 'Element':
+            self.text = element
+            self.canvas.ask_update()
+            return True
+        else:
+            return False
         
     def on_touch_down(self, touch):
         if not self.collide_point(*touch.pos):
             return False
         elif mode == 'Element':
-            self.symbol = element
+            self.update()
         return True
-    
-    def on_symbol(self, instance, value):
-        if not value in pt.periodic_table:
-            raise ValueError(
-                "Symbol {} is not in the periodic table".format(value))
 
 
 class Bond(Widget):
     
     first = StringProperty()
     second = StringProperty()
-    order = NumericProperty()
-    chirality = ObjectProperty()
-    pos = ListProperty([0, 0])
+    _order = NumericProperty()
+    _chirality = ObjectProperty()
+    size_hint = ListProperty([None, None])
     
-    def __init__(self, first, second, order, chirality, pos): 
-        self.first = first
-        self.second = second
+    def __init__(self, first, second, order, chirality=None, **kwargs): 
+        super(Bond, self).__init__(**kwargs)
+        x1, y1 = first.pos
+        x2, y2 = second.pos
+        x1, x2 = ((x1+12, x2-2) if x1<x2 else (x1-2, x2+12))
+        y1, y2 = y1+5, y2+5
+        self.first = first.key
+        self.second = second.key
         self.order = order
-        self. pos = pos
-        self.chirality = None
+        self.chirality = chirality
+        with self.canvas:
+            Color(0, 0, 0, 1)
+            if order == 1:
+                Line(points=[x1, y1, x2, y2], width=1)
+            elif order == 2:
+                Line(points=[x1, y1+2, x2, y2+2], width=1)
+                Line(points=[x1, y1-2, x2, y2-2], width=1)
+            else:
+                Line(points=[x1, y1+2, x2, y2+2], width=1)
+                Line(points=[x1, y1, x2, y2], width=1)
+                Line(points=[x1, y1-2, x2, y2-2], width=1)
+
+    @property
+    def order(self):
+        return self._order
+        
+    @order.setter
+    def order(self, ord_):
+        self._order = int(ord_)
+        
+    @property
+    def chirality(self):
+        return self._chirality
+        
+    @chirality.setter
+    def chirality(self, chiral):
+        self._chirality = chiral
+        
+    def update(self):
+        if mode == 'Bond':
+            if self.order == 3:
+                self.order = 1
+            else:
+                self.order += 1
+            self.chirality = chirality
 
 
-class LabTable(Widget):
+class LabTable(FloatLayout):
     
-    elements = ObjectProperty({})
-    bonds = ObjectProperty({})
+    element_keys = ObjectProperty({})
+    element_locs = ObjectProperty({})
     acount = NumericProperty(1)
+    
+    bond_keys = ObjectProperty({})
+    bond_locs = ObjectProperty({})
     bcount = NumericProperty(1)
     
+    margins = {'Element': 15, 'Bond':20}
+    first, second = None, None
+    
     def on_touch_down(self, touch):
-        if not self.collide_point(touch.x, touch.y):
+        if not self.collide_point(*touch.pos):
             return False
-        elif mode == 'Element':
-            key = 'a{}'.format(self.acount)
-            self.elements[key] = element
-            self.add_widget(Element(element, touch.pos))
-            self.acount += 1
-        elif mode == 'Bond':
-            key = 'b{}'.format(self.bcount)
-            self.bonds[key] = (1, 2, order)
-            Bond(1, 2, order, touch.pos)
-            self.bcount += 1
-        return True
+        else:
+            child = self.compare_touch(touch)
+            if child.__class__.__name__ == mode:
+                child.update()
+                return True
+            elif mode == 'Element':
+                self.add_element(touch)
+            elif mode == 'Bond':
+                self.add_bond(touch)
+            self.canvas.ask_update()
+            return True
+            
+    def add_element(self, touch):
+        key = 'a{}'.format(self.acount)
+        with self.canvas:
+            self.element_locs[key] = touch.pos
+            e = Element(key, element, touch.pos)
+            self.element_keys[key] = element, e
+            self.add_widget(e)
+        self.acount += 1
         
+    def add_bond(self, touch):
+        print self.first, self.second
+        try:
+            print touch, self.first, self.second
+        except AttributeError: pass
+        if self.first:
+            self.second = self.compare_touch(touch)
+            if isinstance(self.second, Element): 
+                key = 'b{}'.format(self.bcount)
+                with self.canvas:
+                    self.bond_locs[key] = touch.pos
+                    b = Bond(self.first, self.second, order)
+                    self.bond_keys[key] = b
+                    self.add_widget(b)
+                self.bcount += 1
+            self.first, self.second = None, None
+        else:
+            self.first = self.compare_touch(touch)
+            if not isinstance(self.first, Element):
+                self.first = None            
+            
+    def compare_touch(self, touch):
+        try:
+            margin = self.margins[mode]
+        except KeyError:
+            return False
+        right, top = map(lambda x: x + margin, touch.pos)
+        left, bottom = map(lambda x: x - margin, touch.pos)
+        for key, (x, y) in self.element_locs.iteritems():
+            if (left <= x and right >= x) and (top >= y and bottom <= y):
+                return self.element_keys[key][-1]
+            
         
 class TextWindow(Widget):
     
@@ -160,7 +263,7 @@ class React(Button):
         print 'react'
     
     
-class Workbench(Widget):
+class Workbench(BoxLayout):
     
     pass    
     

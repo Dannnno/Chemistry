@@ -1,5 +1,6 @@
 #: kivy 1.8.0
 
+
 <ElementMode>:
     text: 'Element'
     on_press: self.callback()
@@ -50,17 +51,23 @@
 
 
 <Element>:
+    size: 10, 10
+    pos: self.pos
     canvas.before:
         Color:
-            rgba: 1, 0, 0, 1
+            rgba: 1, 1, 1, 1
         Rectangle:
-            size: self.size
-            pos: self.pos
+            size: root.size
+            pos: root.pos
             
     Label:
         pos: root.pos
-        size: self.size
-        text: root.symbol
+        size: root.size
+        text: root.text
+        markup: True
+        
+        
+<Bond>:
         
 
 <LabTable>:
@@ -75,7 +82,7 @@
 <TextWindow>:
     canvas:
         Color:
-            rgba: 0, 0, 0, 0
+            rgba: 0, .2, 1, 1
         Rectangle:
             pos: root.pos
             size: self.size
@@ -99,21 +106,20 @@
 
 
 <Workbench>:
-    BoxLayout:
-        size: root.size
-        pos: root.pos
-        orientation: 'vertical'
-        
-        ButtonBar:
-            size_hint: 1, .1
-        
-        BoxLayout:
-            size: self.size
-            pos: self.pos
-            orientation: 'horizontal'
+    size: root.size
+    pos: root.pos
+    orientation: 'vertical'
     
-            LabTable:    
-                size_hint: .7, 1
-            
-            TextWindow:
-                size_hint: .3, 1
+    ButtonBar:
+        size_hint: 1, .1
+    
+    BoxLayout:
+        size: self.size
+        pos: self.pos
+        orientation: 'horizontal'
+
+        LabTable:    
+            size_hint: .7, 1
+        
+        #TextWindow:
+        #    size_hint: .3, 1
