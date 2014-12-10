@@ -36,7 +36,7 @@ parser.add_argument(
                 default=False, action='store_true',
                 help='Signals that the directory should get cleaned up')
 parser.add_argument(
-                '-g', '--gui', dest='gui', default=False, action='store_true',
+                '-g', '--gui', dest='gui', default=True, action='store_true',
                 help='Runs the GUI')
 args = parser.parse_args()
 
@@ -48,16 +48,12 @@ if args.clean:
     strip_whitespace()
 
 if args.gui:
-    import os
-    import subprocess
-
-    subprocess.call('C:\Users\Dan\Downloads\kivy\kivy.bat {}'
-                        .format(os.path.join(os.path.dirname(
-                                                os.path.abspath(__file__)),
-                                             'chemgui.py')), shell=True)
+    import sys
+    sys.argv = sys.argv[:1] ## kivy messes up if I don't do this
+    import chemgui
+    chemgui.main()
 elif args.runtests:
     import runtests
-
     runtests.main()
 else: ## Whatever I'm trying at the moment
     pass

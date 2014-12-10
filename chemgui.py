@@ -37,14 +37,9 @@ from kivy.uix.widget import Widget
 from kivy.properties import StringProperty, ObjectProperty, NumericProperty,\
                                ListProperty
 
-from Chemistry.base.periodic_table import periodic_table as pt
 from Chemistry.compounds import Compound
 
 
-mode = 'Element'
-element = 'C'
-order = 1
-chirality = None
 app = None
 
 
@@ -75,8 +70,8 @@ class Element(Widget):
         self._text = self.color.format(element)
 
     def update(self):
-        if mode == 'Element':
-            self._text = element
+        if app.mode == 'Element':
+            self._text = app.element
             self.label_.text = self._text
             self.canvas.ask_update()
             return True
@@ -86,7 +81,7 @@ class Element(Widget):
     def on_touch_down(self, touch):
         if not self.collide_point(*touch.pos):
             return False
-        elif mode == 'Element':
+        elif app.mode == 'Element':
             self.update()
         return True
 
@@ -142,12 +137,12 @@ class Bond(Widget):
         self._chirality = chiral
 
     def update(self):
-        if mode == 'Bond':
+        if app.mode == 'Bond':
             if self.order == 3:
                 self.order = 1
             else:
                 self.order += 1
-            self.chirality = chirality
+            self.chirality = app.chirality
 
 
 class LabTable(FloatLayout):
@@ -168,23 +163,22 @@ class LabTable(FloatLayout):
             return False
         else:
             child = self.compare_touch(touch)
-            if child.__class__.__name__ == mode:
+            if child.__class__.__name__ == app.mode:
                 child.update()
                 return True
-            elif mode == 'Element':
+            elif app.mode == 'Element':
                 self.add_element(touch)
-            elif mode == 'Bond':
+            elif app.mode == 'Bond':
                 self.add_bond(touch)
             self.canvas.ask_update()
             return True
 
     def add_element(self, touch):
-        global element
         key = 'a{}'.format(self.acount)
         with self.canvas:
             self.element_locs[key] = touch.pos
-            e = Element(key, element, touch.pos)
-            self.element_keys[key] = element, e
+            e = Element(key, app.element, touch.pos)
+            self.element_keys[key] = app.element, e
             self.add_widget(e)
         self.acount += 1
 
@@ -192,14 +186,13 @@ class LabTable(FloatLayout):
         if self.first:
             self.second = self.compare_touch(touch)
             if isinstance(self.second, Element):
-                global order
                 key = 'b{}'.format(self.bcount)
                 with self.canvas:
                     self.bond_locs[key] = touch.pos
-                    b = Bond(self.first, self.second, order, chirality)
+                    b = Bond(self.first, self.second, app.order, app.chirality)
                     self.bond_keys[key] = (self.first.key, self.second.key,
-                                           {'order':order,
-                                            'chirality':chirality}, b)
+                                           {'order': app.order,
+                                            'chirality': app.chirality}, b)
                     self.add_widget(b)
                 self.bcount += 1
             self.first, self.second = None, None
@@ -210,7 +203,7 @@ class LabTable(FloatLayout):
 
     def compare_touch(self, touch):
         try:
-            margin = self.margins[mode]
+            margin = self.margins[app.mode]
         except KeyError:
             return False
         right, top = map(lambda x: x + margin, touch.pos)
@@ -241,32 +234,28 @@ class PeriodicTable(BoxLayout):
 class ElementMode(Button):
 
     def callback(self):
-        global mode
-        mode = 'Element'
+        app.mode = 'Element'
 
 
 class BondMode(Widget):
 
     def callback(self):
-        global mode
-        mode = 'Bond'
+        app.mode = 'Bond'
 
 
-class Order(Button):
-
-    def callback(self): print 'Order'
+class Order(Button):    
+    def callback(self):
+        app.order += 1
 
 
 class Chirality(Button):
-
     def callback(self): print 'Chirality'
 
 
 class ChargeMode(Button):
 
     def callback(self):
-        global mode
-        mode = 'Charge'
+        app.mode = 'Charge'
 
 
 class ElementSelector(Button): pass
@@ -278,27 +267,56 @@ class Workbench(BoxLayout):
 
 
 class ChemApp(App):
+    mode = 'Element'
+    _element = 'C'
+    _order = 1
+    _chirality=None
+    
+    molecule = {}
+    compound = None
+    widget = None
+    labtable = None
+    
 
     def build(self):
-        global app
-        app = self
         self.widget = Workbench()
         return self.widget
 
     def popup(self):
-        self._popup = Popup(title='Periodic Table', content=PeriodicTable(),
-                      size_hint=(.8, .8))
+        self._popup = Popup(title='Periodic Table',
+                            content=PeriodicTable(),
+                            size_hint=(.8, .8))
         self._popup.open()
 
-    def element(self, symbol):
-        global element
-        element = symbol
-        print element, symbol
+    def get_element(self):
+        return self._element
+        
+    def set_element(self, element):
+        self._element = element
         self._popup.dismiss()
+        
+    element = property(get_element, set_element)
+    
+    @property
+    def order(self):
+        return self._order
+        
+    @order.setter
+    def order(self, ord_):
+        self._order = (ord_) % 3
+        if self._order == 0:
+            self._order = 3
+            
+    @property
+    def chirality(self):
+        return self._chirality
+        
+    @chirality.setter
+    def chirality(self, chiral):
+        self._chirality = chiral
 
     def react(self):
         self.molecule = {}
-        self.compound = None
         self.labtable = self.widget.children[0].children[0]
         self.clean_molecule()
         self.store_molecule()
@@ -331,7 +349,13 @@ class ChemApp(App):
 
     def list_reactions(self):
         print 'listing'
+        
+        
+def main():
+    global app
+    app = ChemApp()
+    app.run()
 
 
 if __name__ == '__main__':
-    ChemApp().run()
+    main()
