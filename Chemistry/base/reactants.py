@@ -32,7 +32,7 @@ class Reactant(object):
     """The base Reactant object.  All subclasses of this are things that
     are commonly found in a reaction
     """
-    
+
     @classmethod
     def make_Base(cls, basic_compound, pka=16, point='a1'):
         """Classmethod that turns a compound into a base.  Doesn't work

@@ -24,7 +24,7 @@ If not, see <http://opensource.org/licenses/MIT>
 
 
 class ParsingException(Exception):
-    """A generic exception to be thrown if there is an error with the 
+    """A generic exception to be thrown if there is an error with the
     parsing of a chemical data file
     """
     message = "An error occured while parsing {} file"

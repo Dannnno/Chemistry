@@ -243,7 +243,7 @@ class BondMode(Widget):
         app.mode = 'Bond'
 
 
-class Order(Button):    
+class Order(Button):
     def callback(self):
         app.order += 1
 
@@ -271,12 +271,12 @@ class ChemApp(App):
     _element = 'C'
     _order = 1
     _chirality=None
-    
+
     molecule = {}
     compound = None
     widget = None
     labtable = None
-    
+
 
     def build(self):
         self.widget = Workbench()
@@ -290,27 +290,27 @@ class ChemApp(App):
 
     def get_element(self):
         return self._element
-        
+
     def set_element(self, element):
         self._element = element
         self._popup.dismiss()
-        
+
     element = property(get_element, set_element)
-    
+
     @property
     def order(self):
         return self._order
-        
+
     @order.setter
     def order(self, ord_):
         self._order = (ord_) % 3
         if self._order == 0:
             self._order = 3
-            
+
     @property
     def chirality(self):
         return self._chirality
-        
+
     @chirality.setter
     def chirality(self, chiral):
         self._chirality = chiral
@@ -327,7 +327,7 @@ class ChemApp(App):
         print self.compound
 
     def clean_molecule(self):
-        """Cleans up the molecule if necessary.  For example removes any 
+        """Cleans up the molecule if necessary.  For example removes any
         extraneous atoms or bonds
         """
         print 'cleaning'
@@ -361,8 +361,8 @@ class ChemApp(App):
         on the structure of the molecule and the conditions
         """
         print 'listing'
-        
-        
+
+
 def main():
     global app
     app = ChemApp()

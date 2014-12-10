@@ -41,15 +41,6 @@ class test_helpers(unittest.TestCase):
 
     def tearDown(self): pass
 
-    def test_periodic_table(self):
-        cwd = os.getcwd()
-        try:
-            os.chdir(os.path.join(cwd, 'Chemistry', 'base'))
-            tb.build_table()
-        finally:
-            os.chdir(cwd)
-        from Chemistry.base import periodic_table
-
     def test_convert_type(self):
         self.assertEqual(tb.convert_type('1', int), 1)
         self.assertEqual(tb.convert_type('1.0', float), 1.0)

@@ -1,28 +1,21 @@
-##Read Me for OChem Rxn Sim
-Updated: 9/1/2014   
+##Organic Chemistry Reaction Simulator
+Updated: 12/10/2014   
 
-Program written by:  
 Dan Obermiller  
 Claremont McKenna College  
-Class of 2016  
+Class of 2017 
 dannnno16@gmail.com
 
-The purpose of this repository is to organize the (currently untitled) program.  The (eventual) goal of this program is to create an application that uses
-Python to allow intro level Organic Chemistry students to construct simple (and hopefully somewhat complex) molecules and predict their interactions.  
+This repository is designed to use Python in the simulation of organic chemistry reactions.  The program has several specific goals in particular:
 
-Goals of this program:
-
-1. Create an **interactive** periodic table of the elements that will display basic but key information regarding elements
-2. Be able to create a GUI interface that permits the drawing of compounds
-3. Be able to predict reactions and major/minor products of several types of reactions
-4. Be able to perform **basic** retrosynthetic analysis of molecules
-5. Be able to name compounds as per **IUPAC** standards
-6. Be able to store selected data either on a hard drive or on the internet
+1. Display an interactive periodic table of the elements that will display basic but key information regarding elements
+2. Display a GUI interface that permits the easy depiction of chemical structures
+3. Predict reaction pathways and product ratios based on the information provided by the user
+4. Perform basic retrosynthetic analysis of compounds
+5. Name compounds as per both the IUPAC and Common standards
+6. Store important data on the device in question or on the cloud
 7. More cool stuff TBD
     
 Current stage of development: Pre-Alpha  
 Current version: NA  
-Currently projected date of Alpha release: In a long time
-
-ctfile.pdf is the specification document for assorted data file types, downloaded
-from http://download.accelrys.com/freeware/ctfile-formats/ctfile-formats.zip
+Currently projected date of Alpha release: Soon<sup>TM</sup>

@@ -36,7 +36,7 @@ parser.add_argument(
                 default=False, action='store_true',
                 help='Signals that the directory should get cleaned up')
 parser.add_argument(
-                '-g', '--gui', dest='gui', default=True, action='store_true',
+                '-g', '--gui', dest='gui', default=False, action='store_true',
                 help='Runs the GUI')
 args = parser.parse_args()
 

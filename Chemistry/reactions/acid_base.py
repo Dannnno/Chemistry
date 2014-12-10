@@ -112,7 +112,7 @@ class AcidBase(Reaction):
         acid, base = deepcopy(self.acid[0]), deepcopy(self.base[0])
         conjugate_acid = base.to_conjugate_acid()
         other = acid.other_info
-        
+
         try:
             other['id'] = "Conjugate base of {}".format(acid.other_info['id'])
         except KeyError:

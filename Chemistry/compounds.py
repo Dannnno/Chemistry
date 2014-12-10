@@ -25,13 +25,11 @@ If not, see <http://opensource.org/licenses/MIT>
 
 try:
     from Chemistry.base.periodic_table import periodic_table
-    from Chemistry.base import periodic_table as pt
 except ImportError:
     from Chemistry.base import table_builder
     table_builder.build_table()
     del globals()['table_builder']
     from Chemistry.base.periodic_table import periodic_table
-    from Chemistry.base import periodic_table as pt
 finally:
     from collections import deque
     import json
@@ -45,7 +43,9 @@ finally:
 
 def get_Element(symbol='C'):
     """Function that returns the appropriate data for a periodic table"""
-    return periodic_table[symbol]
+    table = {"symbol": symbol}
+    table.update(periodic_table[symbol])
+    return table
 
 
 class Compound(nx.Graph):

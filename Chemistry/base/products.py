@@ -27,7 +27,7 @@ import types
 
 
 class Product(object):
-    """The base Product object.  Represents a compound that results from a 
+    """The base Product object.  Represents a compound that results from a
     chemical reaction
     """
     _compound = None
