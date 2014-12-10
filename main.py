@@ -50,7 +50,7 @@ if args.clean:
 if args.gui:
     import os
     import subprocess
-    
+
     subprocess.call('C:\Users\Dan\Downloads\kivy\kivy.bat {}'
                         .format(os.path.join(os.path.dirname(
                                                 os.path.abspath(__file__)),

@@ -124,7 +124,7 @@ class Acid(Reactant):
         super(Acid, self).__init__(compound, paths)
         self.acidic_point = acidic_point
         self._validate_pka(pka)
-        
+
     def to_conjugate_base(self, *args, **kwargs):
         raise NotImplementedError
 
@@ -153,8 +153,8 @@ class Base(Reactant):
         except KeyError:
             conjugate.other_info['id'] = "Unknown acid"
         return Acid(conjugate, a_key, self.pka, self.paths)
-        
-        
+
+
 class LewisAcid(Acid): pass
 
 

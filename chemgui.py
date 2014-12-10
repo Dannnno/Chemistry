@@ -38,6 +38,7 @@ from kivy.properties import StringProperty, ObjectProperty, NumericProperty,\
                                ListProperty
 
 from Chemistry.base.periodic_table import periodic_table as pt
+from Chemistry.compounds import Compound
 
 
 mode = 'Element'
@@ -48,14 +49,14 @@ app = None
 
 
 class Element(Widget):
-    
+
     label_ = ObjectProperty()
     color = '[color=3333ff]{}[/color]'
     _text = StringProperty(color.format('C'))
     key = StringProperty('a1')
     pos = ListProperty([0, 0])
     size_hint = ListProperty([None, None])
-    
+
     def __init__(self, key, symb, pos, **kwargs):
         super(Element, self).__init__(**kwargs)
         self.key = key
@@ -64,16 +65,15 @@ class Element(Widget):
             self.text = symb
             self.label_.text = self.text
         self.canvas.ask_update()
-        print self.color
-        
+
     @property
     def text(self):
         return self._text
-        
+
     @text.setter
     def text(self, element):
         self._text = self.color.format(element)
-    
+
     def update(self):
         if mode == 'Element':
             self._text = element
@@ -82,7 +82,7 @@ class Element(Widget):
             return True
         else:
             return False
-        
+
     def on_touch_down(self, touch):
         if not self.collide_point(*touch.pos):
             return False
@@ -92,16 +92,16 @@ class Element(Widget):
 
 
 class Bond(Widget):
-    
+
     first = StringProperty()
     second = StringProperty()
     _order = NumericProperty()
     _chirality = ObjectProperty()
     size_hint = ListProperty([None, None])
-    
-    def __init__(self, first, second, order, chirality=None, **kwargs): 
+
+    def __init__(self, first, second, order, chirality=None, **kwargs):
         super(Bond, self).__init__(**kwargs)
-        x1, y1, x2, y2 = first.pos
+        x1, y1 = first.pos
         x2, y2 = second.pos
         x1, x2 = ((x1+12, x2-2) if x1<x2 else (x1-2, x2+12))
         y1, y2 = y1+5, y2+5
@@ -128,19 +128,19 @@ class Bond(Widget):
     @property
     def order(self):
         return self._order
-        
+
     @order.setter
     def order(self, ord_):
         self._order = int(ord_)
-        
+
     @property
     def chirality(self):
         return self._chirality
-        
+
     @chirality.setter
     def chirality(self, chiral):
         self._chirality = chiral
-        
+
     def update(self):
         if mode == 'Bond':
             if self.order == 3:
@@ -151,18 +151,18 @@ class Bond(Widget):
 
 
 class LabTable(FloatLayout):
-    
+
     element_keys = ObjectProperty({})
     element_locs = ObjectProperty({})
     acount = NumericProperty(1)
-    
+
     bond_keys = ObjectProperty({})
     bond_locs = ObjectProperty({})
     bcount = NumericProperty(1)
-    
+
     margins = {'Element': 15, 'Bond':20}
     first, second = None, None
-    
+
     def on_touch_down(self, touch):
         if not self.collide_point(*touch.pos):
             return False
@@ -177,7 +177,7 @@ class LabTable(FloatLayout):
                 self.add_bond(touch)
             self.canvas.ask_update()
             return True
-            
+
     def add_element(self, touch):
         global element
         key = 'a{}'.format(self.acount)
@@ -187,25 +187,27 @@ class LabTable(FloatLayout):
             self.element_keys[key] = element, e
             self.add_widget(e)
         self.acount += 1
-        
+
     def add_bond(self, touch):
         if self.first:
             self.second = self.compare_touch(touch)
-            if isinstance(self.second, Element): 
+            if isinstance(self.second, Element):
                 global order
                 key = 'b{}'.format(self.bcount)
                 with self.canvas:
                     self.bond_locs[key] = touch.pos
-                    b = Bond(self.first, self.second, order)
-                    self.bond_keys[key] = b
+                    b = Bond(self.first, self.second, order, chirality)
+                    self.bond_keys[key] = (self.first.key, self.second.key,
+                                           {'order':order,
+                                            'chirality':chirality}, b)
                     self.add_widget(b)
                 self.bcount += 1
             self.first, self.second = None, None
         else:
             self.first = self.compare_touch(touch)
             if not isinstance(self.first, Element):
-                self.first = None            
-            
+                self.first = None
+
     def compare_touch(self, touch):
         try:
             margin = self.margins[mode]
@@ -216,90 +218,120 @@ class LabTable(FloatLayout):
         for key, (x, y) in self.element_locs.iteritems():
             if (left <= x and right >= x) and (top >= y and bottom <= y):
                 return self.element_keys[key][-1]
-            
-        
+
+
 class TextWindow(Widget):
-    
+
     pass
-    
+
 
 class ButtonBar(Widget):
-    
-    pass
-    
 
-class PeriodicTable(BoxLayout): 
-    
+    pass
+
+
+class PeriodicTable(BoxLayout):
+
     def on_touch_down(self, touch):
         if not self.collide_point(*touch.pos):
             app._popup.dismiss()
             return True
         super(PeriodicTable, self).on_touch_down(touch)
-    
+
 class ElementMode(Button):
-    
+
     def callback(self):
         global mode
         mode = 'Element'
-    
-    
+
+
 class BondMode(Widget):
-    
+
     def callback(self):
         global mode
         mode = 'Bond'
-    
-    
+
+
 class Order(Button):
-    
+
     def callback(self): print 'Order'
-        
-        
+
+
 class Chirality(Button):
-    
+
     def callback(self): print 'Chirality'
-    
+
 
 class ChargeMode(Button):
-    
+
     def callback(self):
         global mode
         mode = 'Charge'
-    
-    
-class ElementSelector(Button): pass        
-        
-        
-class React(Button):
-    
-    def callback(self):
-        print 'react'
-    
-    
+
+
+class ElementSelector(Button): pass
+
+
 class Workbench(BoxLayout):
-    
+
     pass
-    
-    
+
+
 class ChemApp(App):
-    
+
     def build(self):
         global app
         app = self
-        widget = Workbench()
-        return widget
-        
+        self.widget = Workbench()
+        return self.widget
+
     def popup(self):
         self._popup = Popup(title='Periodic Table', content=PeriodicTable(),
-                      size_hint=(.8, .8))    
+                      size_hint=(.8, .8))
         self._popup.open()
-        
+
     def element(self, symbol):
         global element
         element = symbol
         print element, symbol
         self._popup.dismiss()
-                      
-        
+
+    def react(self):
+        self.molecule = {}
+        self.compound = None
+        self.labtable = self.widget.children[0].children[0]
+        self.clean_molecule()
+        self.store_molecule()
+        self.get_information()
+        self.to_compound()
+        self.list_reactions()
+        print self.labtable
+        print self.molecule
+        print self.compound
+
+    def clean_molecule(self):
+        print 'cleaning'
+
+    def store_molecule(self):
+        self.molecule['atoms'] = {}
+        for k, v in self.labtable.element_keys.iteritems():
+            self.molecule['atoms'][k] = v[0]
+        self.molecule['bonds'] = {}
+        for k, v in self.labtable.bond_keys.iteritems():
+            self.molecule['bonds'][k] = v[:-1]
+
+    def get_information(self):
+        self.molecule['other_info'] = {}
+        print 'getting info'
+
+    def to_compound(self):
+        self.compound = Compound(self.molecule['atoms'],
+                                 self.molecule['bonds'],
+                                 self.molecule['other_info'])
+
+    def list_reactions(self):
+        print 'listing'
+
+
 if __name__ == '__main__':
     ChemApp().run()
