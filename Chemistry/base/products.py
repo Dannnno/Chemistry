@@ -27,6 +27,9 @@ import types
 
 
 class Product(object):
+    """The base Product object.  Represents a compound that results from a 
+    chemical reaction
+    """
     _compound = None
 
     def __init__(self, comp, percentage):
@@ -56,6 +59,9 @@ class Product(object):
 
 
 class Products(object):
+    """A Products object - represents a collection of Product objects
+    as a reaction usually has more than one
+    """
 
     def __init__(self, maj, min_):
         self._major, self._minor = (), ()
@@ -110,6 +116,9 @@ class Products(object):
 
 
 class EquilibriumProducts(object):
+    """EquilibriumProducts object - much the same as a Products object
+    but for reversible reactions
+    """
     _reactants = None
     _products = None
 

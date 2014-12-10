@@ -24,6 +24,7 @@ If not, see <http://opensource.org/licenses/MIT>
 """        
         
 class ReactionError(Exception):
+    """A generic error to be thrown when there is an error with a reaction"""
     err_message = "There was an error with the reaction"
     pka = """
     AcidBase reaction between {} and {} failed because of pka difference {}
@@ -43,6 +44,9 @@ class ReactionError(Exception):
         
 
 class NoReactionError(ReactionError):
+    """A specific reaction error, should be thrown if no reaction would occur
+    in this scenario
+    """
     err_message = "No reaction occured"
     
     def __init__(self, msg=err_message):

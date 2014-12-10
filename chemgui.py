@@ -316,21 +316,26 @@ class ChemApp(App):
         self._chirality = chiral
 
     def react(self):
+        """The steps taken by my program to react a molecule"""
         self.molecule = {}
         self.labtable = self.widget.children[0].children[0]
-        self.clean_molecule()
         self.store_molecule()
+        self.clean_molecule()
         self.get_information()
         self.to_compound()
         self.list_reactions()
-        print self.labtable
-        print self.molecule
         print self.compound
 
     def clean_molecule(self):
+        """Cleans up the molecule if necessary.  For example removes any 
+        extraneous atoms or bonds
+        """
         print 'cleaning'
 
     def store_molecule(self):
+        """Store the molecules in the appropriate format for turning it into
+        a Compound object
+        """
         self.molecule['atoms'] = {}
         for k, v in self.labtable.element_keys.iteritems():
             self.molecule['atoms'][k] = v[0]
@@ -339,15 +344,22 @@ class ChemApp(App):
             self.molecule['bonds'][k] = v[:-1]
 
     def get_information(self):
+        """Ask the user for any pertinent information about the molecule
+        or the reaction conditions
+        """
         self.molecule['other_info'] = {}
         print 'getting info'
 
     def to_compound(self):
+        """Transforms the molecule dictionary into a Compound object"""
         self.compound = Compound(self.molecule['atoms'],
                                  self.molecule['bonds'],
                                  self.molecule['other_info'])
 
     def list_reactions(self):
+        """Generates a list of reactions in order of probability based
+        on the structure of the molecule and the conditions
+        """
         print 'listing'
         
         

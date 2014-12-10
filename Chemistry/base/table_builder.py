@@ -117,6 +117,7 @@ def str_to_list(a_stringy_list, mapped=None):
 
 
 def build_table():
+    """Builds the periodic table .py file"""
     with open("element_list.csv", 'r') as element_data, \
         open("periodic_table.py", 'w') as periodic_table:
 

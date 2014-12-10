@@ -27,12 +27,12 @@ from copy import deepcopy
 
 from Chemistry import compounds
 from Chemistry.reactions.base_reactions import Reaction, Conditions
-from Chemistry.base.reactants import Reactant
 from Chemistry.base.products import Product, Products, EquilibriumProducts
 from Chemistry.reactions.exceptions import NoReactionError
 
 
 class AcidBase(Reaction):
+    """The Acid-Base reaction"""
     _conditions = None
 
     def __init__(self, acid, base, cond):
@@ -85,6 +85,9 @@ class AcidBase(Reaction):
             self._base = (base_, base_.basic_point)
 
     def _equilibrium(self):
+        """Calculates what the equilibrium between reactants and products is,
+        if any
+        """
         pka1, pka2 = self.acid[0].pka, self.base[0].pka
         diff = pka1-pka2
         if diff == 0:
@@ -101,26 +104,15 @@ class AcidBase(Reaction):
                 return (1, 10**diff)
 
     def _calculate_products(self):
+        """Determines the expected products of the reaction.  Incomplete"""
         conjugate_acid = None
         conjugate_base = None
         salt = None # NYI
 
         acid, base = deepcopy(self.acid[0]), deepcopy(self.base[0])
-        symbol = acid.node[self.acid[1]]['symbol']
-        new_base_key = Reactant._new_key(base)
-        new_base_bond_key = Reactant._new_key(base, False)
-
         conjugate_acid = base.to_conjugate_acid()
-        #_Compound
-        #conjugate_acid._add_node_(new_base_key, compounds.get_Element(symbol))
-        #conjugate_acid._add_edge_(new_base_bond_key, self.base[1], new_base_key)
-        #try:
-        #    conjugate_acid.other_info['id'] = \
-        #            "Conjugate acid of {}".format(base.other_info['id'])
-        #except KeyError:
-        #    conjugate_acid.other_info['id'] = "Unknown acid"
-
         other = acid.other_info
+        
         try:
             other['id'] = "Conjugate base of {}".format(acid.other_info['id'])
         except KeyError:
@@ -134,6 +126,7 @@ class AcidBase(Reaction):
                  (Product(None, 0),))
 
     def react(self):
+        """Performs the actual acid-base reaction"""
         product_ratio, reactant_ratio = self._equilibrium()
         major, minor = self._calculate_products()
         if reactant_ratio == 0:

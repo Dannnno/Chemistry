@@ -44,13 +44,16 @@ finally:
 
 
 def get_Element(symbol='C'):
-    return {"symbol":symbol} #periodic_table[symbol]
+    """Function that returns the appropriate data for a periodic table"""
+    return periodic_table[symbol]
 
 
 class Compound(nx.Graph):
+    """A compound.  Represents a molecule in all its glory"""
 
     @classmethod
     def from_CML(cls, CML_file):
+        """Generates a Compound object from a CML file"""
         try:
             with open(CML_file, 'r') as CML_in:
                 parsed = cml.CMLParser(CML_in)
@@ -62,6 +65,7 @@ class Compound(nx.Graph):
 
     @classmethod
     def from_molfile(cls, molfile, from_v3000=False):
+        """Generates a Compound object from a mol file"""
         try:
             with open(molfile, 'r') as mol_in:
                 mol = molv2000.MolV2000(mol_in)
@@ -73,6 +77,7 @@ class Compound(nx.Graph):
 
     @classmethod
     def json_serialize(cls, obj, as_str=False):
+        """Serializes an object for json, used for __str__ and __repr__"""
         stringify_function = repr
         d = {}
         if as_str:
@@ -90,6 +95,7 @@ class Compound(nx.Graph):
 
     @classmethod
     def node_matcher(cls, node1, node2):
+        """Helper function to check for isomorphic graphs"""
         try:
             return node1['symbol'] == node2['symbol']
         except KeyError:
@@ -97,6 +103,7 @@ class Compound(nx.Graph):
 
     @classmethod
     def edge_matcher(cls, edge1, edge2):
+        """Helper function to check for isomorphic graphs"""
         return edge1 == edge2
 
     def __init__(self, atoms, bonds, other_info={}):
@@ -120,14 +127,17 @@ class Compound(nx.Graph):
                          'bonds': self.bonds}
 
     def _add_nodes_from_(self, atoms):
+        """Adds a group of nodes"""
         for key, atom in atoms.iteritems():
             self._add_node_(key, get_Element(atom))
 
     def _add_edges_from_(self, bonds):
+        """Adds a group of edges"""
         for id_, bond in bonds.iteritems():
             self._add_edge_(id_, *bond)
 
     def _add_node_(self, key, atom):
+        """Adds a single node.  Should probably be a property"""
         try:
             _ = self.atoms[key]
         except KeyError:
@@ -137,6 +147,7 @@ class Compound(nx.Graph):
             raise KeyError("There is already an atom {}".format(key))
 
     def _add_edge_(self, key, first, second, rest={}):
+        """Adds a single edge. Should probably be a property"""
         try:
             _ = self.bonds[key]
         except KeyError:
@@ -148,6 +159,7 @@ class Compound(nx.Graph):
             raise KeyError("There is already a bond {}".format(key))
 
     def path(self, atoms, bonds=[]):
+        """Locates a path that contains the specified atoms/bonds"""
         if bonds:
             return self._path(atoms, bonds)
         first = self._get_first(atoms[0])
@@ -189,6 +201,7 @@ class Compound(nx.Graph):
             return tuple(tup)
 
     def _path(self, atoms, bonds):
+        """Helper function to find paths"""
         if not all(isinstance(bond, (dict, types.NoneType)) for bond in bonds):
             raise TypeError("All information in bonds must be a NoneType or a dict")
         first = self._get_first(atoms[0])
@@ -200,6 +213,7 @@ class Compound(nx.Graph):
         return set(self._flatten_tuples(self._get_tuples(paths)))
 
     def _get_path(self, starting_point, rest, so_far=()):
+        """Helper function to find paths"""
         so_far += (starting_point,)
 
         next_atom = self._get_next(starting_point, so_far, rest[0])
@@ -214,6 +228,7 @@ class Compound(nx.Graph):
             return ret_tuples
 
     def _get_path_with_bond(self, starting_point, rest, bonds, so_far=()):
+        """Helper function to find paths"""
         so_far += (starting_point,)
 
         next_atom = self._get_next_with_bond(
@@ -229,6 +244,7 @@ class Compound(nx.Graph):
             return ret_tuples
 
     def _join_paths(self, first, second):
+        """Cleanly combines two path sections"""
         if first:
             if first[-1] == second[0]:
                 return first[:-1] + second
@@ -238,14 +254,17 @@ class Compound(nx.Graph):
             return second
 
     def _get_first(self, atom):
+        """Helper function to find paths"""
         return [key
                  for key, value in self.atoms.iteritems()
                  if value == atom]
 
     def _get_next(self, atom, visited, next_=None):
+        """Helper function to find paths"""
         return self._filter_next(self._next_(atom), visited, next_=next_)
 
     def _get_next_with_bond(self, atom, visited, bond, next_=None):
+        """Helper function to find paths"""
         if bond is None:
             return self._get_next(atom, visited, next_)
         else:
@@ -260,12 +279,14 @@ class Compound(nx.Graph):
             return valid_neighbors
 
     def _next_(self, atom):
+        """Helper function to find paths"""
         try:
             return self.neighbors(atom)
         except nx.exception.NetworkXError:
             raise KeyError("{} not in the graph".format(atom))
 
     def _filter_next(self, neighbors, visited, next_=None):
+        """Helper function to find paths"""
         return tuple(neighbor
                       for neighbor in neighbors
                       if neighbor not in visited and
@@ -274,9 +295,11 @@ class Compound(nx.Graph):
                           (next_ is None)))
 
     def to_CML(self, filename):
+        """Generates a CML file from the current Compound"""
         cml.CMLBuilder.from_Compound(self)
 
     def to_molfile(self, filename, to_v3000=False):
+        """Generates a mol file from the current Compound"""
         if to_v3000:
             raise NotImplementedError("No support for v3000 yet")
         else:
@@ -305,15 +328,4 @@ class Compound(nx.Graph):
 
 
 if __name__ == '__main__':
-    a = Compound({'a1':'H', 'a2':'O', 'a3':'C', 'a4':'C'},
-                 {'b1':('a1', 'a2', {'order':1, 'chirality':None}),
-                  'b2':('a2', 'a3', {'order':1, 'chirality':None}),
-                  'b3':('a3', 'a4', {'order':1, 'chirality':None})})
-    print a
-    print a.path(('H', 'O', 'C'), bonds=[{'order':1,'chirality':None},
-                                          {'order':1,'chirality':None}])
-    print
-    b = Compound({'a1':'H', 'a2':'H', 'a3':'O'},
-                 {'b1':('a1', 'a3', {'order':1, 'chirality':None}),
-                  'b2':('a2', 'a3', {'order':1, 'chirality':None})})
-    print b.path(('H', 'O'), bonds=[{'order':1,'chirality':None}])
+    pass

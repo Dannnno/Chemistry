@@ -29,9 +29,16 @@ from Chemistry import compounds
 
 
 class Reactant(object):
-
+    """The base Reactant object.  All subclasses of this are things that
+    are commonly found in a reaction
+    """
+    
     @classmethod
     def make_Base(cls, basic_compound, pka=16, point='a1'):
+        """Classmethod that turns a compound into a base.  Doesn't work
+        particularly well if the pka of that compound's conjugate acid
+        is unknown
+        """
         if isinstance(basic_compound, Base):
             return basic_compound
         else:
@@ -42,6 +49,7 @@ class Reactant(object):
 
     @classmethod
     def make_Acid(cls, acidic_compound, pka=16, point='a1'):
+        """Basically the same as make_Base, but it makes acids"""
         if isinstance(acidic_compound, Acid):
             return acidic_compound
         else:
@@ -52,6 +60,7 @@ class Reactant(object):
 
     @classmethod
     def _new_key(cls, compound, atom=True):
+        """Generates a new atom/bond key for a compound"""
         if atom:
             max_key = max(compound.atoms)
             letter = 'a'
@@ -72,6 +81,7 @@ class Reactant(object):
         return self._compound
 
     def add_paths(self, **paths):
+        """Deprecated/NYI. Not sure yet."""
         for reaction, path in paths.iteritems():
             if reaction in self.paths:
                 self.paths[reaction].add(path)
@@ -79,12 +89,14 @@ class Reactant(object):
                 self.paths[reaction] = set([path])
 
     def get_paths(self, reaction):
+        """Deprecated/NYI. Not sure yet."""
         try:
             return self.paths[reaction]
         except KeyError:
             raise KeyError("{} paths haven't been found yet".format(reaction))
 
     def _validate_pka(self, pka):
+        """Validates the pKa of a molecule.  This should move into a property"""
         try:
             _ = self.__dict__['pka']
         except KeyError:
@@ -119,6 +131,7 @@ class Reactant(object):
 
 
 class Acid(Reactant):
+    """A subclass of Reactant, represents acidic compounds in a reaction"""
 
     def __init__(self, compound, acidic_point, pka, paths={}):
         super(Acid, self).__init__(compound, paths)
@@ -126,10 +139,12 @@ class Acid(Reactant):
         self._validate_pka(pka)
 
     def to_conjugate_base(self, *args, **kwargs):
+        """Transforms the current acid into its conjugate base"""
         raise NotImplementedError
 
 
 class Base(Reactant):
+    """A subclass of Reactant, represents basic compounds in a reaction"""
 
     def __init__(self, compound, basic_point, pka, paths={}):
         """The pka of a Base should be equal to that of its conjugate
@@ -141,6 +156,7 @@ class Base(Reactant):
         self._validate_pka(pka)
 
     def to_conjugate_acid(self):
+        """Transforms the current base into its conjugate acid"""
         conjugate = deepcopy(self.compound)
         a_key = Reactant._new_key(conjugate)
         b_key = Reactant._new_key(conjugate, False)

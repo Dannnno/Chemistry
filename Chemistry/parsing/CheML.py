@@ -33,7 +33,6 @@ from lxml import builder as lb
 class CMLParser(object):
 
     def __init__(self, CML_file):
-        """Should be given an open file"""
         self.CML_file = CML_file
         self.bonds = {}
         self.atoms = {}
@@ -102,6 +101,7 @@ class CMLBuilder(object):
 
     @classmethod
     def from_Compound(cls, comp):
+        """Generates a CMLBuilder object from a Compound object"""
         comp = deepcopy(comp)
         atoms = comp.atoms
         bonds = {}
@@ -143,7 +143,7 @@ class CMLBuilder(object):
                         **self.attribs)
 
     def to_file(self, cml_file):
-        """Should be given an open file"""
+        """Writes the new cml to file"""
         try:
             cml_file.write(str(self))
         except AttributeError:

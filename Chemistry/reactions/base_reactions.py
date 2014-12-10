@@ -27,6 +27,10 @@ import abc
 
 
 class Conditions(object):
+    """Object that represents the conditions in which a reaction occurs.
+    Contains information like relative acidity/basicity of the conditions,
+    as well as anything else that is pertinent to the reaction
+    """
     acidic = False
     basic = False
     _neutral = True
@@ -71,15 +75,21 @@ class Conditions(object):
 
 
 class Reaction(object):
-
+    """The base `Reaction` object.  I treat a reaction as a first class
+    citizen (like functions).
+    """
     __metaclass__ = abc.ABCMeta
 
     @abc.abstractmethod
     def react(self):
+        """The specific mechanics of how any given reaction progresses"""
         pass
 
     @classmethod
     def _remove_node(cls, compound, rem_key):
+        """Function that serves to remove a node from a compound and make a
+        new one based on it
+        """
         compound.atoms.pop(rem_key)
         compound.remove_node(rem_key)
 
@@ -103,6 +113,9 @@ class Reaction(object):
 
     @staticmethod
     def _rebuild_dict(dict_, letter):
+        """Helper function that rebuilds the dictionary so keys are sequential
+        and start at one
+        """
         return {key:'{}{}'.format(letter, i)
                  for i, key in enumerate(sorted(dict_), 1)}
 
