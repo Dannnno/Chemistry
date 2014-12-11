@@ -99,7 +99,12 @@ def load_doc_tests(big_suite):
                 p = path[:path.rfind(os.sep)]
                 sys.path[0] = p
                 module = __import__(file_)
-                big_suite.addTest(doctest.DocTestSuite(module))
+                try:
+                    suite = doctest.DocTestSuite(module)
+                except ValueError:
+                    pass
+                else:
+                    big_suite.addTest(suite)
             except ImportError as e:
                 print e
     finally:

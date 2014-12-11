@@ -1,0 +1,225 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Chemistry.reactions.base_reactions &mdash; Chemistry 0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="Chemistry 0.0 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">Chemistry 0.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for Chemistry.reactions.base_reactions</h1><div class="highlight"><pre>
+<span class="c">#Copyright (c) 2014 Dan Obermiller</span>
+<span class="c">#</span>
+<span class="c">#Permission is hereby granted, free of charge, to any person obtaining a copy</span>
+<span class="c">#of this software and associated documentation files (the &quot;Software&quot;), to deal</span>
+<span class="c">#in the Software without restriction, including without limitation the rights</span>
+<span class="c">#to use, copy, modify, merge, publish, distribute, sublicense, and/or sell</span>
+<span class="c">#copies of the Software, and to permit persons to whom the Software is</span>
+<span class="c">#furnished to do so, subject to the following conditions:</span>
+<span class="c">#</span>
+<span class="c">#The above copyright notice and this permission notice shall be included in</span>
+<span class="c">#all copies or substantial portions of the Software.</span>
+<span class="c">#</span>
+<span class="c">#THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span>
+<span class="c">#IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span>
+<span class="c">#FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE</span>
+<span class="c">#AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER</span>
+<span class="c">#LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,</span>
+<span class="c">#OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN</span>
+<span class="c">#THE SOFTWARE.</span>
+<span class="c">#</span>
+<span class="c">#You should have received a copy of the MIT License along with this program.</span>
+<span class="c">#If not, see &lt;http://opensource.org/licenses/MIT&gt;</span>
+
+<span class="kn">import</span> <span class="nn">abc</span>
+
+
+<div class="viewcode-block" id="Conditions"><a class="viewcode-back" href="../../../Chemistry.reactions.html#Chemistry.reactions.base_reactions.Conditions">[docs]</a><span class="k">class</span> <span class="nc">Conditions</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Object that represents the conditions in which a reaction occurs.</span>
+<span class="sd">    Contains information like relative acidity/basicity of the conditions,</span>
+<span class="sd">    as well as anything else that is pertinent to the reaction</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">acidic</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="n">basic</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="n">_neutral</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">pka</span> <span class="o">=</span> <span class="mi">16</span>
+    <span class="n">pka_molecule</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">pka_location</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conditions</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s">&#39;acidic&#39;</span> <span class="ow">in</span> <span class="n">conditions</span> <span class="ow">and</span> <span class="s">&#39;basic&#39;</span> <span class="ow">in</span> <span class="n">conditions</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s">&#39;A molecule is either acidic&#39;</span><span class="p">,</span>
+                                         <span class="s">&#39;or basic, not both&#39;</span><span class="p">]))</span>
+        <span class="k">if</span> <span class="p">((</span><span class="s">&#39;acidic&#39;</span> <span class="ow">in</span> <span class="n">conditions</span> <span class="ow">or</span> <span class="s">&#39;basic&#39;</span> <span class="ow">in</span> <span class="n">conditions</span><span class="p">)</span> <span class="ow">and</span>
+                <span class="nb">any</span><span class="p">(</span><span class="n">item</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">conditions</span>
+                    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="p">[</span><span class="s">&#39;pka&#39;</span><span class="p">,</span> <span class="s">&#39;pka_molecule&#39;</span><span class="p">,</span> <span class="s">&#39;pka_location&#39;</span><span class="p">])):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s">&quot;If conditions aren&#39;t neutral the pka&quot;</span><span class="p">,</span>
+                                         <span class="s">&quot;must be specified as well as the&quot;</span><span class="p">,</span>
+                                         <span class="s">&quot;molecule in question and the&quot;</span><span class="p">,</span>
+                                         <span class="s">&quot;specific location (key)&quot;</span><span class="p">]))</span>
+        <span class="k">if</span> <span class="s">&#39;acidic&#39;</span> <span class="ow">in</span> <span class="n">conditions</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">acidic</span> <span class="o">=</span> <span class="n">conditions</span><span class="p">[</span><span class="s">&#39;acidic&#39;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">basic</span> <span class="o">=</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">acidic</span>
+        <span class="k">elif</span> <span class="s">&#39;basic&#39;</span> <span class="ow">in</span> <span class="n">conditions</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">basic</span> <span class="o">=</span> <span class="n">conditions</span><span class="p">[</span><span class="s">&#39;basic&#39;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">acidic</span> <span class="o">=</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">basic</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">conditions</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">[</span><span class="s">&#39;acidic&#39;</span><span class="p">,</span> <span class="s">&#39;basic&#39;</span><span class="p">]:</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_neutral</span> <span class="o">=</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">acidic</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">basic</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="Conditions.neutral"><a class="viewcode-back" href="../../../Chemistry.reactions.html#Chemistry.reactions.base_reactions.Conditions.neutral">[docs]</a>    <span class="k">def</span> <span class="nf">neutral</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The neutrality of the Conditions.  A read-only property in order to</span>
+<span class="sd">        minimize the danger of creating conditions that are False for each of</span>
+<span class="sd">        acidity, basicity, and neutrality.  That would be bad and cause a number</span>
+<span class="sd">        of problems.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_neutral</span>
+</div>
+    <span class="k">def</span> <span class="nf">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">&quot;Reaction conditions&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="Reaction"><a class="viewcode-back" href="../../../Chemistry.reactions.html#Chemistry.reactions.base_reactions.Reaction">[docs]</a><span class="k">class</span> <span class="nc">Reaction</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The abstract base `Reaction` object.  I treat a reaction as a first </span>
+<span class="sd">    class citizen (like functions).  </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span>
+
+    <span class="nd">@abc.abstractmethod</span>
+<div class="viewcode-block" id="Reaction.react"><a class="viewcode-back" href="../../../Chemistry.reactions.html#Chemistry.reactions.base_reactions.Reaction.react">[docs]</a>    <span class="k">def</span> <span class="nf">react</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The specific mechanics of how any given reaction progresses&quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+</div>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_remove_node</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">compound</span><span class="p">,</span> <span class="n">rem_key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Function that removes a node from a compound and make a new one</span>
+<span class="sd">        based on it</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">compound</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">rem_key</span><span class="p">)</span>
+        <span class="n">compound</span><span class="o">.</span><span class="n">remove_node</span><span class="p">(</span><span class="n">rem_key</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">compound</span><span class="o">.</span><span class="n">bonds</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">compound</span><span class="o">.</span><span class="n">atoms</span> <span class="ow">or</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">compound</span><span class="o">.</span><span class="n">atoms</span><span class="p">:</span>
+                <span class="n">compound</span><span class="o">.</span><span class="n">bonds</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+
+        <span class="n">a_ref</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">rebuild_dict</span><span class="p">(</span><span class="n">compound</span><span class="o">.</span><span class="n">atoms</span><span class="p">,</span> <span class="s">&#39;a&#39;</span><span class="p">)</span>
+        <span class="n">new_atoms</span><span class="p">,</span> <span class="n">new_bonds</span> <span class="o">=</span> <span class="p">{},</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">compound</span><span class="o">.</span><span class="n">node</span><span class="p">:</span>
+            <span class="n">new_atoms</span><span class="p">[</span><span class="n">a_ref</span><span class="p">[</span><span class="n">atom</span><span class="p">]]</span> <span class="o">=</span> <span class="n">compound</span><span class="o">.</span><span class="n">node</span><span class="p">[</span><span class="n">atom</span><span class="p">][</span><span class="s">&#39;symbol&#39;</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">second</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">compound</span><span class="o">.</span><span class="n">edges</span><span class="p">(),</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">endpoints</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">sorted</span><span class="p">((</span><span class="n">a_ref</span><span class="p">[</span><span class="n">first</span><span class="p">],</span> <span class="n">a_ref</span><span class="p">[</span><span class="n">second</span><span class="p">])))</span>
+            <span class="n">rest</span> <span class="o">=</span> <span class="p">({</span><span class="n">k</span><span class="p">:</span><span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">compound</span><span class="o">.</span><span class="n">edge</span><span class="p">[</span><span class="n">first</span><span class="p">][</span><span class="n">second</span><span class="p">]</span><span class="o">.</span><span class="n">iteritems</span><span class="p">()</span>
+                     <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="s">&#39;key&#39;</span><span class="p">},)</span>
+            <span class="n">new_bonds</span><span class="p">[</span><span class="s">&#39;b{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span> <span class="o">=</span> <span class="n">endpoints</span> <span class="o">+</span> <span class="n">rest</span>
+
+        <span class="k">return</span> <span class="n">new_atoms</span><span class="p">,</span> <span class="n">new_bonds</span>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="Reaction.rebuild_dict"><a class="viewcode-back" href="../../../Chemistry.reactions.html#Chemistry.reactions.base_reactions.Reaction.rebuild_dict">[docs]</a>    <span class="k">def</span> <span class="nf">rebuild_dict</span><span class="p">(</span><span class="n">dict_</span><span class="p">,</span> <span class="n">letter</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Helper function that rebuilds the dictionary so keys are sequential</span>
+<span class="sd">        and start at one.  Returns a dictionary that can be used as reference</span>
+<span class="sd">        for the new keys</span>
+<span class="sd">        </span>
+<span class="sd">        For example,</span>
+<span class="sd">        </span>
+<span class="sd">        &gt;&gt;&gt; Reaction.rebuild_dict({&#39;a2&#39;: 1, &#39;a3&#39;: 2}, &#39;a&#39;)</span>
+<span class="sd">        {&#39;a3&#39;: &#39;a2&#39;, &#39;a2&#39;: &#39;a1&#39;}</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span><span class="s">&#39;{}{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">letter</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+                 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">dict_</span><span class="p">),</span> <span class="mi">1</span><span class="p">)}</span>
+
+</div></div>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="k">pass</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">Chemistry 0.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Dan Obermiller.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

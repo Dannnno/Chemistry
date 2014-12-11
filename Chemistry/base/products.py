@@ -1,27 +1,25 @@
-"""
-Copyright (c) 2014 Dan Obermiller
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-
-You should have received a copy of the MIT License along with this program.
-If not, see <http://opensource.org/licenses/MIT>
-"""
+#Copyright (c) 2014 Dan Obermiller
+#
+#Permission is hereby granted, free of charge, to any person obtaining a copy
+#of this software and associated documentation files (the "Software"), to deal
+#in the Software without restriction, including without limitation the rights
+#to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+#copies of the Software, and to permit persons to whom the Software is
+#furnished to do so, subject to the following conditions:
+#
+#The above copyright notice and this permission notice shall be included in
+#all copies or substantial portions of the Software.
+#
+#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+#IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+#FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+#AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+#LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+#OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+#THE SOFTWARE.
+#
+#You should have received a copy of the MIT License along with this program.
+#If not, see <http://opensource.org/licenses/MIT>
 
 import types
 
@@ -30,6 +28,7 @@ class Product(object):
     """The base Product object.  Represents a compound that results from a
     chemical reaction
     """
+    
     _compound = None
 
     def __init__(self, comp, percentage):
@@ -70,6 +69,13 @@ class Products(object):
 
     @property
     def major(self):
+        """The major products of a reaction.  
+        
+        Expected to be a collection of Product objects.  Raises a TypeError if 
+        given things that are not NoneType (those are skipped) or Product 
+        objects
+        """
+        
         return self._major
 
     @major.setter
@@ -90,6 +96,13 @@ class Products(object):
 
     @property
     def minor(self):
+        """The minor products of a reaction.  
+        
+        Expected to be a collection of Product objects.  Raises a TypeError if 
+        given things that are not NoneType (those are skipped) or Product 
+        objects
+        """
+        
         return self._minor
 
     @minor.setter
@@ -119,6 +132,7 @@ class EquilibriumProducts(object):
     """EquilibriumProducts object - much the same as a Products object
     but for reversible reactions
     """
+    
     _reactants = None
     _products = None
 
@@ -128,6 +142,10 @@ class EquilibriumProducts(object):
 
     @property
     def products(self):
+        """The products of the reaction; that is the things resulting from
+        the interaction of the reactants
+        """
+        
         return self._products
 
     @products.setter
@@ -136,6 +154,10 @@ class EquilibriumProducts(object):
 
     @property
     def reactants(self):
+        """The reactants in the reaction; the things that were there initially 
+        and that remain there after the reaction
+        """
+        
         return self._reactants
 
     @reactants.setter

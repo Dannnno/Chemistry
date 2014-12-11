@@ -1,0 +1,414 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Chemistry.parsing.mol.molv2000 &mdash; Chemistry 0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="Chemistry 0.0 documentation" href="../../../../index.html" />
+    <link rel="up" title="Module code" href="../../../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../../index.html">Chemistry 0.0 documentation</a> &raquo;</li>
+          <li><a href="../../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for Chemistry.parsing.mol.molv2000</h1><div class="highlight"><pre>
+<span class="c">#Copyright (c) 2014 Dan Obermiller</span>
+<span class="c">#</span>
+<span class="c">#Permission is hereby granted, free of charge, to any person obtaining a copy</span>
+<span class="c">#of this software and associated documentation files (the &quot;Software&quot;), to deal</span>
+<span class="c">#in the Software without restriction, including without limitation the rights</span>
+<span class="c">#to use, copy, modify, merge, publish, distribute, sublicense, and/or sell</span>
+<span class="c">#copies of the Software, and to permit persons to whom the Software is</span>
+<span class="c">#furnished to do so, subject to the following conditions:</span>
+<span class="c">#</span>
+<span class="c">#The above copyright notice and this permission notice shall be included in</span>
+<span class="c">#all copies or substantial portions of the Software.</span>
+<span class="c">#</span>
+<span class="c">#THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span>
+<span class="c">#IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span>
+<span class="c">#FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE</span>
+<span class="c">#AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER</span>
+<span class="c">#LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,</span>
+<span class="c">#OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN</span>
+<span class="c">#THE SOFTWARE.</span>
+<span class="c">#</span>
+<span class="c">#You should have received a copy of the MIT License along with this program.</span>
+<span class="c">#If not, see &lt;http://opensource.org/licenses/MIT&gt;</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">cStringIO</span> <span class="kn">as</span> <span class="nn">IO</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">StringIO</span> <span class="kn">as</span> <span class="nn">IO</span>
+<span class="k">finally</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">re</span>
+
+    <span class="kn">from</span> <span class="nn">Chemistry.parsing.exceptions</span> <span class="kn">import</span> <span class="n">ParsingException</span>
+
+
+<div class="viewcode-block" id="MolV2000"><a class="viewcode-back" href="../../../../Chemistry.parsing.mol.html#Chemistry.parsing.mol.molv2000.MolV2000">[docs]</a><span class="k">class</span> <span class="nc">MolV2000</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Represents a molfile that follows the v2000 standard as a data structure</span>
+<span class="sd">    in memory (instead of a text file/string)</span>
+
+<span class="sd">    Lines 1-3 represent the header  </span>
+<span class="sd">      |  1: Title  </span>
+<span class="sd">      |  2: Software produced by  </span>
+<span class="sd">      |  3: Comment line  </span>
+<span class="sd">    Lines 4+ are the ctab block.  It can be split into a few sections:  </span>
+<span class="sd">      |  Counts line  </span>
+<span class="sd">      |  Atom block  </span>
+<span class="sd">      |  Bond block  </span>
+<span class="sd">      |  Atom list block  </span>
+<span class="sd">      |  Stext (structural text descriptor)  </span>
+<span class="sd">      |  Properties block  </span>
+
+<span class="sd">    Blank numerical values should be represented as `0`.  Spaces are significant</span>
+<span class="sd">    and can indicate any of a number of things, such as:</span>
+<span class="sd">        - absense of an entry</span>
+<span class="sd">        - Empty character positions</span>
+<span class="sd">        - Spaces between entries (single unless noted otherwise)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">version</span> <span class="o">=</span> <span class="s">&#39;V2000&#39;</span>
+    <span class="n">_counts_format</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;aaa&#39;</span><span class="p">,</span> <span class="s">&#39;bbb&#39;</span><span class="p">,</span> <span class="s">&#39;lll&#39;</span><span class="p">,</span> <span class="s">&#39;fff&#39;</span><span class="p">,</span> <span class="s">&#39;ccc&#39;</span><span class="p">,</span> <span class="s">&#39;sss&#39;</span><span class="p">,</span> <span class="s">&#39;xxx&#39;</span><span class="p">,</span>
+                      <span class="s">&#39;rrr&#39;</span><span class="p">,</span> <span class="s">&#39;ppp&#39;</span><span class="p">,</span> <span class="s">&#39;iii&#39;</span><span class="p">,</span> <span class="s">&#39;mmm&#39;</span><span class="p">,</span> <span class="s">&#39;vvvvvv&#39;</span><span class="p">)</span>
+
+    <span class="n">count_meanings</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;aaa&#39;</span><span class="p">:</span> <span class="s">&#39;number of atoms (max 255)&#39;</span><span class="p">,</span>
+                      <span class="s">&#39;bbb&#39;</span><span class="p">:</span> <span class="s">&#39;number of bonds (max 255)&#39;</span><span class="p">,</span>
+                      <span class="s">&#39;lll&#39;</span><span class="p">:</span> <span class="s">&#39;number of atom lists (max 30)&#39;</span><span class="p">,</span>
+                      <span class="s">&#39;ccc&#39;</span><span class="p">:</span> <span class="s">&#39;chiral flag. {0:chiral, 1:not_chiral}&#39;</span><span class="p">,</span>
+                      <span class="s">&#39;sss&#39;</span><span class="p">:</span> <span class="s">&#39;number of stext entries&#39;</span><span class="p">,</span>
+                      <span class="s">&#39;mmm&#39;</span><span class="p">:</span> <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s">&#39;number of lines of properties, &#39;</span><span class="p">,</span>
+                                      <span class="s">&#39;including `M END` (max 999)&#39;</span><span class="p">]),</span>
+                      <span class="s">&#39;vvvvvv&#39;</span><span class="p">:</span> <span class="s">&#39;the schema this obeys&#39;</span><span class="p">,</span>
+                      <span class="s">&#39;fff&#39;</span><span class="p">:</span> <span class="s">&#39;obsolete&#39;</span><span class="p">,</span>
+                      <span class="s">&#39;xxx&#39;</span><span class="p">:</span> <span class="s">&#39;obsolete&#39;</span><span class="p">,</span>
+                      <span class="s">&#39;rrr&#39;</span><span class="p">:</span> <span class="s">&#39;obsolete&#39;</span><span class="p">,</span>
+                      <span class="s">&#39;ppp&#39;</span><span class="p">:</span> <span class="s">&#39;obsolete&#39;</span><span class="p">,</span>
+                      <span class="s">&#39;iii&#39;</span><span class="p">:</span> <span class="s">&#39;obsolete&#39;</span><span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">molfile</span><span class="p">,</span> <span class="n">from_string</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">from_string</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_moldata</span> <span class="o">=</span> <span class="n">IO</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">molfile</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">molfile</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">molfile</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_moldata</span> <span class="o">=</span> <span class="n">IO</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+            <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">ParsingException</span><span class="p">(</span>
+                    <span class="s">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s">&quot;MolV2000 given {}, wasn&#39;t a valid file&quot;</span><span class="p">,</span>
+                               <span class="s">&quot;</span><span class="se">\n</span><span class="s">If you would like to parse a string&quot;</span><span class="p">,</span>
+                               <span class="s">&quot;then pass the kwarg `from_string=True&quot;</span><span class="p">])</span>
+                            <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">molfile</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">molfile</span><span class="p">,</span> <span class="s">&quot;read&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_moldata</span> <span class="o">=</span> <span class="n">IO</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">molfile</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s">&quot;MolV2000 must be given something it can read data from&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_moldata</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span>
+
+<div class="viewcode-block" id="MolV2000.parse"><a class="viewcode-back" href="../../../../Chemistry.parsing.mol.html#Chemistry.parsing.mol.molv2000.MolV2000.parse">[docs]</a>    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Parses the data.  Uses the MolV2000Parser wrapper to parse the data</span>
+<span class="sd">        line by line and then add various instance variables to the current</span>
+<span class="sd">        instance (not the parser object which just wraps this)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="n">MolV2000Parser</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">other</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span><span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">vars</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">iteritems</span><span class="p">()</span>
+                      <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s">&#39;atoms&#39;</span><span class="p">,</span> <span class="s">&#39;bonds&#39;</span><span class="p">]</span> <span class="ow">and</span>
+                      <span class="ow">not</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;_&#39;</span><span class="p">)}</span>
+</div>
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&quot;title&quot;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="s">&quot;MolV2000 data representing {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">title</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">&quot;MolV2000 data object&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="MolV2000Parser"><a class="viewcode-back" href="../../../../Chemistry.parsing.mol.html#Chemistry.parsing.mol.molv2000.MolV2000Parser">[docs]</a><span class="k">class</span> <span class="nc">MolV2000Parser</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Parser object for molfiles conforming to the V2000 standard. Is just a </span>
+<span class="sd">    wrapper over the underlying molfile object</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">_molfile</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">molv2000</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">molfile</span> <span class="o">=</span> <span class="n">molv2000</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parse_file</span><span class="p">()</span>
+     
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">molfile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The underlying molfile object of the parser&quot;&quot;&quot;</span>
+        
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_molfile</span>
+        
+    <span class="nd">@molfile.setter</span>
+<div class="viewcode-block" id="MolV2000Parser.molfile"><a class="viewcode-back" href="../../../../Chemistry.parsing.mol.html#Chemistry.parsing.mol.molv2000.MolV2000Parser.molfile">[docs]</a>    <span class="k">def</span> <span class="nf">molfile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">molv2000</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">molv2000</span><span class="p">,</span> <span class="n">MolV2000</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_molfile</span> <span class="o">=</span> <span class="n">MolV2000</span><span class="p">(</span><span class="n">molv2000</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_molfile</span> <span class="o">=</span> <span class="n">molv2000</span>       
+</div>
+    <span class="k">def</span> <span class="nf">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">molfile</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">attr</span> <span class="ow">in</span> <span class="p">[</span><span class="s">&#39;_molfile&#39;</span><span class="p">,</span> <span class="s">&#39;molfile&#39;</span><span class="p">]:</span>
+            <span class="k">exec</span><span class="p">(</span><span class="s">&quot;self.__dict__[&#39;{}&#39;] = value&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">attr</span><span class="p">),</span>
+                 <span class="nb">globals</span><span class="p">(),</span>
+                 <span class="nb">locals</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_molfile</span><span class="o">.</span><span class="n">__setattr__</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+<div class="viewcode-block" id="MolV2000Parser.parse_file"><a class="viewcode-back" href="../../../../Chemistry.parsing.mol.html#Chemistry.parsing.mol.molv2000.MolV2000Parser.parse_file">[docs]</a>    <span class="k">def</span> <span class="nf">parse_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Parses the molfile.&quot;&quot;&quot;</span>
+        
+        <span class="n">lines</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parse_header</span><span class="p">(</span><span class="n">lines</span><span class="p">[:</span><span class="mi">3</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parse_body</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="mi">3</span><span class="p">:])</span>
+</div>
+    <span class="k">def</span> <span class="nf">_parse_header</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lines</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Parses the header of the molfile.</span>
+<span class="sd">        </span>
+<span class="sd">        Expects three lines so don&#39;t cut off leading whitespace (sometimes the</span>
+<span class="sd">        headers get truncated.  This is bad mkay).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ParsingException</span><span class="p">(</span>
+                <span class="s">&quot;Header must have three lines, not {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">comments</span> <span class="o">=</span> <span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">if</span> <span class="n">lines</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">else</span> <span class="bp">None</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_parse_body</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lines</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Parses the body of the function.&quot;&quot;&quot;</span>
+        
+        <span class="n">line_start</span><span class="p">,</span> <span class="n">line_end</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parse_counts_line</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="n">line_start</span><span class="p">,</span> <span class="n">line_end</span> <span class="o">=</span> <span class="n">line_end</span><span class="p">,</span> <span class="n">line_end</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">counts</span><span class="p">[</span><span class="s">&#39;aaa&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parse_atom_block</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="n">line_start</span><span class="p">:</span><span class="n">line_end</span><span class="p">])</span>
+
+        <span class="n">line_start</span><span class="p">,</span> <span class="n">line_end</span> <span class="o">=</span> <span class="n">line_end</span><span class="p">,</span> <span class="n">line_end</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">counts</span><span class="p">[</span><span class="s">&#39;bbb&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parse_bond_block</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="n">line_start</span><span class="p">:</span><span class="n">line_end</span><span class="p">])</span>
+
+        <span class="n">line_start</span><span class="p">,</span> <span class="n">line_end</span> <span class="o">=</span> <span class="n">line_end</span><span class="p">,</span> <span class="n">line_end</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">counts</span><span class="p">[</span><span class="s">&#39;lll&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parse_atom_list_block</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="n">line_start</span><span class="p">:</span><span class="n">line_end</span><span class="p">])</span>
+
+        <span class="n">line_start</span><span class="p">,</span> <span class="n">line_end</span> <span class="o">=</span> <span class="n">line_end</span><span class="p">,</span> <span class="n">line_end</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">counts</span><span class="p">[</span><span class="s">&#39;sss&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parse_stext_block</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="n">line_start</span><span class="p">:</span><span class="n">line_end</span><span class="p">])</span>
+
+        <span class="n">line_start</span><span class="p">,</span> <span class="n">line_end</span> <span class="o">=</span> <span class="n">line_end</span><span class="p">,</span> <span class="n">line_end</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">counts</span><span class="p">[</span><span class="s">&#39;mmm&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parse_properties_block</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="n">line_start</span><span class="p">:</span><span class="n">line_end</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">_parse_counts_line</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The counts line has the general form of</span>
+
+<span class="sd">        aaabbblllfffcccsssxxxrrrpppiiimmmvvvvvv</span>
+
+<span class="sd">        Where:</span>
+
+<span class="sd">            aaa -&gt; number of atoms (max 255)</span>
+<span class="sd">            bbb -&gt; number of bonds (max 255)</span>
+<span class="sd">            lll -&gt; number of atom lists (max 30)</span>
+<span class="sd">            ccc -&gt; chiral flag. {0:chiral, 1:not_chiral}</span>
+<span class="sd">            sss -&gt; number of stext entries</span>
+<span class="sd">            mmm -&gt; number of lines of properties, including `M END` (max 999)</span>
+<span class="sd">            vvvvvv -&gt; schema this obeys</span>
+<span class="sd">            fff, xxx, rrr, ppp, iii -&gt; obsolete</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">counts</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">sequence</span> <span class="ow">in</span> <span class="n">MolV2000</span><span class="o">.</span><span class="n">_counts_format</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">counts</span><span class="p">[</span><span class="n">sequence</span><span class="p">]</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="n">sequence</span><span class="p">)]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">counts</span><span class="p">[</span><span class="n">sequence</span><span class="p">]</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="n">i</span><span class="p">:]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="k">raise</span> <span class="ne">StopIteration</span>
+            <span class="n">i</span><span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sequence</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">counts</span><span class="p">[</span><span class="s">&#39;vvvvvv&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">version</span> <span class="o">==</span> <span class="n">MolV2000</span><span class="o">.</span><span class="n">version</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ParsingException</span><span class="p">(</span>
+                <span class="s">&quot;{{}} file is in {} not {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">version</span><span class="p">,</span>
+                                                   <span class="n">MolV2000</span><span class="o">.</span><span class="n">version</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">_parse_atom_block</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lines</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Parses the atom block&quot;&quot;&quot;</span>
+        
+        <span class="n">properly_formed</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">r&quot;&quot;&quot;</span>
+<span class="s">                    (\s+[-.0-9]+){3} # matches the X, Y, and Z coordinates</span>
+<span class="s">                    \s+[A-Z]{1}[a-z]{,2} # matches the chemical symbol</span>
+<span class="s">                    (\s+[-.0-9]+){,12} # matches the series of values</span>
+<span class="s">                                      &quot;&quot;&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">X</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_atoms</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">match</span> <span class="o">=</span> <span class="n">properly_formed</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
+                <span class="n">atom</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="p">[</span><span class="s">&#39;a{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;coords&#39;</span><span class="p">:</span>
+                                                    <span class="nb">map</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="p">[</span><span class="n">atom</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+                                                                <span class="n">atom</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+                                                                <span class="n">atom</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)]),</span>
+                                               <span class="s">&#39;symbol&#39;</span><span class="p">:</span> <span class="n">atom</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)}</span>
+                <span class="c"># I don&#39;t know what all this stuff means yet, so I won&#39;t</span>
+                <span class="c"># bother doing anything with it</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_atoms</span><span class="p">[</span><span class="s">&#39;a{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span> <span class="o">=</span> <span class="n">atom</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">ParsingException</span><span class="p">(</span><span class="s">&quot;Malformed atom text&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_parse_bond_block</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lines</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Parses the bond block&quot;&quot;&quot;</span>
+        
+        <span class="n">properly_formed</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">r&quot;(\s+[0-9]+){,7}&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bonds</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bonds</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">match</span> <span class="o">=</span> <span class="n">properly_formed</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
+                <span class="n">bond</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="s">&#39;b{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;a{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">bond</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)),</span>
+                                               <span class="s">&#39;a{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">bond</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)),</span>
+                                               <span class="p">{</span><span class="s">&#39;order&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">bond</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)),</span>
+                                                <span class="s">&#39;chirality&#39;</span><span class="p">:</span> <span class="bp">None</span><span class="p">})</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_bonds</span><span class="p">[</span><span class="s">&#39;b{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span> <span class="o">=</span> <span class="n">bond</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">ParsingException</span><span class="p">(</span><span class="s">&quot;Malformed bond text&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_parse_atom_list_block</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lines</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Parses the atom list block. </span>
+<span class="sd">        </span>
+<span class="sd">        I don&#39;t really know what this is, yet</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">if</span> <span class="n">lines</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s">&quot;I don&#39;t know how to parse these&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_parse_stext_block</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lines</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Parses the stext block</span>
+<span class="sd">        </span>
+<span class="sd">        I don&#39;t really know what this is yet</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">if</span> <span class="n">lines</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s">&quot;I don&#39;t know how to parse these&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_parse_properties_block</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lines</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Parses the properties block.</span>
+<span class="sd">        </span>
+<span class="sd">        I haven&#39;t really seen an example of what this would look like</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">properties</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">line_end</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">r&quot;\s*M\s*END&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">line_end</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
+                <span class="k">return</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="s">&#39;p{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span> <span class="o">=</span> <span class="n">line</span>
+
+</div>
+<div class="viewcode-block" id="MolV2000Builder"><a class="viewcode-back" href="../../../../Chemistry.parsing.mol.html#Chemistry.parsing.mol.molv2000.MolV2000Builder">[docs]</a><span class="k">class</span> <span class="nc">MolV2000Builder</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="MolV2000Builder.from_Compound"><a class="viewcode-back" href="../../../../Chemistry.parsing.mol.html#Chemistry.parsing.mol.molv2000.MolV2000Builder.from_Compound">[docs]</a>    <span class="k">def</span> <span class="nf">from_Compound</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">compound</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+</div>
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">&quot;MolV2000 Builder&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+</div>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="k">pass</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../../index.html">Chemistry 0.0 documentation</a> &raquo;</li>
+          <li><a href="../../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Dan Obermiller.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

@@ -1,3 +1,4 @@
+![Build status](https://readthedocs.org/projects/chemistry/badge/?version=latest)
 ##Organic Chemistry Reaction Simulator
 Updated: 12/10/2014   
 

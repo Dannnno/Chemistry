@@ -1,27 +1,25 @@
-"""
-Copyright (c) 2014 Dan Obermiller
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-
-You should have received a copy of the MIT License along with this program.
-If not, see <http://opensource.org/licenses/MIT>
-"""
+#Copyright (c) 2014 Dan Obermiller
+#
+#Permission is hereby granted, free of charge, to any person obtaining a copy
+#of this software and associated documentation files (the "Software"), to deal
+#in the Software without restriction, including without limitation the rights
+#to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+#copies of the Software, and to permit persons to whom the Software is
+#furnished to do so, subject to the following conditions:
+#
+#The above copyright notice and this permission notice shall be included in
+#all copies or substantial portions of the Software.
+#
+#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+#IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+#FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+#AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+#LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+#OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+#THE SOFTWARE.
+#
+#You should have received a copy of the MIT License along with this program.
+#If not, see <http://opensource.org/licenses/MIT>
 
 import abc
 
@@ -62,6 +60,11 @@ class Conditions(object):
 
     @property
     def neutral(self):
+        """The neutrality of the Conditions.  A read-only property in order to
+        minimize the danger of creating conditions that are False for each of
+        acidity, basicity, and neutrality.  That would be bad and cause a number
+        of problems.
+        """
         return self._neutral
 
     def __contains__(self, key):
@@ -75,8 +78,8 @@ class Conditions(object):
 
 
 class Reaction(object):
-    """The base `Reaction` object.  I treat a reaction as a first class
-    citizen (like functions).
+    """The abstract base `Reaction` object.  I treat a reaction as a first 
+    class citizen (like functions).  
     """
     __metaclass__ = abc.ABCMeta
 
@@ -87,8 +90,8 @@ class Reaction(object):
 
     @classmethod
     def _remove_node(cls, compound, rem_key):
-        """Function that serves to remove a node from a compound and make a
-        new one based on it
+        """Function that removes a node from a compound and make a new one
+        based on it
         """
         compound.atoms.pop(rem_key)
         compound.remove_node(rem_key)
@@ -97,7 +100,7 @@ class Reaction(object):
             if v[0] not in compound.atoms or v[1] not in compound.atoms:
                 compound.bonds.pop(k)
 
-        a_ref = cls._rebuild_dict(compound.atoms, 'a')
+        a_ref = cls.rebuild_dict(compound.atoms, 'a')
         new_atoms, new_bonds = {}, {}
 
         for atom in compound.node:
@@ -112,9 +115,15 @@ class Reaction(object):
         return new_atoms, new_bonds
 
     @staticmethod
-    def _rebuild_dict(dict_, letter):
+    def rebuild_dict(dict_, letter):
         """Helper function that rebuilds the dictionary so keys are sequential
-        and start at one
+        and start at one.  Returns a dictionary that can be used as reference
+        for the new keys
+        
+        For example,
+        
+        >>> Reaction.rebuild_dict({'a2': 1, 'a3': 2}, 'a')
+        {'a3': 'a2', 'a2': 'a1'}
         """
         return {key:'{}{}'.format(letter, i)
                  for i, key in enumerate(sorted(dict_), 1)}

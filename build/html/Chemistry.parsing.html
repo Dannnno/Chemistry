@@ -1,0 +1,178 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Chemistry.parsing package &mdash; Chemistry 0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Chemistry 0.0 documentation" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="index.html">Chemistry 0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="chemistry-parsing-package">
+<h1>Chemistry.parsing package<a class="headerlink" href="#chemistry-parsing-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Chemistry.parsing.mol.html">Chemistry.parsing.mol package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Chemistry.parsing.mol.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Chemistry.parsing.mol.html#module-Chemistry.parsing.mol.molv2000">Chemistry.parsing.mol.molv2000 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Chemistry.parsing.mol.html#module-Chemistry.parsing.mol.molv3000">Chemistry.parsing.mol.molv3000 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Chemistry.parsing.mol.html#module-Chemistry.parsing.mol.sdf">Chemistry.parsing.mol.sdf module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Chemistry.parsing.mol.html#module-Chemistry.parsing.mol">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-Chemistry.parsing.CheML">
+<span id="chemistry-parsing-cheml-module"></span><h2>Chemistry.parsing.CheML module<a class="headerlink" href="#module-Chemistry.parsing.CheML" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="Chemistry.parsing.CheML.CMLBuilder">
+<em class="property">class </em><tt class="descclassname">Chemistry.parsing.CheML.</tt><tt class="descname">CMLBuilder</tt><big>(</big><em>molecule_dict</em><big>)</big><a class="reference internal" href="_modules/Chemistry/parsing/CheML.html#CMLBuilder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Chemistry.parsing.CheML.CMLBuilder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>CML generator object</p>
+<p>Constructs a CML file based on a dictionary or compound input</p>
+<dl class="classmethod">
+<dt id="Chemistry.parsing.CheML.CMLBuilder.from_Compound">
+<em class="property">classmethod </em><tt class="descname">from_Compound</tt><big>(</big><em>comp</em><big>)</big><a class="reference internal" href="_modules/Chemistry/parsing/CheML.html#CMLBuilder.from_Compound"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Chemistry.parsing.CheML.CMLBuilder.from_Compound" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a CMLBuilder object from a Compound object</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Chemistry.parsing.CheML.CMLBuilder.to_file">
+<tt class="descname">to_file</tt><big>(</big><em>cml_file</em><big>)</big><a class="reference internal" href="_modules/Chemistry/parsing/CheML.html#CMLBuilder.to_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Chemistry.parsing.CheML.CMLBuilder.to_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes the new cml to file</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="Chemistry.parsing.CheML.CMLParser">
+<em class="property">class </em><tt class="descclassname">Chemistry.parsing.CheML.</tt><tt class="descname">CMLParser</tt><big>(</big><em>CML_file</em><big>)</big><a class="reference internal" href="_modules/Chemistry/parsing/CheML.html#CMLParser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Chemistry.parsing.CheML.CMLParser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Parser for CML files</p>
+<p>Pretty limited on what it can actually handle; it expects that things are
+formatted the way I do and not more generically.  I want to eventually make 
+this more generalizable.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-Chemistry.parsing.exceptions">
+<span id="chemistry-parsing-exceptions-module"></span><h2>Chemistry.parsing.exceptions module<a class="headerlink" href="#module-Chemistry.parsing.exceptions" title="Permalink to this headline">¶</a></h2>
+<dl class="exception">
+<dt id="Chemistry.parsing.exceptions.ParsingException">
+<em class="property">exception </em><tt class="descclassname">Chemistry.parsing.exceptions.</tt><tt class="descname">ParsingException</tt><big>(</big><em>msg='An error occured while parsing {} file'</em>, <em>filetype='CML'</em><big>)</big><a class="reference internal" href="_modules/Chemistry/parsing/exceptions.html#ParsingException"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Chemistry.parsing.exceptions.ParsingException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
+<p>A generic exception to be thrown if there is an error with the
+parsing of a chemical data file</p>
+<dl class="attribute">
+<dt id="Chemistry.parsing.exceptions.ParsingException.message">
+<tt class="descname">message</tt><em class="property"> = 'An error occured while parsing {} file'</em><a class="headerlink" href="#Chemistry.parsing.exceptions.ParsingException.message" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-Chemistry.parsing">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-Chemistry.parsing" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Chemistry.parsing package</a><ul>
+<li><a class="reference internal" href="#subpackages">Subpackages</a></li>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-Chemistry.parsing.CheML">Chemistry.parsing.CheML module</a></li>
+<li><a class="reference internal" href="#module-Chemistry.parsing.exceptions">Chemistry.parsing.exceptions module</a></li>
+<li><a class="reference internal" href="#module-Chemistry.parsing">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/Chemistry.parsing.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="index.html">Chemistry 0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Dan Obermiller.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>
