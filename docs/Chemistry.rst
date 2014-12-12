@@ -6,10 +6,13 @@ Subpackages
 
 .. toctree::
 
+    Chemistry.Testing
     Chemistry.base
     Chemistry.parsing
     Chemistry.reactions
 
+Submodules
+----------
 
 Chemistry.compounds module
 --------------------------

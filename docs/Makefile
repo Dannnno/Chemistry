@@ -5,7 +5,7 @@
 SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
 PAPER         =
-BUILDDIR      = ../../PyChem-docs
+BUILDDIR      = ../../PyChem-docs/html
 PDFBUILDDIR   = /tmp
 PDF           = ../manual.pdf
 
