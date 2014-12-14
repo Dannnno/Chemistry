@@ -33,7 +33,7 @@ from Chemistry.reactions.exceptions import NoReactionError
 class AcidBase(Reaction):
     """Describes an acid-base reaction.  Creating an instance of this object
     with the appropriate variables (which is handled by the application when run
-    from the GUI) will do all the necessary prep work to perform the reaction. 
+    from the GUI) will do all the necessary prep work to perform the reaction.
     """
     _conditions = None
 
@@ -45,8 +45,8 @@ class AcidBase(Reaction):
 
     @property
     def conditions(self):
-        """The Conditions object for the reaction.  Should contain enough 
-        information for the reaction to take place.  Not including important 
+        """The Conditions object for the reaction.  Should contain enough
+        information for the reaction to take place.  Not including important
         information about solvents, other present molecules and the like will
         impair the results.  Can be given a dictionary instead of a Conditions
         object - it will be transformed into a Conditions object
@@ -65,8 +65,8 @@ class AcidBase(Reaction):
     @property
     def acid(self):
         """The compound that is being treated as an acid for this reaction. Note
-        that if the conditions are acidic the compound being passed in as the 
-        acid may not be the one used in the reaction (if the conditions are more 
+        that if the conditions are acidic the compound being passed in as the
+        acid may not be the one used in the reaction (if the conditions are more
         acidic than the compound that purports to be an acid).
         """
         return self._acid
@@ -85,8 +85,8 @@ class AcidBase(Reaction):
     @property
     def base(self):
         """The compound that is being treated as an base for this reaction. Note
-        that if the conditions are basic the compound being passed in as the 
-        base may not be the one used in the reaction (if the conditions are more 
+        that if the conditions are basic the compound being passed in as the
+        base may not be the one used in the reaction (if the conditions are more
         basic than the compound that purports to be an base)
         """
         return self._base
@@ -106,7 +106,7 @@ class AcidBase(Reaction):
         """Calculates what the equilibrium between reactants and products is,
         if any.  This comparison is done by a difference in pka between the acid
         and the conjuagte acid and the base.  By default this threshold is a
-        difference of 10 pKa units.  
+        difference of 10 pKa units.
         """
         pka1, pka2 = self.acid[0].pka, self.base[0].pka
         diff = pka1-pka2
@@ -124,7 +124,7 @@ class AcidBase(Reaction):
                 return (1, 10**diff)
 
     def _calculate_products(self):
-        """Determines the expected products of the reaction.  This will 
+        """Determines the expected products of the reaction.  This will
         generally be the conjugate acid and base, as well as some salt (or other
         byproduct).  This method is still incomplete - it lacks support for
         generating the salt from ionic compounds.

@@ -28,7 +28,7 @@ class Product(object):
     """The base Product object.  Represents a compound that results from a
     chemical reaction
     """
-    
+
     _compound = None
 
     def __init__(self, comp, percentage):
@@ -69,13 +69,13 @@ class Products(object):
 
     @property
     def major(self):
-        """The major products of a reaction.  
-        
-        Expected to be a collection of Product objects.  Raises a TypeError if 
-        given things that are not NoneType (those are skipped) or Product 
+        """The major products of a reaction.
+
+        Expected to be a collection of Product objects.  Raises a TypeError if
+        given things that are not NoneType (those are skipped) or Product
         objects
         """
-        
+
         return self._major
 
     @major.setter
@@ -96,13 +96,13 @@ class Products(object):
 
     @property
     def minor(self):
-        """The minor products of a reaction.  
-        
-        Expected to be a collection of Product objects.  Raises a TypeError if 
-        given things that are not NoneType (those are skipped) or Product 
+        """The minor products of a reaction.
+
+        Expected to be a collection of Product objects.  Raises a TypeError if
+        given things that are not NoneType (those are skipped) or Product
         objects
         """
-        
+
         return self._minor
 
     @minor.setter
@@ -132,7 +132,7 @@ class EquilibriumProducts(object):
     """EquilibriumProducts object - much the same as a Products object
     but for reversible reactions
     """
-    
+
     _reactants = None
     _products = None
 
@@ -145,7 +145,7 @@ class EquilibriumProducts(object):
         """The products of the reaction; that is the things resulting from
         the interaction of the reactants
         """
-        
+
         return self._products
 
     @products.setter
@@ -154,10 +154,10 @@ class EquilibriumProducts(object):
 
     @property
     def reactants(self):
-        """The reactants in the reaction; the things that were there initially 
+        """The reactants in the reaction; the things that were there initially
         and that remain there after the reaction
         """
-        
+
         return self._reactants
 
     @reactants.setter

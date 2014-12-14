@@ -78,8 +78,8 @@ class Conditions(object):
 
 
 class Reaction(object):
-    """The abstract base `Reaction` object.  I treat a reaction as a first 
-    class citizen (like functions).  
+    """The abstract base `Reaction` object.  I treat a reaction as a first
+    class citizen (like functions).
     """
     __metaclass__ = abc.ABCMeta
 
@@ -119,9 +119,9 @@ class Reaction(object):
         """Helper function that rebuilds the dictionary so keys are sequential
         and start at one.  Returns a dictionary that can be used as reference
         for the new keys
-        
+
         For example,
-        
+
         >>> Reaction.rebuild_dict({'a2': 1, 'a3': 2}, 'a')
         {'a3': 'a2', 'a2': 'a1'}
         """

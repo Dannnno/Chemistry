@@ -31,9 +31,9 @@ from lxml import builder as lb
 
 class CMLParser(object):
     """Parser for CML files
-    
+
     Pretty limited on what it can actually handle; it expects that things are
-    formatted the way I do and not more generically.  I want to eventually make 
+    formatted the way I do and not more generically.  I want to eventually make
     this more generalizable.
     """
 
@@ -104,7 +104,7 @@ class CMLParser(object):
 
 class CMLBuilder(object):
     """CML generator object
-    
+
     Constructs a CML file based on a dictionary or compound input
     """
 

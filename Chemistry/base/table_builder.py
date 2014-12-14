@@ -116,11 +116,11 @@ def str_to_list(a_stringy_list, mapped=None):
 
 def build_table():
     """Builds the periodic_table.py file if it hasn't been created yet.
-    
+
     The function exists to ease large scale changes to the data held within the
     periodic table
     """
-    
+
     with open("element_list.csv", 'r') as element_data, \
         open("periodic_table.py", 'w') as periodic_table:
 

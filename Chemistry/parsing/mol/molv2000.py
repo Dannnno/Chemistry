@@ -35,17 +35,17 @@ class MolV2000(object):
     """Represents a molfile that follows the v2000 standard as a data structure
     in memory (instead of a text file/string)
 
-    Lines 1-3 represent the header  
-      |  1: Title  
-      |  2: Software produced by  
-      |  3: Comment line  
-    Lines 4+ are the ctab block.  It can be split into a few sections:  
-      |  Counts line  
-      |  Atom block  
-      |  Bond block  
-      |  Atom list block  
-      |  Stext (structural text descriptor)  
-      |  Properties block  
+    Lines 1-3 represent the header
+      |  1: Title
+      |  2: Software produced by
+      |  3: Comment line
+    Lines 4+ are the ctab block.  It can be split into a few sections:
+      |  Counts line
+      |  Atom block
+      |  Bond block
+      |  Atom list block
+      |  Stext (structural text descriptor)
+      |  Properties block
 
     Blank numerical values should be represented as `0`.  Spaces are significant
     and can indicate any of a number of things, such as:
@@ -99,7 +99,7 @@ class MolV2000(object):
         line by line and then add various instance variables to the current
         instance (not the parser object which just wraps this)
         """
-        
+
         MolV2000Parser(self)
         self.other = {k:v for k, v in vars(self).iteritems()
                       if k not in ['atoms', 'bonds'] and
@@ -116,28 +116,28 @@ class MolV2000(object):
 
 
 class MolV2000Parser(object):
-    """Parser object for molfiles conforming to the V2000 standard. Is just a 
+    """Parser object for molfiles conforming to the V2000 standard. Is just a
     wrapper over the underlying molfile object
     """
-    
+
     _molfile = None
 
     def __init__(self, molv2000):
         self.molfile = molv2000
         self.parse_file()
-     
+
     @property
     def molfile(self):
         """The underlying molfile object of the parser"""
-        
+
         return self._molfile
-        
+
     @molfile.setter
     def molfile(self, molv2000):
         if not isinstance(molv2000, MolV2000):
             self._molfile = MolV2000(molv2000)
         else:
-            self._molfile = molv2000       
+            self._molfile = molv2000
 
     def __getattr__(self, attr):
         return getattr(self.molfile, attr)
@@ -152,18 +152,18 @@ class MolV2000Parser(object):
 
     def parse_file(self):
         """Parses the molfile."""
-        
+
         lines = self.readlines()
         self._parse_header(lines[:3])
         self._parse_body(lines[3:])
 
     def _parse_header(self, lines):
         """Parses the header of the molfile.
-        
+
         Expects three lines so don't cut off leading whitespace (sometimes the
         headers get truncated.  This is bad mkay).
         """
-        
+
         if len(lines) != 3:
             raise ParsingException(
                 "Header must have three lines, not {}".format(len(lines)))
@@ -174,7 +174,7 @@ class MolV2000Parser(object):
 
     def _parse_body(self, lines):
         """Parses the body of the function."""
-        
+
         line_start, line_end = 0, 1
         self._parse_counts_line(lines[0])
 
@@ -228,7 +228,7 @@ class MolV2000Parser(object):
 
     def _parse_atom_block(self, lines):
         """Parses the atom block"""
-        
+
         properly_formed = re.compile(r"""
                     (\s+[-.0-9]+){3} # matches the X, Y, and Z coordinates
                     \s+[A-Z]{1}[a-z]{,2} # matches the chemical symbol
@@ -253,7 +253,7 @@ class MolV2000Parser(object):
 
     def _parse_bond_block(self, lines):
         """Parses the bond block"""
-        
+
         properly_formed = re.compile(r"(\s+[0-9]+){,7}")
         self.bonds = {}
         self._bonds = {}
@@ -270,29 +270,29 @@ class MolV2000Parser(object):
                 raise ParsingException("Malformed bond text")
 
     def _parse_atom_list_block(self, lines):
-        """Parses the atom list block. 
-        
+        """Parses the atom list block.
+
         I don't really know what this is, yet
         """
-        
+
         if lines:
             raise NotImplementedError("I don't know how to parse these")
 
     def _parse_stext_block(self, lines):
         """Parses the stext block
-        
+
         I don't really know what this is yet
         """
-        
+
         if lines:
             raise NotImplementedError("I don't know how to parse these")
 
     def _parse_properties_block(self, lines):
         """Parses the properties block.
-        
+
         I haven't really seen an example of what this would look like
         """
-        
+
         self.properties = {}
         line_end = re.compile(r"\s*M\s*END")
         for i, line in enumerate(lines, 1):
@@ -303,7 +303,7 @@ class MolV2000Parser(object):
 
 
 class MolV2000Builder(object):
-    
+
     def __init__(self):
         raise NotImplementedError
 
@@ -320,4 +320,3 @@ class MolV2000Builder(object):
 
 if __name__ == '__main__':
     pass
-

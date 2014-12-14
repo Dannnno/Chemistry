@@ -21,38 +21,4 @@
 #You should have received a copy of the MIT License along with this program.
 #If not, see <http://opensource.org/licenses/MIT>
 
-import argparse
-
-
-parser = argparse.ArgumentParser(description="Runs the Chemistry simulator")
-parser.add_argument(
-                '-t', '--runtests', dest='runtests',
-                default=False, action='store_true',
-                help='Signals that the tests, not the program, should be run')
-parser.add_argument(
-                '-c', '--clean', dest='clean',
-                default=False, action='store_true',
-                help='Signals that the directory should get cleaned up')
-parser.add_argument(
-                '-g', '--gui', dest='gui', default=False, action='store_true',
-                help='Runs the GUI')
-args = parser.parse_args()
-print args
-
-if args.clean:
-    from scripts.make_clean import make_clean
-    from scripts.strip_whitespace import strip_whitespace
-
-    make_clean()
-    strip_whitespace()
-
-if args.gui:
-    import sys
-    sys.argv = sys.argv[:1] # kivy messes up if I don't do this
-    from Chemistry import chemgui
-    chemgui.main()
-elif args.runtests:
-    import runtests
-    runtests.main()
-else: ## Whatever I'm trying at the moment
-    pass
+__all__ = ['docstring_checker', 'make_clean', 'strip_whitespace', 'to_blockdiag']
