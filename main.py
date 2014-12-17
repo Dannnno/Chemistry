@@ -26,10 +26,6 @@ import argparse
 
 parser = argparse.ArgumentParser(description="Runs the Chemistry simulator")
 parser.add_argument(
-                '-t', '--runtests', dest='runtests',
-                default=False, action='store_true',
-                help='Signals that the tests, not the program, should be run')
-parser.add_argument(
                 '-c', '--clean', dest='clean',
                 default=False, action='store_true',
                 help='Signals that the directory should get cleaned up')
@@ -45,10 +41,7 @@ if args.clean:
     make_clean()
     strip_whitespace()
 
-if args.runtests:
-    import runtests
-    runtests.main()
-elif args.gui:
+if args.gui:
     import sys
     sys.argv = sys.argv[:1] # kivy messes up if I don't do this
     from Chemistry import chemgui

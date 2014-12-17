@@ -20,3 +20,10 @@ This repository is designed to use Python in the simulation of organic chemistry
 Current stage of development: Pre-Alpha  
 Current version: NA  
 Currently projected date of Alpha release: Soon<sup>TM</sup>
+
+
+### Testing
+
+All tests can be run from the command line
+
+    \Path\To\Directory\Chemistry\> nosetests
