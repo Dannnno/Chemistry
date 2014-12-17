@@ -7,6 +7,7 @@ ctfile.pdf
 ## PyCharm
 #################
 .idea/*
+base_chemistry.py
 
 #################
 ## Eclipse

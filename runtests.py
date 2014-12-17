@@ -96,6 +96,7 @@ def load_doc_tests(big_suite):
     try:
         for file_, path in tester.visited.iteritems():
             try:
+                if 'chemgui' in file_: continue
                 p = path[:path.rfind(os.sep)]
                 sys.path[0] = p
                 module = __import__(file_)

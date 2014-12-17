@@ -37,7 +37,6 @@ parser.add_argument(
                 '-g', '--gui', dest='gui', default=False, action='store_true',
                 help='Runs the GUI')
 args = parser.parse_args()
-print args
 
 if args.clean:
     from scripts.make_clean import make_clean
@@ -46,13 +45,13 @@ if args.clean:
     make_clean()
     strip_whitespace()
 
-if args.gui:
+if args.runtests:
+    import runtests
+    runtests.main()
+elif args.gui:
     import sys
     sys.argv = sys.argv[:1] # kivy messes up if I don't do this
     from Chemistry import chemgui
     chemgui.main()
-elif args.runtests:
-    import runtests
-    runtests.main()
 else: ## Whatever I'm trying at the moment
     pass
