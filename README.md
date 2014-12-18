@@ -1,4 +1,5 @@
-![Build status](https://readthedocs.org/projects/chemistry/badge/?version=latest)
+![Docs built](https://readthedocs.org/projects/chemistry/badge/?version=latest)
+![Build passed](https://travis-ci.org/Dannnno/Chemistry#)
 ##Organic Chemistry Reaction Simulator
 Updated: 12/10/2014   
 
