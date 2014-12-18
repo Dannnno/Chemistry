@@ -247,7 +247,7 @@ class Order(Button):
 
 
 class Chirality(Button):
-    def callback(self): print 'Chirality'
+    def callback(self): print('Chirality')
 
 
 class ChargeMode(Button):
@@ -322,13 +322,13 @@ class ChemApp(App):
         self.get_information()
         self.to_compound()
         self.list_reactions()
-        print self.compound
+        print(self.compound)
 
     def clean_molecule(self):
         """Cleans up the molecule if necessary.  For example removes any
         extraneous atoms or bonds
         """
-        print 'cleaning'
+        print('cleaning')
 
     def store_molecule(self):
         """Store the molecules in the appropriate format for turning it into
@@ -346,7 +346,7 @@ class ChemApp(App):
         or the reaction conditions
         """
         self.molecule['other_info'] = {}
-        print 'getting info'
+        print('getting info')
 
     def to_compound(self):
         """Transforms the molecule dictionary into a Compound object"""
@@ -358,7 +358,7 @@ class ChemApp(App):
         """Generates a list of reactions in order of probability based
         on the structure of the molecule and the conditions
         """
-        print 'listing'
+        print('listing')
 
 
 def main():

@@ -1,2 +1,3 @@
 lxml
 networkx
+python-coveralls

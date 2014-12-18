@@ -24,7 +24,10 @@
 try:
     import cStringIO as IO
 except ImportError:
-    import StringIO as IO
+    try:
+        import StringIO as IO
+    except ImportError:
+        import io as IO
 finally:
     import os
     import sys

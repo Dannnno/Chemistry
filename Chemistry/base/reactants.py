@@ -44,7 +44,7 @@ class Reactant(object):
             try:
                 return Base(basic_compound, point, pka)
             except Exception as e:
-                print e
+                print(e)
 
     @classmethod
     def make_Acid(cls, acidic_compound, pka=16, point='a1'):
@@ -56,7 +56,7 @@ class Reactant(object):
             try:
                 return Acid(acidic_compound, point, pka)
             except Exception as e:
-                print e
+                print(e)
 
     @classmethod
     def _new_key(cls, compound, atom=True):

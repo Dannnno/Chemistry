@@ -21,7 +21,6 @@
 #You should have received a copy of the MIT License along with this program.
 #If not, see <http://opensource.org/licenses/MIT>
 
-import itertools
 import os
 import tempfile
 import unittest

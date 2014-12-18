@@ -43,7 +43,7 @@ class Chemistry(object):
     __metaclass__ = MetaChemistry
 
     def __init__(self, input1):
-        print input1
+        print(input1)
 
 def reactant_meta_class(clsname, base, dct, *args, **kwargs):
     return MetaChemistry.__new__(MetaChemistry, clsname, base, dct,
@@ -89,7 +89,7 @@ class Reactant(Chemistry):
     __metaclass__ = reactant_meta_class
 
     def __init__(self):
-        print self.__dict__
+        print(self.__dict__)
 
 
 if __name__ == '__main__':
@@ -97,7 +97,7 @@ if __name__ == '__main__':
     #Reactant()
     a = make_Acid(None)
     b = a(1, 2, 3, 4, 5)
-    print a
-    print type(a)
-    print b
-    print type(b)
+    print(a)
+    print(type(a))
+    print(b)
+    print(type(b))
