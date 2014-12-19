@@ -2,3 +2,4 @@ lxml
 networkx
 coveralls
 kivy>=1.8.0
+cython
