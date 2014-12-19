@@ -1,5 +1,6 @@
 [![Docs built](https://readthedocs.org/projects/chemistry/badge/?version=latest)](http://chemistry.readthedocs.org/en/latest/)
 [![Build passed](https://travis-ci.org/Dannnno/Chemistry.svg?branch=master)](https://travis-ci.org/Dannnno/Chemistry)
+[![Coverage Status](https://coveralls.io/repos/Dannnno/Chemistry/badge.png)](https://coveralls.io/r/Dannnno/Chemistry)
 ##Organic Chemistry Reaction Simulator
 Updated: 12/10/2014   
 
