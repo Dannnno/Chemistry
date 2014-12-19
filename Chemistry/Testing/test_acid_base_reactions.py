@@ -37,7 +37,7 @@ finally:
     from Chemistry.base.products import Product, Products
     from Chemistry.reactions.base_reactions import Conditions
     from Chemistry.reactions.acid_base import AcidBase
-    from Chemistry.reactions.exceptions import NoReactionError
+    from Chemistry.exceptions.ReactionErrors import NoReactionError
 
 
 class test_AcidBase_class(unittest.TestCase):

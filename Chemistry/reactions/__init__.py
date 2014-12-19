@@ -25,4 +25,4 @@
 necessary code to describe reaction objects and their processes.
 """
 
-__all__ = ['acid_base', 'base_reactions', 'exceptions']
+__all__ = ['acid_base', 'base_reactions']

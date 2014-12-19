@@ -27,7 +27,7 @@ from copy import deepcopy
 from Chemistry import compounds
 from Chemistry.reactions.base_reactions import Reaction, Conditions
 from Chemistry.base.products import Product, Products, EquilibriumProducts
-from Chemistry.reactions.exceptions import NoReactionError
+from Chemistry.exceptions.ReactionErrors import NoReactionError
 
 
 class AcidBase(Reaction):

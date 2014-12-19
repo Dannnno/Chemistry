@@ -31,7 +31,7 @@ except ImportError:
 finally:
     import re
 
-    from Chemistry.parsing.exceptions import ParsingException
+    from Chemistry.exceptions.ParseErrors import ParsingException
 
 
 class MolV2000(object):

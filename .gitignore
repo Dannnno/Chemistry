@@ -2,12 +2,14 @@
 ## My Project
 #################
 ctfile.pdf
+base_chemistry.py
+Chemistry/specs/*
+docs/*
 
 #################
 ## PyCharm
 #################
 .idea/*
-base_chemistry.py
 
 #################
 ## Eclipse

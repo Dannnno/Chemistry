@@ -1,4 +1,4 @@
-[![Docs built](https://readthedocs.org/projects/chemistry/badge/?version=latest)](Chemistry.rtfd.org)
+[![Docs built](https://readthedocs.org/projects/chemistry/badge/?version=latest)](http://chemistry.readthedocs.org/en/latest/)
 [![Build passed](https://travis-ci.org/Dannnno/Chemistry.svg?branch=master)](https://travis-ci.org/Dannnno/Chemistry)
 ##Organic Chemistry Reaction Simulator
 Updated: 12/10/2014   
