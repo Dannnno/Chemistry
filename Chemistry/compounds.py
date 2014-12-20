@@ -21,22 +21,15 @@
 #You should have received a copy of the MIT License along with this program.
 #If not, see <http://opensource.org/licenses/MIT>
 
-try:
-    from Chemistry.base.periodic_table import periodic_table
-except ImportError:
-    from Chemistry.base import table_builder
-    table_builder.build_table()
-    del globals()['table_builder']
-    from Chemistry.base.periodic_table import periodic_table
-finally:
-    from collections import deque
-    import json
-    import types
+from collections import deque
+import json
+import types
 
-    import networkx as nx
+import networkx as nx
 
-    from Chemistry.parsing import CheML as cml
-    from Chemistry.parsing.mol import molv2000, molv3000
+from Chemistry.base.periodic_table import periodic_table
+from Chemistry.parsing import CheML as cml
+from Chemistry.parsing.mol import molv2000, molv3000
 
 
 def get_Element(symbol='C'):
@@ -94,10 +87,9 @@ class Compound(nx.Graph):
     @classmethod
     def node_matcher(cls, node1, node2):
         """Helper function to check for isomorphic graphs"""
-        try:
-            return node1['symbol'] == node2['symbol']
-        except KeyError:
-            return False
+        return (node1['symbol'] == node2['symbol']
+                if ('symbol' in node1 and 'symbol' in node2)
+                else False)
 
     @classmethod
     def edge_matcher(cls, edge1, edge2):

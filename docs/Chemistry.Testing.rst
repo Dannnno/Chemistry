@@ -68,6 +68,22 @@ Chemistry.Testing.test_periodic_helpers module
     :undoc-members:
     :show-inheritance:
 
+Chemistry.Testing.test_products module
+--------------------------------------
+
+.. automodule:: Chemistry.Testing.test_products
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Chemistry.Testing.test_reactants module
+---------------------------------------
+
+.. automodule:: Chemistry.Testing.test_reactants
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 Chemistry.Testing.test_sdf module
 ---------------------------------
 

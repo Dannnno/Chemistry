@@ -19,14 +19,6 @@ Chemistry.parsing.CheML module
     :undoc-members:
     :show-inheritance:
 
-Chemistry.parsing.exceptions module
------------------------------------
-
-.. automodule:: Chemistry.parsing.exceptions
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 
 Module contents
 ---------------

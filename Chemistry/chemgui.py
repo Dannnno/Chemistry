@@ -36,10 +36,14 @@ from kivy.properties import StringProperty, ObjectProperty, NumericProperty,\
                                ListProperty
 
 from Chemistry.compounds import Compound
+from Chemistry.base.reactants import Acid, Base, Reactant
+from Chemistry.reactions.base_reactions import Conditions
+# Reactions
+from Chemistry.reactions import AcidBase
 
 
+reaction_list = [AcidBase]
 app = None
-
 
 class Element(Widget):
 
@@ -229,6 +233,7 @@ class PeriodicTable(BoxLayout):
             return True
         super(PeriodicTable, self).on_touch_down(touch)
 
+
 class ElementMode(Button):
 
     def callback(self):
@@ -268,13 +273,14 @@ class ChemApp(App):
     mode = 'Element'
     _element = 'C'
     _order = 1
-    _chirality=None
+    _chirality = None
 
     molecule = {}
     compound = None
+    conditions = None
     widget = None
     labtable = None
-
+    reactionlist = None
 
     def build(self):
         self.widget = Workbench()
@@ -301,7 +307,7 @@ class ChemApp(App):
 
     @order.setter
     def order(self, ord_):
-        self._order = (ord_) % 3
+        self._order = ord_ % 3
         if self._order == 0:
             self._order = 3
 
@@ -315,25 +321,26 @@ class ChemApp(App):
 
     def react(self):
         """The steps taken by my program to react a molecule"""
+
         self.molecule = {}
         self.labtable = self.widget.children[0].children[0]
         self.store_molecule()
         self.clean_molecule()
         self.get_information()
         self.to_compound()
+        self.generate_conditions()
         self.list_reactions()
+        self.test_reactions()
+        self.pick_result()
+        self.build_instructions()
+        self.display_result()
         print(self.compound)
-
-    def clean_molecule(self):
-        """Cleans up the molecule if necessary.  For example removes any
-        extraneous atoms or bonds
-        """
-        print('cleaning')
 
     def store_molecule(self):
         """Store the molecules in the appropriate format for turning it into
         a Compound object
         """
+
         self.molecule['atoms'] = {}
         for k, v in self.labtable.element_keys.iteritems():
             self.molecule['atoms'][k] = v[0]
@@ -341,24 +348,58 @@ class ChemApp(App):
         for k, v in self.labtable.bond_keys.iteritems():
             self.molecule['bonds'][k] = v[:-1]
 
+    def clean_molecule(self):
+        """Cleans up the molecule if necessary.  For example removes any
+        extraneous atoms or bonds
+        """
+
+        print('cleaning')
+
     def get_information(self):
         """Ask the user for any pertinent information about the molecule
         or the reaction conditions
         """
+
         self.molecule['other_info'] = {}
         print('getting info')
 
     def to_compound(self):
         """Transforms the molecule dictionary into a Compound object"""
-        self.compound = Compound(self.molecule['atoms'],
-                                 self.molecule['bonds'],
-                                 self.molecule['other_info'])
+
+        self.compound = [Compound(self.molecule['atoms'],
+                                  self.molecule['bonds'],
+                                  self.molecule['other_info']),
+                         Compound({}, {}, {})]
+
+    def generate_conditions(self):
+        """Generates the reaction conditions"""
+
+        self.conditions = Conditions({})
+        print self.conditions
 
     def list_reactions(self):
         """Generates a list of reactions in order of probability based
         on the structure of the molecule and the conditions
         """
-        print('listing')
+
+        # I don't really have this working yet
+        self.reactionlist = sorted(reaction_list) ## This will have a key or something
+
+    def test_reactions(self):
+        """Tests the reactions to determine which will come to fruition"""
+
+        self.successful_reactions = []
+        for reaction in self.reactionlist:
+            testing_reaction = reaction(Acid(self.compound[0], 'a1', -1.74),
+                                        Base(self.compound[1], 'a3', 16),
+                                        self.conditions)
+            print testing_reaction._acid
+            print testing_reaction._conditions
+            print testing_reaction._base
+
+    def pick_result(self): pass
+    def build_instructions(self): pass
+    def display_result(self): pass
 
 
 def main():

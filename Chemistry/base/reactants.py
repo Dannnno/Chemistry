@@ -191,7 +191,3 @@ class Electrophile(Reactant): pass
 
 
 class Nucleophile(Reactant): pass
-
-
-if __name__ == '__main__':
-    pass

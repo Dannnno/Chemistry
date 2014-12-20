@@ -20,14 +20,6 @@ Chemistry.reactions.base_reactions module
     :undoc-members:
     :show-inheritance:
 
-Chemistry.reactions.exceptions module
--------------------------------------
-
-.. automodule:: Chemistry.reactions.exceptions
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 
 Module contents
 ---------------

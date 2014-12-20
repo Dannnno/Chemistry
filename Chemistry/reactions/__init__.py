@@ -26,3 +26,5 @@ necessary code to describe reaction objects and their processes.
 """
 
 __all__ = ['acid_base', 'base_reactions']
+
+from .acid_base import AcidBase

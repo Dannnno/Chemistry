@@ -130,19 +130,19 @@ class test_acid_base_reaction(unittest.TestCase):
 
     def setUp(self):
         self.compound1 = compounds.Compound(
-                                {"a1":"H", "a2":"O"},
-                                {"b1":("a1", "a2", {'order': 1,
-                                                    'chirality': None})},
-                                {"id":"Hydroxide"})
+                                {"a1": "H", "a2": "O"},
+                                {"b1": ("a1", "a2", {'order': 1,
+                                                     'chirality': None})},
+                                {"id": "Hydroxide"})
         self.compound2 = compounds.Compound(
-                                {"a1":"H", "a2":"H", "a3":"O", "a4":"H"},
-                                {"b1":("a1", "a3", {'order': 1,
-                                                    'chirality': None}),
-                                 "b2":("a2", "a3", {'order': 1,
-                                                    'chirality': None}),
-                                 "b3":("a3", "a4", {'order': 1,
-                                                    'chirality': None})},
-                                {"id":"Hydronium"})
+                                {"a1": "H", "a2": "H", "a3": "O", "a4": "H"},
+                                {"b1": ("a1", "a3", {'order': 1,
+                                                     'chirality': None}),
+                                 "b2": ("a2", "a3", {'order': 1,
+                                                     'chirality': None}),
+                                 "b3": ("a3", "a4", {'order': 1,
+                                                     'chirality': None})},
+                                {"id": "Hydronium"})
 
         self.acid1 = Acid(self.compound2, 'a1', -1.74)
         self.base1 = Base(self.compound1, 'a2', 15.7)

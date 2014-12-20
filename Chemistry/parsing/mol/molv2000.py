@@ -305,21 +305,4 @@ class MolV2000Parser(object):
                 self.properties['p{}'.format(i)] = line
 
 
-class MolV2000Builder(object):
-
-    def __init__(self):
-        raise NotImplementedError
-
-    @classmethod
-    def from_Compound(cls, compound):
-        raise NotImplementedError
-
-    def __str__(self):
-        return "MolV2000 Builder"
-
-    def __repr__(self):
-        return str(self)
-
-
-if __name__ == '__main__':
-    pass
+class MolV2000Builder(object): pass
