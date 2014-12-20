@@ -41,10 +41,7 @@ class Reactant(object):
         if isinstance(basic_compound, Base):
             return basic_compound
         else:
-            try:
-                return Base(basic_compound, point, pka)
-            except Exception as e:
-                print(e)
+            return Base(basic_compound, point, pka)
 
     @classmethod
     def make_Acid(cls, acidic_compound, pka=16, point='a1'):
@@ -53,10 +50,7 @@ class Reactant(object):
         if isinstance(acidic_compound, Acid):
             return acidic_compound
         else:
-            try:
-                return Acid(acidic_compound, point, pka)
-            except Exception as e:
-                print(e)
+            return Acid(acidic_compound, point, pka)
 
     @classmethod
     def _new_key(cls, compound, atom=True):
@@ -85,7 +79,7 @@ class Reactant(object):
 
         return self._compound
 
-    def add_paths(self, **paths):
+    def add_paths(self, paths):
         """Deprecated/NYI. Not sure yet."""
 
         for reaction, path in paths.iteritems():

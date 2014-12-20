@@ -1,40 +1,32 @@
-#Copyright (c) 2014 Dan Obermiller
+# Copyright (c) 2014 Dan Obermiller
 #
-#Permission is hereby granted, free of charge, to any person obtaining a copy
-#of this software and associated documentation files (the "Software"), to deal
-#in the Software without restriction, including without limitation the rights
-#to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-#copies of the Software, and to permit persons to whom the Software is
-#furnished to do so, subject to the following conditions:
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
 #
-#The above copyright notice and this permission notice shall be included in
-#all copies or substantial portions of the Software.
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
 #
-#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-#IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-#FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-#AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-#LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-#OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-#THE SOFTWARE.
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
 #
-#You should have received a copy of the MIT License along with this program.
-#If not, see <http://opensource.org/licenses/MIT>
+# You should have received a copy of the MIT License along with this program.
+# If not, see <http://opensource.org/licenses/MIT>
 
-try:
-    import cStringIO as IO
-except ImportError:
-    try:
-        import StringIO as IO
-    except ImportError:
-        import io as IO
-finally:
-    import unittest
+import io
+import unittest
 
-    from nose.plugins.skip import SkipTest
+from nose.plugins.skip import SkipTest
 
-    from Chemistry import compounds
-    from Chemistry.parsing.mol import molv2000 as mol
+from Chemistry.parsing.mol import molv2000 as mol
 
 @unittest.skip('minor error thats breaking travis')
 class test_MolV2000(unittest.TestCase):
@@ -42,7 +34,7 @@ class test_MolV2000(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         raise SkipTest
-        cls.moldata = IO.StringIO(""" benzene
+        cls.moldata = io.StringIO(""" benzene
  ACD/Labs0812062058
 
  6  6  0  0  0  0  0  0  0  0  1 V2000
@@ -147,17 +139,5 @@ class test_MolV2000Builder(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    import types
-    import sys
-
-
-    test_classes_to_run = [value for key, value in globals().items()
-                           if (isinstance(value, (type, types.ClassType)) and
-                               issubclass(value, unittest.TestCase))]
-
-    loader = unittest.TestLoader()
-    big_suite = unittest.TestSuite(loader.loadTestsFromTestCase(test_class)
-                                   for test_class in test_classes_to_run)
-
-    runner = unittest.TextTestRunner(sys.stdout, verbosity=1)
-    runner.run(big_suite)
+    from . import helper
+    helper(globals())

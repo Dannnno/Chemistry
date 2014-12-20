@@ -21,11 +21,8 @@
 #You should have received a copy of the MIT License along with this program.
 #If not, see <http://opensource.org/licenses/MIT>
 
-import os
-import tempfile
 import unittest
 
-from Chemistry import compounds
 from Chemistry.parsing.mol import sdf
 
 
@@ -69,17 +66,6 @@ class test_SDFBuilder(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    import types
-    import sys
+    from . import helper
+    helper(globals())
 
-
-    test_classes_to_run = [value for key, value in globals().items()
-                           if (isinstance(value, (type, types.ClassType)) and
-                               issubclass(value, unittest.TestCase))]
-
-    loader = unittest.TestLoader()
-    big_suite = unittest.TestSuite(loader.loadTestsFromTestCase(test_class)
-                                   for test_class in test_classes_to_run)
-
-    runner = unittest.TextTestRunner(sys.stdout, verbosity=1)
-    runner.run(big_suite)

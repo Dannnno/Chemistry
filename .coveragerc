@@ -6,3 +6,4 @@ omit =
     */Chemistry/Testing/*
     */base/base_chemistry.py
     */Chemistry/chemgui.py
+    */Chemistry/exceptions/*

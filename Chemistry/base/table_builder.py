@@ -23,6 +23,7 @@
 
 import csv
 import json
+import os
 from collections import OrderedDict
 
 
@@ -89,7 +90,7 @@ def convert_type(cell, typ):
         if typ is str_to_list:
             return typ(cell, mapped=int)
         return typ(cell)
-    except (TypeError, ValueError):
+    except ValueError:
         return None
 
 
@@ -105,13 +106,7 @@ def str_to_list(a_stringy_list, mapped=None):
     """
 
     the_list = a_stringy_list[1:-1].split(",")
-    try:
-        # Fun fact, mapping 'None' to a list just returns the list
-        return map(mapped, the_list)
-    except ValueError:
-        if the_list[0] is None:
-            return None
-        return the_list
+    return map(mapped, the_list)
 
 
 def build_table():
@@ -120,7 +115,9 @@ def build_table():
     The function exists to ease large scale changes to the data held within the
     periodic table
     """
-
+    curdir = os.getcwd()
+    local_dir = os.path.dirname(os.path.abspath(__file__))
+    os.chdir(local_dir)
     with open("element_list.csv", 'r') as element_data, \
         open("periodic_table.py", 'w') as periodic_table:
 
@@ -144,7 +141,4 @@ def build_table():
 
         for line in json_table:
             periodic_table.write(line.replace('null', 'None') + "\n")
-
-
-if __name__ == "__main__":
-    build_table()
+    os.chdir(curdir)

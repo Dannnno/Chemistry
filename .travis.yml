@@ -1,6 +1,8 @@
 language: python
 python:
   - "2.7"
+  # No python 3 support yet.  I'm curious about pypy though...
+  - "pypy"
 # command to install dependencies
 install:
   - pip install -r requirements.txt

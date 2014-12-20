@@ -1,3 +1,4 @@
 lxml
 networkx
 coveralls
+nose

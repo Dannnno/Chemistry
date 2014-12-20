@@ -39,9 +39,9 @@ class Product(object):
         return getattr(self._compound, attr)
 
     def __eq__(self, other):
-        try:
+        if hasattr(other, '_compound'):
             return self._compound == other._compound
-        except AttributeError:
+        else:
             return self._compound == other
 
     def __str__(self):
@@ -92,7 +92,7 @@ class Products(object):
                     raise TypeError(
                             "Should be a Product, not a {}".format(type(prod)))
         else:
-            return
+            raise TypeError("Should be a Product, not a {}".format(type(products)))
 
     @property
     def minor(self):
@@ -119,7 +119,7 @@ class Products(object):
                     raise TypeError(
                             "Should be a Product, not a {}".format(type(prod)))
         else:
-            return
+            raise TypeError("Should be a Product, not a {}".format(type(products)))
 
     def __eq__(self, other):
         return False
