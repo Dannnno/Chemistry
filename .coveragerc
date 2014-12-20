@@ -3,3 +3,6 @@ omit =
     */python?.?/*
     */site-packages/*
     *__init__*
+    */Chemistry/Testing/*
+    */base/base_chemistry.py
+    */Chemistry/chemgui.py
