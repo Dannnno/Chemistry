@@ -25,6 +25,7 @@ import os
 import unittest
 
 from Chemistry import compounds
+import Chemistry.base.periodic_table as pt
 
 
 class test_Compound(unittest.TestCase):
@@ -93,25 +94,23 @@ class test_Compound(unittest.TestCase):
                                     'b2': ('a2', 'a3',
                                           {'chirality': None, 'order': 1})}})
 
-    def test__add_node_raises_KE(self):
-        self.assertRaises(KeyError,
-                          self.compound1._add_node_,
-                          *('a2', compounds.get_Element('H')))
+    def test_add_node_raises_KE(self):
+        with self.assertRaises(KeyError):
+            self.compound1._add_node('a2', pt.get_element('H'))
 
-    def test__add_node_(self):
-        self.compound1._add_node_('a4', compounds.get_Element('H'))
+    def test_add_node_(self):
+        self.compound1._add_node('a4', pt.get_element('H'))
         self.assertIn('a4', self.compound1.nodes())
 
-    def test__add_edge_raises_KE(self):
-        self.compound1._add_edge_('b3', 'a1', 'a2',
+    def test_add_edge_raises_KE(self):
+        self.compound1._add_edge('b3', 'a1', 'a2',
                                   {'order':1, 'chirality':None})
-        self.assertRaises(KeyError,
-                          self.compound1._add_edge_,
-                          *('b3', 'a1', 'a2', {'order':1, 'chirality':None}))
+        with self.assertRaises(KeyError):
+            self.compound1._add_edge('b3', 'a1', 'a2', {'order':1, 'chirality':None})
 
-    def test__add_edge_(self):
-        self.compound1._add_node_('a4', compounds.get_Element('H'))
-        self.compound1._add_edge_('b3', 'a1', 'a4',
+    def test_add_edge_(self):
+        self.compound1._add_node('a4', pt.get_element('H'))
+        self.compound1._add_edge('b3', 'a1', 'a4',
                                   {'order':1, 'chirality':None})
         self.assertEqual(self.compound1['a1']['a4']['key'], "b3")
 

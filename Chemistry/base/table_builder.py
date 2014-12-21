@@ -1,25 +1,25 @@
-#Copyright (c) 2014 Dan Obermiller
+# Copyright (c) 2014 Dan Obermiller
 #
-#Permission is hereby granted, free of charge, to any person obtaining a copy
-#of this software and associated documentation files (the "Software"), to deal
-#in the Software without restriction, including without limitation the rights
-#to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-#copies of the Software, and to permit persons to whom the Software is
-#furnished to do so, subject to the following conditions:
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
 #
-#The above copyright notice and this permission notice shall be included in
-#all copies or substantial portions of the Software.
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
 #
-#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-#IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-#FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-#AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-#LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-#OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-#THE SOFTWARE.
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
 #
-#You should have received a copy of the MIT License along with this program.
-#If not, see <http://opensource.org/licenses/MIT>
+# You should have received a copy of the MIT License along with this program.
+# If not, see <http://opensource.org/licenses/MIT>
 
 import csv
 import json
@@ -52,19 +52,13 @@ You should have received a copy of the MIT License along with this program.
 If not, see <http://opensource.org/licenses/MIT>
 \"\"\"
 
-ENEG = "Electronegativity"
-GROUP = "Group"
-MP = "Melting Point"
-WEIGHT = "Weight"
-DENSITY = "Density"
-SYMB = "Symbol"
-ELEMENT = "Element"
-NUMBER = "Atomic Number"
-BP = "Boiling Point"
-HEAT = "Heat of ?"
-RAD = "Atomic Radius"
-OX = "Oxidation Number(s)"
+def get_element(symbol='C'):
+    '''Function that returns the appropriate data for a periodic table'''
+    table = {"symbol": symbol}
+    table.update(periodic_table[symbol])
+    return table
 """
+
 
 def convert_type(cell, typ):
     """Credit to SO user Marius for (most of) this function

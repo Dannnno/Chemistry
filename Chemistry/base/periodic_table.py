@@ -23,18 +23,11 @@ You should have received a copy of the MIT License along with this program.
 If not, see <http://opensource.org/licenses/MIT>
 """
 
-ENEG = "Electronegativity"
-GROUP = "Group"
-MP = "Melting Point"
-WEIGHT = "Weight"
-DENSITY = "Density"
-SYMB = "Symbol"
-ELEMENT = "Element"
-NUMBER = "Atomic Number"
-BP = "Boiling Point"
-HEAT = "Heat of ?"
-RAD = "Atomic Radius"
-OX = "Oxidation Number(s)"
+def get_element(symbol='C'):
+    '''Function that returns the appropriate data for a periodic table'''
+    table = {"symbol": symbol}
+    table.update(periodic_table[symbol])
+    return table
 
 
 periodic_table = {
