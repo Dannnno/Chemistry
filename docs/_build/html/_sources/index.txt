@@ -1,18 +1,19 @@
-.. PyChem documentation master file, created by
-   sphinx-quickstart on Wed Dec 10 19:44:55 2014.
+.. PyChAOS documentation master file, created by
+   sphinx-quickstart on Sun Dec 21 15:00:57 2014.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to PyChem's documentation!
-==================================
+Welcome to PyChAOS's documentation!
+===================================
 
 Contents:
 
 .. toctree::
    :maxdepth: 2
 
-    includeme
-    
+.. automodule:: Chemistry.compounds
+   :members:
+
 
 Indices and tables
 ==================

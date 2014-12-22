@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
-# PyChem documentation build configuration file, created by
-# sphinx-quickstart on Wed Dec 10 19:44:55 2014.
+# PyChAOS documentation build configuration file, created by
+# sphinx-quickstart on Sun Dec 21 15:00:57 2014.
 #
 # This file is execfile()d with the current directory set to its
 # containing dir.
@@ -18,10 +18,7 @@ import os
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-dirname = os.path.dirname(os.path.abspath('.'))
-dirname = dirname[:dirname.rfind('\\')]
-sys.path.insert(0, os.path.join(dirname, 'PyChem-docs', 'html'))
-sys.path.insert(0, dirname)
+sys.path.insert(0, os.path.abspath('..'))
 
 # -- General configuration ------------------------------------------------
 
@@ -33,9 +30,7 @@ sys.path.insert(0, dirname)
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
-    'sphinx.ext.doctest',
-    'sphinx.ext.coverage',
-    'sphinx.ext.viewcode',
+    'sphinx.ext.autosummary',
     'numpydoc'
 ]
 
@@ -52,7 +47,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'PyChem'
+project = u'PyChAOS'
 copyright = u'2014, Dan Obermiller'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -185,7 +180,7 @@ html_static_path = ['_static']
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'PyChemdoc'
+htmlhelp_basename = 'PyChAOSdoc'
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -205,7 +200,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-  ('index', 'PyChem.tex', u'PyChem Documentation',
+  ('index', 'PyChAOS.tex', u'PyChAOS Documentation',
    u'Dan Obermiller', 'manual'),
 ]
 
@@ -235,7 +230,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'pychem', u'PyChem Documentation',
+    ('index', 'pychaos', u'PyChAOS Documentation',
      [u'Dan Obermiller'], 1)
 ]
 
@@ -249,8 +244,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'PyChem', u'PyChem Documentation',
-   u'Dan Obermiller', 'PyChem', 'One line description of project.',
+  ('index', 'PyChAOS', u'PyChAOS Documentation',
+   u'Dan Obermiller', 'PyChAOS', 'One line description of project.',
    'Miscellaneous'),
 ]
 

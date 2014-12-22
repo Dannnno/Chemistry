@@ -5,9 +5,7 @@
 SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
 PAPER         =
-BUILDDIR      = ../../PyChem-docs/html
-PDFBUILDDIR   = /tmp
-PDF           = ../manual.pdf
+BUILDDIR      = _build
 
 # User-friendly check for sphinx-build
 ifeq ($(shell which $(SPHINXBUILD) >/dev/null 2>&1; echo $$?), 1)
@@ -87,17 +85,17 @@ qthelp:
 	@echo
 	@echo "Build finished; now you can run "qcollectiongenerator" with the" \
 	      ".qhcp project file in $(BUILDDIR)/qthelp, like this:"
-	@echo "# qcollectiongenerator $(BUILDDIR)/qthelp/PyChem.qhcp"
+	@echo "# qcollectiongenerator $(BUILDDIR)/qthelp/PyChAOS.qhcp"
 	@echo "To view the help file:"
-	@echo "# assistant -collectionFile $(BUILDDIR)/qthelp/PyChem.qhc"
+	@echo "# assistant -collectionFile $(BUILDDIR)/qthelp/PyChAOS.qhc"
 
 devhelp:
 	$(SPHINXBUILD) -b devhelp $(ALLSPHINXOPTS) $(BUILDDIR)/devhelp
 	@echo
 	@echo "Build finished."
 	@echo "To view the help file:"
-	@echo "# mkdir -p $$HOME/.local/share/devhelp/PyChem"
-	@echo "# ln -s $(BUILDDIR)/devhelp $$HOME/.local/share/devhelp/PyChem"
+	@echo "# mkdir -p $$HOME/.local/share/devhelp/PyChAOS"
+	@echo "# ln -s $(BUILDDIR)/devhelp $$HOME/.local/share/devhelp/PyChAOS"
 	@echo "# devhelp"
 
 epub:
@@ -113,14 +111,10 @@ latex:
 	      "(use \`make latexpdf' here to do that automatically)."
 
 latexpdf:
-        $(SPHINXBUILD) -b latex $(ALLSPHINXOPTS) $(PDFBUILDDIR)/latex
-        #                                          ^^^
-        @echo "Running LaTeX files through pdflatex..."
-        make -C $(PDFBUILDDIR)/latex all-pdf
-        #         ^^^
-        cp $(PDFBUILDDIR)/latex/*.pdf $(PDF)
-        #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-        @echo "pdflatex finished; see $(PDF)"
+	$(SPHINXBUILD) -b latex $(ALLSPHINXOPTS) $(BUILDDIR)/latex
+	@echo "Running LaTeX files through pdflatex..."
+	$(MAKE) -C $(BUILDDIR)/latex all-pdf
+	@echo "pdflatex finished; the PDF files are in $(BUILDDIR)/latex."
 
 latexpdfja:
 	$(SPHINXBUILD) -b latex $(ALLSPHINXOPTS) $(BUILDDIR)/latex
