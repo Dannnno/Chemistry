@@ -12,7 +12,6 @@ Contents:
    :maxdepth: 2
 
 .. automodule:: Chemistry.compounds
-   :members:
 
 
 Indices and tables

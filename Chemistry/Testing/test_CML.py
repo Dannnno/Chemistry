@@ -92,18 +92,22 @@ class test_cml_builder(unittest.TestCase):
             self.assertEqual(line1.lstrip(), line2.lstrip())
 
     def test_from_Compound(self):
-        Builder = cml.CMLBuilder.from_Compound(
-                    compounds.Compound.from_CML("CML_1.cml"))
+        with open("CML_1.cml", 'r') as cml_file:
+            builder = cml.CMLBuilder.from_Compound(
+                        compounds.Compound.build_from_file('cml', cml_file))
 
-        with tempfile.NamedTemporaryFile(
-                                          mode='r+',
-                                          suffix='.cml',
-                                          dir=os.getcwd()
-                                         ) as tfile:
-            Builder.to_file(tfile)
-            tfile.seek(0)
-            self.assertEqual(compounds.Compound.from_CML("CML_1.cml").molecule,
-                             compounds.Compound.from_CML(tfile).molecule)
+            with tempfile.NamedTemporaryFile(mode='r+',
+                                             suffix='.cml',
+                                             dir=os.getcwd()
+                                             ) as tfile:
+                builder.to_file(tfile)
+                tfile.seek(0)
+                cml_file.seek(0)
+                self.assertEqual(
+                    compounds.Compound.build_from_file(
+                        'cml', cml_file).molecule,
+                    compounds.Compound.build_from_file(
+                        'cml', tfile).molecule)
 
 
 if __name__ == '__main__':

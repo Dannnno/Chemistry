@@ -34,7 +34,7 @@ from Chemistry.exceptions.ParseErrors import UnsupportedFileTypeException
 
 
 # Parsing functions
-def from_cml(cml_file):
+def from_cml(cml_file, **kwargs):
     """Generates a Compound object from a cml file
 
     Parameters
@@ -52,7 +52,7 @@ def from_cml(cml_file):
     return Compound(parsed.atoms, parsed.bonds, parsed.other)
 
 
-def to_cml(compound, filename):
+def to_cml(compound, filename, **kwargs):
     """Generates a CML file from the given Compound
 
     Parameters
@@ -66,7 +66,7 @@ def to_cml(compound, filename):
     cml.CMLBuilder.from_Compound(compound).to_file(filename)
 
 
-def from_molfile_v2000(mol_file):
+def from_molfile_v2000(mol_file, **kwargs):
     """Generates a Compound object from a mol file in v2000 format
 
     Parameters
@@ -85,7 +85,7 @@ def from_molfile_v2000(mol_file):
     return Compound(mol.atoms, mol.bonds, mol.other)
 
 
-def to_molfile_v2000(cml_file):
+def to_molfile_v2000(compound, filename, **kwargs):
     pass
 
 
@@ -161,6 +161,28 @@ class Compound(nx.Graph):
         else:
             raise UnsupportedFileTypeException(
                 "Filetype {} is not supported".format(filetype))
+
+    @classmethod
+    def write_to_file(cls, compound, filetype, filename, **kwargs):
+        """Writes to a file the necessary data to rebuild this molecule
+
+        Parameters
+        ----------
+        compound : Compound
+            The compound to be written
+        filetype : str
+            The type of file being used.
+        filename : str
+            The file that will be written to
+        """
+
+        if filetype in cls.filetypes:
+            return cls.filetypes[filetype][cls.BUILD_FILE](
+                filename, compound, **kwargs)
+        else:
+            raise UnsupportedFileTypeException(
+                "Filetype {} is not supported".format(filetype))
+
 
     @classmethod
     def json_serialize(cls, obj, as_str=False):
@@ -430,14 +452,6 @@ class Compound(nx.Graph):
                          ((next_ is not None and
                            self.atoms[neighbor] == next_) or
                           (next_ is None)))
-
-    def to_molfile(self, filename, to_v3000=False):
-        """Generates a mol file from the current Compound"""
-
-        if to_v3000:
-            raise NotImplementedError("No support for v3000 yet")
-        else:
-            molv2000.MolV2000Builder.from_Compound(self)
 
     def __str__(self):
         return json.dumps(Compound.json_serialize(self, as_str=True),
