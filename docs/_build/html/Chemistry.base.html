@@ -1,0 +1,766 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Chemistry.base package &mdash; PyChAOS 0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="PyChAOS 0.0 documentation" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="index.html">PyChAOS 0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="chemistry-base-package">
+<h1>Chemistry.base package<a class="headerlink" href="#chemistry-base-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-Chemistry.base.base_chemistry">
+<span id="chemistry-base-base-chemistry-module"></span><h2>Chemistry.base.base_chemistry module<a class="headerlink" href="#module-Chemistry.base.base_chemistry" title="Permalink to this headline">¶</a></h2>
+<p>Not for public use.  I&#8217;ve been playing around with meta classes and I haven&#8217;t
+decided if they&#8217;re going to really be necessary as I move forward.  If you&#8217;re
+using this module then you&#8217;re doing something wrong.</p>
+<dl class="class">
+<dt id="Chemistry.base.base_chemistry.Chemistry">
+<em class="property">class </em><tt class="descclassname">Chemistry.base.base_chemistry.</tt><tt class="descname">Chemistry</tt><big>(</big><em>input1</em><big>)</big><a class="headerlink" href="#Chemistry.base.base_chemistry.Chemistry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="Chemistry.base.base_chemistry.MetaChemistry">
+<em class="property">class </em><tt class="descclassname">Chemistry.base.base_chemistry.</tt><tt class="descname">MetaChemistry</tt><a class="headerlink" href="#Chemistry.base.base_chemistry.MetaChemistry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">type</span></tt></p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">__call__</span></tt>(...)&nbsp;&lt;==&gt;&nbsp;x(...)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">mro</span></tt>(()&nbsp;-&gt;&nbsp;list)</td>
+<td>return a type&#8217;s method resolution order</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="Chemistry.base.base_chemistry.Reactant">
+<em class="property">class </em><tt class="descclassname">Chemistry.base.base_chemistry.</tt><tt class="descname">Reactant</tt><a class="headerlink" href="#Chemistry.base.base_chemistry.Reactant" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#Chemistry.base.base_chemistry.Chemistry" title="Chemistry.base.base_chemistry.Chemistry"><tt class="xref py py-class docutils literal"><span class="pre">Chemistry.base.base_chemistry.Chemistry</span></tt></a></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="Chemistry.base.base_chemistry.acid_init">
+<tt class="descclassname">Chemistry.base.base_chemistry.</tt><tt class="descname">acid_init</tt><big>(</big><em>self</em>, <em>atoms</em>, <em>bonds</em>, <em>acidic_point</em>, <em>pka</em>, <em>other_info={}</em><big>)</big><a class="headerlink" href="#Chemistry.base.base_chemistry.acid_init" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="Chemistry.base.base_chemistry.base_init">
+<tt class="descclassname">Chemistry.base.base_chemistry.</tt><tt class="descname">base_init</tt><big>(</big><em>self</em>, <em>atoms</em>, <em>bonds</em>, <em>basic_point</em>, <em>pka</em>, <em>other_info={}</em><big>)</big><a class="headerlink" href="#Chemistry.base.base_chemistry.base_init" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="Chemistry.base.base_chemistry.generic_init">
+<tt class="descclassname">Chemistry.base.base_chemistry.</tt><tt class="descname">generic_init</tt><big>(</big><em>self</em>, <em>atoms</em>, <em>bonds</em>, <em>point</em>, <em>pka</em>, <em>other_info</em><big>)</big><a class="headerlink" href="#Chemistry.base.base_chemistry.generic_init" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="Chemistry.base.base_chemistry.make_Acid">
+<tt class="descclassname">Chemistry.base.base_chemistry.</tt><tt class="descname">make_Acid</tt><big>(</big><em>dct</em><big>)</big><a class="headerlink" href="#Chemistry.base.base_chemistry.make_Acid" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="Chemistry.base.base_chemistry.reactant_meta_class">
+<tt class="descclassname">Chemistry.base.base_chemistry.</tt><tt class="descname">reactant_meta_class</tt><big>(</big><em>clsname</em>, <em>base</em>, <em>dct</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#Chemistry.base.base_chemistry.reactant_meta_class" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-Chemistry.base.periodic_table">
+<span id="chemistry-base-periodic-table-module"></span><h2>Chemistry.base.periodic_table module<a class="headerlink" href="#module-Chemistry.base.periodic_table" title="Permalink to this headline">¶</a></h2>
+<p>Copyright (c) 2014 Dan Obermiller</p>
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the &#8220;Software&#8221;), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:</p>
+<p>The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.</p>
+<p>THE SOFTWARE IS PROVIDED &#8220;AS IS&#8221;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.</p>
+<p>You should have received a copy of the MIT License along with this program.
+If not, see &lt;<a class="reference external" href="http://opensource.org/licenses/MIT">http://opensource.org/licenses/MIT</a>&gt;</p>
+<dl class="function">
+<dt id="Chemistry.base.periodic_table.get_element">
+<tt class="descclassname">Chemistry.base.periodic_table.</tt><tt class="descname">get_element</tt><big>(</big><em>symbol='C'</em><big>)</big><a class="headerlink" href="#Chemistry.base.periodic_table.get_element" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function that returns the appropriate data for a periodic table</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-Chemistry.base.products">
+<span id="chemistry-base-products-module"></span><h2>Chemistry.base.products module<a class="headerlink" href="#module-Chemistry.base.products" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="Chemistry.base.products.EquilibriumProducts">
+<em class="property">class </em><tt class="descclassname">Chemistry.base.products.</tt><tt class="descname">EquilibriumProducts</tt><big>(</big><em>reactants</em>, <em>products</em><big>)</big><a class="headerlink" href="#Chemistry.base.products.EquilibriumProducts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>EquilibriumProducts object - much the same as a Products object
+but for reversible reactions</p>
+<p class="rubric">Attributes</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#Chemistry.base.products.EquilibriumProducts.products" title="Chemistry.base.products.EquilibriumProducts.products"><tt class="xref py py-obj docutils literal"><span class="pre">products</span></tt></a></td>
+<td>The products of the reaction; that is the things resulting from</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#Chemistry.base.products.EquilibriumProducts.reactants" title="Chemistry.base.products.EquilibriumProducts.reactants"><tt class="xref py py-obj docutils literal"><span class="pre">reactants</span></tt></a></td>
+<td>The reactants in the reaction; the things that were there initially</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="Chemistry.base.products.EquilibriumProducts.products">
+<tt class="descname">products</tt><a class="headerlink" href="#Chemistry.base.products.EquilibriumProducts.products" title="Permalink to this definition">¶</a></dt>
+<dd><p>The products of the reaction; that is the things resulting from
+the interaction of the reactants</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Chemistry.base.products.EquilibriumProducts.reactants">
+<tt class="descname">reactants</tt><a class="headerlink" href="#Chemistry.base.products.EquilibriumProducts.reactants" title="Permalink to this definition">¶</a></dt>
+<dd><p>The reactants in the reaction; the things that were there initially
+and that remain there after the reaction</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="Chemistry.base.products.Product">
+<em class="property">class </em><tt class="descclassname">Chemistry.base.products.</tt><tt class="descname">Product</tt><big>(</big><em>comp</em>, <em>percentage</em><big>)</big><a class="headerlink" href="#Chemistry.base.products.Product" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>The base Product object.  Represents a compound that results from a
+chemical reaction</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="Chemistry.base.products.Products">
+<em class="property">class </em><tt class="descclassname">Chemistry.base.products.</tt><tt class="descname">Products</tt><big>(</big><em>maj</em>, <em>min_</em><big>)</big><a class="headerlink" href="#Chemistry.base.products.Products" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>A Products object - represents a collection of Product objects
+as a reaction usually has more than one</p>
+<p class="rubric">Attributes</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#Chemistry.base.products.Products.major" title="Chemistry.base.products.Products.major"><tt class="xref py py-obj docutils literal"><span class="pre">major</span></tt></a></td>
+<td>The major products of a reaction.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#Chemistry.base.products.Products.minor" title="Chemistry.base.products.Products.minor"><tt class="xref py py-obj docutils literal"><span class="pre">minor</span></tt></a></td>
+<td>The minor products of a reaction.</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="Chemistry.base.products.Products.major">
+<tt class="descname">major</tt><a class="headerlink" href="#Chemistry.base.products.Products.major" title="Permalink to this definition">¶</a></dt>
+<dd><p>The major products of a reaction.</p>
+<p>Expected to be a collection of Product objects.  Raises a TypeError if
+given things that are not NoneType (those are skipped) or Product
+objects</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Chemistry.base.products.Products.minor">
+<tt class="descname">minor</tt><a class="headerlink" href="#Chemistry.base.products.Products.minor" title="Permalink to this definition">¶</a></dt>
+<dd><p>The minor products of a reaction.</p>
+<p>Expected to be a collection of Product objects.  Raises a TypeError if
+given things that are not NoneType (those are skipped) or Product
+objects</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-Chemistry.base.reactants">
+<span id="chemistry-base-reactants-module"></span><h2>Chemistry.base.reactants module<a class="headerlink" href="#module-Chemistry.base.reactants" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="Chemistry.base.reactants.Acid">
+<em class="property">class </em><tt class="descclassname">Chemistry.base.reactants.</tt><tt class="descname">Acid</tt><big>(</big><em>compound</em>, <em>acidic_point</em>, <em>pka</em>, <em>paths={}</em><big>)</big><a class="headerlink" href="#Chemistry.base.reactants.Acid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#Chemistry.base.reactants.Reactant" title="Chemistry.base.reactants.Reactant"><tt class="xref py py-class docutils literal"><span class="pre">Chemistry.base.reactants.Reactant</span></tt></a></p>
+<p>A subclass of Reactant, represents acidic compounds in a reaction</p>
+<p class="rubric">Attributes</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">compound</span></tt></td>
+<td>The underlying compound object.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">add_paths</span></tt>(paths)</td>
+<td>Deprecated/NYI.</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">get_paths</span></tt>(reaction)</td>
+<td>Deprecated/NYI.</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">make_Acid</span></tt>(acidic_compound[,&nbsp;pka,&nbsp;point])</td>
+<td>Basically the same as make_Base, but it makes acids</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">make_Base</span></tt>(basic_compound[,&nbsp;pka,&nbsp;point])</td>
+<td>Classmethod that turns a compound into a base.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#Chemistry.base.reactants.Acid.to_conjugate_base" title="Chemistry.base.reactants.Acid.to_conjugate_base"><tt class="xref py py-obj docutils literal"><span class="pre">to_conjugate_base</span></tt></a>(*args,&nbsp;**kwargs)</td>
+<td>Transforms the current acid into its conjugate base</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="Chemistry.base.reactants.Acid.to_conjugate_base">
+<tt class="descname">to_conjugate_base</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#Chemistry.base.reactants.Acid.to_conjugate_base" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transforms the current acid into its conjugate base</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="Chemistry.base.reactants.Base">
+<em class="property">class </em><tt class="descclassname">Chemistry.base.reactants.</tt><tt class="descname">Base</tt><big>(</big><em>compound</em>, <em>basic_point</em>, <em>pka</em>, <em>paths={}</em><big>)</big><a class="headerlink" href="#Chemistry.base.reactants.Base" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#Chemistry.base.reactants.Reactant" title="Chemistry.base.reactants.Reactant"><tt class="xref py py-class docutils literal"><span class="pre">Chemistry.base.reactants.Reactant</span></tt></a></p>
+<p>A subclass of Reactant, represents basic compounds in a reaction</p>
+<p class="rubric">Attributes</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">compound</span></tt></td>
+<td>The underlying compound object.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">add_paths</span></tt>(paths)</td>
+<td>Deprecated/NYI.</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">get_paths</span></tt>(reaction)</td>
+<td>Deprecated/NYI.</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">make_Acid</span></tt>(acidic_compound[,&nbsp;pka,&nbsp;point])</td>
+<td>Basically the same as make_Base, but it makes acids</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">make_Base</span></tt>(basic_compound[,&nbsp;pka,&nbsp;point])</td>
+<td>Classmethod that turns a compound into a base.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#Chemistry.base.reactants.Base.to_conjugate_acid" title="Chemistry.base.reactants.Base.to_conjugate_acid"><tt class="xref py py-obj docutils literal"><span class="pre">to_conjugate_acid</span></tt></a>()</td>
+<td>Transforms the current base into its conjugate acid</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="Chemistry.base.reactants.Base.to_conjugate_acid">
+<tt class="descname">to_conjugate_acid</tt><big>(</big><big>)</big><a class="headerlink" href="#Chemistry.base.reactants.Base.to_conjugate_acid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transforms the current base into its conjugate acid</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="Chemistry.base.reactants.BronstedAcid">
+<em class="property">class </em><tt class="descclassname">Chemistry.base.reactants.</tt><tt class="descname">BronstedAcid</tt><big>(</big><em>compound</em>, <em>acidic_point</em>, <em>pka</em>, <em>paths={}</em><big>)</big><a class="headerlink" href="#Chemistry.base.reactants.BronstedAcid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#Chemistry.base.reactants.Acid" title="Chemistry.base.reactants.Acid"><tt class="xref py py-class docutils literal"><span class="pre">Chemistry.base.reactants.Acid</span></tt></a></p>
+<p class="rubric">Attributes</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">compound</span></tt></td>
+<td>The underlying compound object.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">add_paths</span></tt>(paths)</td>
+<td>Deprecated/NYI.</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">get_paths</span></tt>(reaction)</td>
+<td>Deprecated/NYI.</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">make_Acid</span></tt>(acidic_compound[,&nbsp;pka,&nbsp;point])</td>
+<td>Basically the same as make_Base, but it makes acids</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">make_Base</span></tt>(basic_compound[,&nbsp;pka,&nbsp;point])</td>
+<td>Classmethod that turns a compound into a base.</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">to_conjugate_base</span></tt>(*args,&nbsp;**kwargs)</td>
+<td>Transforms the current acid into its conjugate base</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="Chemistry.base.reactants.BronstedBase">
+<em class="property">class </em><tt class="descclassname">Chemistry.base.reactants.</tt><tt class="descname">BronstedBase</tt><big>(</big><em>compound</em>, <em>basic_point</em>, <em>pka</em>, <em>paths={}</em><big>)</big><a class="headerlink" href="#Chemistry.base.reactants.BronstedBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#Chemistry.base.reactants.Base" title="Chemistry.base.reactants.Base"><tt class="xref py py-class docutils literal"><span class="pre">Chemistry.base.reactants.Base</span></tt></a></p>
+<p class="rubric">Attributes</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">compound</span></tt></td>
+<td>The underlying compound object.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">add_paths</span></tt>(paths)</td>
+<td>Deprecated/NYI.</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">get_paths</span></tt>(reaction)</td>
+<td>Deprecated/NYI.</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">make_Acid</span></tt>(acidic_compound[,&nbsp;pka,&nbsp;point])</td>
+<td>Basically the same as make_Base, but it makes acids</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">make_Base</span></tt>(basic_compound[,&nbsp;pka,&nbsp;point])</td>
+<td>Classmethod that turns a compound into a base.</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">to_conjugate_acid</span></tt>()</td>
+<td>Transforms the current base into its conjugate acid</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="Chemistry.base.reactants.Electrophile">
+<em class="property">class </em><tt class="descclassname">Chemistry.base.reactants.</tt><tt class="descname">Electrophile</tt><big>(</big><em>compound</em>, <em>paths={}</em><big>)</big><a class="headerlink" href="#Chemistry.base.reactants.Electrophile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#Chemistry.base.reactants.Reactant" title="Chemistry.base.reactants.Reactant"><tt class="xref py py-class docutils literal"><span class="pre">Chemistry.base.reactants.Reactant</span></tt></a></p>
+<p class="rubric">Attributes</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">compound</span></tt></td>
+<td>The underlying compound object.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">add_paths</span></tt>(paths)</td>
+<td>Deprecated/NYI.</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">get_paths</span></tt>(reaction)</td>
+<td>Deprecated/NYI.</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">make_Acid</span></tt>(acidic_compound[,&nbsp;pka,&nbsp;point])</td>
+<td>Basically the same as make_Base, but it makes acids</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">make_Base</span></tt>(basic_compound[,&nbsp;pka,&nbsp;point])</td>
+<td>Classmethod that turns a compound into a base.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="Chemistry.base.reactants.LewisAcid">
+<em class="property">class </em><tt class="descclassname">Chemistry.base.reactants.</tt><tt class="descname">LewisAcid</tt><big>(</big><em>compound</em>, <em>acidic_point</em>, <em>pka</em>, <em>paths={}</em><big>)</big><a class="headerlink" href="#Chemistry.base.reactants.LewisAcid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#Chemistry.base.reactants.Acid" title="Chemistry.base.reactants.Acid"><tt class="xref py py-class docutils literal"><span class="pre">Chemistry.base.reactants.Acid</span></tt></a></p>
+<p class="rubric">Attributes</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">compound</span></tt></td>
+<td>The underlying compound object.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">add_paths</span></tt>(paths)</td>
+<td>Deprecated/NYI.</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">get_paths</span></tt>(reaction)</td>
+<td>Deprecated/NYI.</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">make_Acid</span></tt>(acidic_compound[,&nbsp;pka,&nbsp;point])</td>
+<td>Basically the same as make_Base, but it makes acids</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">make_Base</span></tt>(basic_compound[,&nbsp;pka,&nbsp;point])</td>
+<td>Classmethod that turns a compound into a base.</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">to_conjugate_base</span></tt>(*args,&nbsp;**kwargs)</td>
+<td>Transforms the current acid into its conjugate base</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="Chemistry.base.reactants.LewisBase">
+<em class="property">class </em><tt class="descclassname">Chemistry.base.reactants.</tt><tt class="descname">LewisBase</tt><big>(</big><em>compound</em>, <em>basic_point</em>, <em>pka</em>, <em>paths={}</em><big>)</big><a class="headerlink" href="#Chemistry.base.reactants.LewisBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#Chemistry.base.reactants.Base" title="Chemistry.base.reactants.Base"><tt class="xref py py-class docutils literal"><span class="pre">Chemistry.base.reactants.Base</span></tt></a></p>
+<p class="rubric">Attributes</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">compound</span></tt></td>
+<td>The underlying compound object.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">add_paths</span></tt>(paths)</td>
+<td>Deprecated/NYI.</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">get_paths</span></tt>(reaction)</td>
+<td>Deprecated/NYI.</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">make_Acid</span></tt>(acidic_compound[,&nbsp;pka,&nbsp;point])</td>
+<td>Basically the same as make_Base, but it makes acids</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">make_Base</span></tt>(basic_compound[,&nbsp;pka,&nbsp;point])</td>
+<td>Classmethod that turns a compound into a base.</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">to_conjugate_acid</span></tt>()</td>
+<td>Transforms the current base into its conjugate acid</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="Chemistry.base.reactants.Nucleophile">
+<em class="property">class </em><tt class="descclassname">Chemistry.base.reactants.</tt><tt class="descname">Nucleophile</tt><big>(</big><em>compound</em>, <em>paths={}</em><big>)</big><a class="headerlink" href="#Chemistry.base.reactants.Nucleophile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#Chemistry.base.reactants.Reactant" title="Chemistry.base.reactants.Reactant"><tt class="xref py py-class docutils literal"><span class="pre">Chemistry.base.reactants.Reactant</span></tt></a></p>
+<p class="rubric">Attributes</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">compound</span></tt></td>
+<td>The underlying compound object.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">add_paths</span></tt>(paths)</td>
+<td>Deprecated/NYI.</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">get_paths</span></tt>(reaction)</td>
+<td>Deprecated/NYI.</td>
+</tr>
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">make_Acid</span></tt>(acidic_compound[,&nbsp;pka,&nbsp;point])</td>
+<td>Basically the same as make_Base, but it makes acids</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">make_Base</span></tt>(basic_compound[,&nbsp;pka,&nbsp;point])</td>
+<td>Classmethod that turns a compound into a base.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="Chemistry.base.reactants.Reactant">
+<em class="property">class </em><tt class="descclassname">Chemistry.base.reactants.</tt><tt class="descname">Reactant</tt><big>(</big><em>compound</em>, <em>paths={}</em><big>)</big><a class="headerlink" href="#Chemistry.base.reactants.Reactant" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>The base Reactant object.  All subclasses of this are things that
+are commonly found in a reaction</p>
+<p class="rubric">Attributes</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#Chemistry.base.reactants.Reactant.compound" title="Chemistry.base.reactants.Reactant.compound"><tt class="xref py py-obj docutils literal"><span class="pre">compound</span></tt></a></td>
+<td>The underlying compound object.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#Chemistry.base.reactants.Reactant.add_paths" title="Chemistry.base.reactants.Reactant.add_paths"><tt class="xref py py-obj docutils literal"><span class="pre">add_paths</span></tt></a>(paths)</td>
+<td>Deprecated/NYI.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#Chemistry.base.reactants.Reactant.get_paths" title="Chemistry.base.reactants.Reactant.get_paths"><tt class="xref py py-obj docutils literal"><span class="pre">get_paths</span></tt></a>(reaction)</td>
+<td>Deprecated/NYI.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#Chemistry.base.reactants.Reactant.make_Acid" title="Chemistry.base.reactants.Reactant.make_Acid"><tt class="xref py py-obj docutils literal"><span class="pre">make_Acid</span></tt></a>(acidic_compound[,&nbsp;pka,&nbsp;point])</td>
+<td>Basically the same as make_Base, but it makes acids</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#Chemistry.base.reactants.Reactant.make_Base" title="Chemistry.base.reactants.Reactant.make_Base"><tt class="xref py py-obj docutils literal"><span class="pre">make_Base</span></tt></a>(basic_compound[,&nbsp;pka,&nbsp;point])</td>
+<td>Classmethod that turns a compound into a base.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="Chemistry.base.reactants.Reactant.add_paths">
+<tt class="descname">add_paths</tt><big>(</big><em>paths</em><big>)</big><a class="headerlink" href="#Chemistry.base.reactants.Reactant.add_paths" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deprecated/NYI. Not sure yet.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Chemistry.base.reactants.Reactant.compound">
+<tt class="descname">compound</tt><a class="headerlink" href="#Chemistry.base.reactants.Reactant.compound" title="Permalink to this definition">¶</a></dt>
+<dd><p>The underlying compound object.  All Reactant objects and subclasses
+just wrap a Compound and add some extra functionality.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Chemistry.base.reactants.Reactant.get_paths">
+<tt class="descname">get_paths</tt><big>(</big><em>reaction</em><big>)</big><a class="headerlink" href="#Chemistry.base.reactants.Reactant.get_paths" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deprecated/NYI. Not sure yet.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="Chemistry.base.reactants.Reactant.make_Acid">
+<em class="property">classmethod </em><tt class="descname">make_Acid</tt><big>(</big><em>acidic_compound</em>, <em>pka=16</em>, <em>point='a1'</em><big>)</big><a class="headerlink" href="#Chemistry.base.reactants.Reactant.make_Acid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Basically the same as make_Base, but it makes acids</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="Chemistry.base.reactants.Reactant.make_Base">
+<em class="property">classmethod </em><tt class="descname">make_Base</tt><big>(</big><em>basic_compound</em>, <em>pka=16</em>, <em>point='a1'</em><big>)</big><a class="headerlink" href="#Chemistry.base.reactants.Reactant.make_Base" title="Permalink to this definition">¶</a></dt>
+<dd><p>Classmethod that turns a compound into a base.  Doesn&#8217;t work
+particularly well if the pka of that compound&#8217;s conjugate acid
+is unknown</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-Chemistry.base.table_builder">
+<span id="chemistry-base-table-builder-module"></span><h2>Chemistry.base.table_builder module<a class="headerlink" href="#module-Chemistry.base.table_builder" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="Chemistry.base.table_builder.build_table">
+<tt class="descclassname">Chemistry.base.table_builder.</tt><tt class="descname">build_table</tt><big>(</big><big>)</big><a class="headerlink" href="#Chemistry.base.table_builder.build_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Builds the periodic_table.py file if it hasn&#8217;t been created yet.</p>
+<p>The function exists to ease large scale changes to the data held within the
+periodic table</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="Chemistry.base.table_builder.convert_type">
+<tt class="descclassname">Chemistry.base.table_builder.</tt><tt class="descname">convert_type</tt><big>(</big><em>cell</em>, <em>typ</em><big>)</big><a class="headerlink" href="#Chemistry.base.table_builder.convert_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Credit to SO user Marius for (most of) this function
+<a class="reference external" href="http://stackoverflow.com/a/25498445/3076272">http://stackoverflow.com/a/25498445/3076272</a></p>
+<p>Takes a string and a function that the string should be represented as,
+if possible.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">convert_type</span><span class="p">(</span><span class="s">&#39;4&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
+<span class="go">4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">convert_type</span><span class="p">(</span><span class="s">&#39;4.0&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+<span class="go">4.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">convert_type</span><span class="p">(</span><span class="s">&#39;[1,2,3]&#39;</span><span class="p">,</span> <span class="n">str_to_list</span><span class="p">)</span>
+<span class="go">[1, 2, 3]</span>
+</pre></div>
+</div>
+<p>If the function can&#8217;t be applied to that string then it returns
+None
+&gt;&gt;&gt; convert_type(&#8216;No Data&#8217;, int) is None
+True</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="Chemistry.base.table_builder.str_to_list">
+<tt class="descclassname">Chemistry.base.table_builder.</tt><tt class="descname">str_to_list</tt><big>(</big><em>a_stringy_list</em>, <em>mapped=None</em><big>)</big><a class="headerlink" href="#Chemistry.base.table_builder.str_to_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes a string that looks like a list and makes it a list</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">str_to_list</span><span class="p">(</span><span class="s">&quot;[1,2,3]&quot;</span><span class="p">)</span>
+<span class="go">[&#39;1&#39;, &#39;2&#39;, &#39;3&#39;]</span>
+</pre></div>
+</div>
+<p>If a function to be mapped is provided it will attempt to do so
+&gt;&gt;&gt; str_to_list(&#8220;[1,2,3]&#8221;, mapped=int)
+[1, 2, 3]</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-Chemistry.base">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-Chemistry.base" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Chemistry.base package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-Chemistry.base.base_chemistry">Chemistry.base.base_chemistry module</a></li>
+<li><a class="reference internal" href="#module-Chemistry.base.periodic_table">Chemistry.base.periodic_table module</a></li>
+<li><a class="reference internal" href="#module-Chemistry.base.products">Chemistry.base.products module</a><ul>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-Chemistry.base.reactants">Chemistry.base.reactants module</a><ul>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-Chemistry.base.table_builder">Chemistry.base.table_builder module</a></li>
+<li><a class="reference internal" href="#module-Chemistry.base">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/Chemistry.base.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="index.html">PyChAOS 0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Dan Obermiller.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

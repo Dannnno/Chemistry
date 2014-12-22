@@ -1,0 +1,311 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Chemistry.reactions package &mdash; PyChAOS 0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="PyChAOS 0.0 documentation" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="index.html">PyChAOS 0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="chemistry-reactions-package">
+<h1>Chemistry.reactions package<a class="headerlink" href="#chemistry-reactions-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-Chemistry.reactions.acid_base">
+<span id="chemistry-reactions-acid-base-module"></span><h2>Chemistry.reactions.acid_base module<a class="headerlink" href="#module-Chemistry.reactions.acid_base" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="Chemistry.reactions.acid_base.AcidBase">
+<em class="property">class </em><tt class="descclassname">Chemistry.reactions.acid_base.</tt><tt class="descname">AcidBase</tt><big>(</big><em>acid</em>, <em>base</em>, <em>cond</em><big>)</big><a class="headerlink" href="#Chemistry.reactions.acid_base.AcidBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#Chemistry.reactions.base_reactions.Reaction" title="Chemistry.reactions.base_reactions.Reaction"><tt class="xref py py-class docutils literal"><span class="pre">Chemistry.reactions.base_reactions.Reaction</span></tt></a></p>
+<p>Describes an acid-base reaction.  Creating an instance of this object
+with the appropriate variables (which is handled by the application when run
+from the GUI) will do all the necessary prep work to perform the reaction.</p>
+<p class="rubric">Attributes</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#Chemistry.reactions.acid_base.AcidBase.acid" title="Chemistry.reactions.acid_base.AcidBase.acid"><tt class="xref py py-obj docutils literal"><span class="pre">acid</span></tt></a></td>
+<td>The compound that is being treated as an acid for this reaction.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#Chemistry.reactions.acid_base.AcidBase.base" title="Chemistry.reactions.acid_base.AcidBase.base"><tt class="xref py py-obj docutils literal"><span class="pre">base</span></tt></a></td>
+<td>The compound that is being treated as an base for this reaction.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#Chemistry.reactions.acid_base.AcidBase.conditions" title="Chemistry.reactions.acid_base.AcidBase.conditions"><tt class="xref py py-obj docutils literal"><span class="pre">conditions</span></tt></a></td>
+<td>The Conditions object for the reaction.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#Chemistry.reactions.acid_base.AcidBase.react" title="Chemistry.reactions.acid_base.AcidBase.react"><tt class="xref py py-obj docutils literal"><span class="pre">react</span></tt></a>()</td>
+<td>Performs the actual acid-base reaction.</td>
+</tr>
+<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">rebuild_dict</span></tt>(<a href="#id1"><span class="problematic" id="id2">dict_</span></a>,&nbsp;letter)</td>
+<td>Helper function that rebuilds the dictionary so keys are sequential and start at one.</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="Chemistry.reactions.acid_base.AcidBase.acid">
+<tt class="descname">acid</tt><a class="headerlink" href="#Chemistry.reactions.acid_base.AcidBase.acid" title="Permalink to this definition">¶</a></dt>
+<dd><p>The compound that is being treated as an acid for this reaction. Note
+that if the conditions are acidic the compound being passed in as the
+acid may not be the one used in the reaction (if the conditions are more
+acidic than the compound that purports to be an acid).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Chemistry.reactions.acid_base.AcidBase.base">
+<tt class="descname">base</tt><a class="headerlink" href="#Chemistry.reactions.acid_base.AcidBase.base" title="Permalink to this definition">¶</a></dt>
+<dd><p>The compound that is being treated as an base for this reaction. Note
+that if the conditions are basic the compound being passed in as the
+base may not be the one used in the reaction (if the conditions are more
+basic than the compound that purports to be an base)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Chemistry.reactions.acid_base.AcidBase.conditions">
+<tt class="descname">conditions</tt><a class="headerlink" href="#Chemistry.reactions.acid_base.AcidBase.conditions" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Conditions object for the reaction.  Should contain enough
+information for the reaction to take place.  Not including important
+information about solvents, other present molecules and the like will
+impair the results.  Can be given a dictionary instead of a Conditions
+object - it will be transformed into a Conditions object</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Chemistry.reactions.acid_base.AcidBase.react">
+<tt class="descname">react</tt><big>(</big><big>)</big><a class="headerlink" href="#Chemistry.reactions.acid_base.AcidBase.react" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs the actual acid-base reaction.  Current implementation is
+incomplete and only accurately describes a small fraction of acid-base
+reactions</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-Chemistry.reactions.base_reactions">
+<span id="chemistry-reactions-base-reactions-module"></span><h2>Chemistry.reactions.base_reactions module<a class="headerlink" href="#module-Chemistry.reactions.base_reactions" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="Chemistry.reactions.base_reactions.Conditions">
+<em class="property">class </em><tt class="descclassname">Chemistry.reactions.base_reactions.</tt><tt class="descname">Conditions</tt><big>(</big><em>conditions</em><big>)</big><a class="headerlink" href="#Chemistry.reactions.base_reactions.Conditions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Object that represents the conditions in which a reaction occurs.
+Contains information like relative acidity/basicity of the conditions,
+as well as anything else that is pertinent to the reaction</p>
+<p class="rubric">Attributes</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#Chemistry.reactions.base_reactions.Conditions.neutral" title="Chemistry.reactions.base_reactions.Conditions.neutral"><tt class="xref py py-obj docutils literal"><span class="pre">neutral</span></tt></a></td>
+<td>The neutrality of the Conditions.</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils">
+<colgroup>
+<col width="55%" />
+<col width="45%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>pka_molecule</td>
+<td>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="Chemistry.reactions.base_reactions.Conditions.acidic">
+<tt class="descname">acidic</tt><em class="property"> = False</em><a class="headerlink" href="#Chemistry.reactions.base_reactions.Conditions.acidic" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="Chemistry.reactions.base_reactions.Conditions.basic">
+<tt class="descname">basic</tt><em class="property"> = False</em><a class="headerlink" href="#Chemistry.reactions.base_reactions.Conditions.basic" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="Chemistry.reactions.base_reactions.Conditions.neutral">
+<tt class="descname">neutral</tt><a class="headerlink" href="#Chemistry.reactions.base_reactions.Conditions.neutral" title="Permalink to this definition">¶</a></dt>
+<dd><p>The neutrality of the Conditions.  A read-only property in order to
+minimize the danger of creating conditions that are False for each of
+acidity, basicity, and neutrality.  That would be bad and cause a number
+of problems.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Chemistry.reactions.base_reactions.Conditions.pka">
+<tt class="descname">pka</tt><em class="property"> = 16</em><a class="headerlink" href="#Chemistry.reactions.base_reactions.Conditions.pka" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="Chemistry.reactions.base_reactions.Conditions.pka_location">
+<tt class="descname">pka_location</tt><em class="property"> = ''</em><a class="headerlink" href="#Chemistry.reactions.base_reactions.Conditions.pka_location" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="Chemistry.reactions.base_reactions.Conditions.pka_molecule">
+<tt class="descname">pka_molecule</tt><em class="property"> = None</em><a class="headerlink" href="#Chemistry.reactions.base_reactions.Conditions.pka_molecule" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="Chemistry.reactions.base_reactions.Reaction">
+<em class="property">class </em><tt class="descclassname">Chemistry.reactions.base_reactions.</tt><tt class="descname">Reaction</tt><a class="headerlink" href="#Chemistry.reactions.base_reactions.Reaction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>The abstract base <cite>Reaction</cite> object.  I treat a reaction as a first
+class citizen (like functions).</p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#Chemistry.reactions.base_reactions.Reaction.react" title="Chemistry.reactions.base_reactions.Reaction.react"><tt class="xref py py-obj docutils literal"><span class="pre">react</span></tt></a>()</td>
+<td>The specific mechanics of how any given reaction progresses</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#Chemistry.reactions.base_reactions.Reaction.rebuild_dict" title="Chemistry.reactions.base_reactions.Reaction.rebuild_dict"><tt class="xref py py-obj docutils literal"><span class="pre">rebuild_dict</span></tt></a>(<a href="#id3"><span class="problematic" id="id4">dict_</span></a>,&nbsp;letter)</td>
+<td>Helper function that rebuilds the dictionary so keys are sequential and start at one.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="Chemistry.reactions.base_reactions.Reaction.react">
+<tt class="descname">react</tt><big>(</big><big>)</big><a class="headerlink" href="#Chemistry.reactions.base_reactions.Reaction.react" title="Permalink to this definition">¶</a></dt>
+<dd><p>The specific mechanics of how any given reaction progresses</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="Chemistry.reactions.base_reactions.Reaction.rebuild_dict">
+<em class="property">static </em><tt class="descname">rebuild_dict</tt><big>(</big><em>dict_</em>, <em>letter</em><big>)</big><a class="headerlink" href="#Chemistry.reactions.base_reactions.Reaction.rebuild_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper function that rebuilds the dictionary so keys are sequential
+and start at one.  Returns a dictionary that can be used as reference
+for the new keys</p>
+<p>For example,</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Reaction</span><span class="o">.</span><span class="n">rebuild_dict</span><span class="p">({</span><span class="s">&#39;a2&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;a3&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span> <span class="s">&#39;a&#39;</span><span class="p">)</span>
+<span class="go">{&#39;a3&#39;: &#39;a2&#39;, &#39;a2&#39;: &#39;a1&#39;}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-Chemistry.reactions">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-Chemistry.reactions" title="Permalink to this headline">¶</a></h2>
+<p>This is the reactions package of the simulator app.  It contains all of the
+necessary code to describe reaction objects and their processes.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Chemistry.reactions package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-Chemistry.reactions.acid_base">Chemistry.reactions.acid_base module</a><ul>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-Chemistry.reactions.base_reactions">Chemistry.reactions.base_reactions module</a><ul>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-Chemistry.reactions">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/Chemistry.reactions.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="index.html">PyChAOS 0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Dan Obermiller.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>
