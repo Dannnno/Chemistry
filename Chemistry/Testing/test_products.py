@@ -23,8 +23,8 @@
 
 import unittest
 
-from Chemistry.compounds import Compound
-from Chemistry.base.products import Product, Products, EquilibriumProducts
+from Chemistry.base.compounds import Compound
+from Chemistry.base.products import Product, Products
 
 
 class test_product(unittest.TestCase):

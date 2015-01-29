@@ -23,7 +23,7 @@
 
 import unittest
 
-from Chemistry import compounds
+from Chemistry.base import compounds
 from Chemistry.base.reactants import Acid, Base
 from Chemistry.base.products import Product, Products
 from Chemistry.reactions.base_reactions import Conditions

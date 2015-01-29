@@ -24,7 +24,7 @@
 import os
 import unittest
 
-from Chemistry import compounds
+from Chemistry.base import compounds
 import Chemistry.base.periodic_table as pt
 
 

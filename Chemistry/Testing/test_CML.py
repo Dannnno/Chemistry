@@ -26,7 +26,7 @@ import os
 import tempfile
 import unittest
 
-from Chemistry import compounds
+from Chemistry.base import compounds
 from Chemistry.parsing import CheML as cml
 
 

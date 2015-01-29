@@ -35,8 +35,8 @@ from kivy.uix.widget import Widget
 from kivy.properties import StringProperty, ObjectProperty, NumericProperty,\
                                ListProperty
 
-from Chemistry.compounds import Compound
-from Chemistry.base.reactants import Acid, Base, Reactant
+from Chemistry.base.compounds import Compound
+from Chemistry.base.reactants import Acid, Base
 from Chemistry.reactions.base_reactions import Conditions
 # Reactions
 from Chemistry.reactions import AcidBase
