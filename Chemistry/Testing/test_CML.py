@@ -26,7 +26,7 @@ import os
 import tempfile
 import unittest
 
-from Chemistry.base import compounds
+from Chemistry.interface.compound_utility import compound_from_file
 from Chemistry.parsing import CheML as cml
 
 
@@ -94,7 +94,7 @@ class test_cml_builder(unittest.TestCase):
     def test_from_Compound(self):
         with open("CML_1.cml", 'r') as cml_file:
             builder = cml.CMLBuilder.from_Compound(
-                        compounds.Compound.build_from_file('cml', cml_file))
+                compound_from_file(cml_file, 'cml'))
 
             with tempfile.NamedTemporaryFile(mode='r+',
                                              suffix='.cml',
@@ -104,10 +104,8 @@ class test_cml_builder(unittest.TestCase):
                 tfile.seek(0)
                 cml_file.seek(0)
                 self.assertEqual(
-                    compounds.Compound.build_from_file(
-                        'cml', cml_file).molecule,
-                    compounds.Compound.build_from_file(
-                        'cml', tfile).molecule)
+                    compound_from_file(cml_file, 'cml'),
+                    compound_from_file(tfile, 'cml'))
 
 
 if __name__ == '__main__':

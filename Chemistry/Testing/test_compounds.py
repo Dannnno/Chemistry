@@ -26,6 +26,7 @@ import unittest
 
 from Chemistry.base import compounds
 import Chemistry.base.periodic_table as pt
+from Chemistry.interface.compound_utility import compound_from_file
 
 
 class test_Compound(unittest.TestCase):
@@ -130,9 +131,7 @@ class test_to_from_files(unittest.TestCase):
     def test_from_CML(self):
         with open(os.path.join(os.getcwd(), "Chemistry", "Testing",
                                "test_molecules", "CML", "CML_1.cml"), 'r') as f:
-            self.assertEqual(
-                self.compound1.molecule,
-                compounds.Compound.build_from_file('cml', f).molecule)
+            self.assertEqual(self.compound1, compound_from_file(f, 'cml'))
 
     @unittest.skip('')
     def test_to_CML(self):

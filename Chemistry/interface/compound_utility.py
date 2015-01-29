@@ -25,6 +25,7 @@ from Chemistry.base.compounds import Compound
 from Chemistry.parsing.CheML import CMLParser, CMLBuilder
 from Chemistry.parsing.mol.molv2000 import MolV2000Parser, MolV2000Builder
 from Chemistry.parsing.mol.molv3000 import MolV3000Parser, MolV3000Builder
+from Chemistry.exceptions.ParseErrors import UnsupportedFileTypeException
 
 
 SUPPORTED_FILETYPES = {'cml': [CMLParser, CMLBuilder],
@@ -84,6 +85,22 @@ def compound_to_dict(compound):
             'other': compound.other_info}
 
 
+def _parser_to_compound(parsed_file):
+    """Takes the result of parsing a file and turns it into a compound object.
+
+    Parameters
+    ----------
+    parsed_file : some parser object
+        The parser object that has already parsed a molecular file.
+
+    Returns
+    -------
+    Compound
+        The resulting compound.
+    """
+
+    return Compound(parsed_file.atoms, parsed_file.bonds, parsed_file.other)
+
 def compound_from_file(file_, filetype):
     """Builds a compound object from file.
 
@@ -102,14 +119,14 @@ def compound_from_file(file_, filetype):
 
     Raises
     ------
-    ValueError
+    UnsupportedFiletypeException
         Raised if the filetype given is not supported.
     """
 
     try:
-        return SUPPORTED_FILETYPES[filetype][0](file_)
+        return _parser_to_compound(SUPPORTED_FILETYPES[filetype][0](file_))
     except KeyError:
-        raise ValueError("{} is not a supported filetype".format(filetype))
+        raise UnsupportedFileTypeException(filetype, "Unsupported filetype {}")
 
 
 def compound_to_file(file_, filetype, compound):
@@ -127,11 +144,11 @@ def compound_to_file(file_, filetype, compound):
 
     Raises
     ------
-    ValueError
+    UnsupportedFiletypeException
         Raised if the filetype given is not supported.
     """
 
     try:
-        return SUPPORTED_FILETYPES[filetype][1](file_, compound)
+        return SUPPORTED_FILETYPES[filetype][1].from_Compound(file_, compound)
     except KeyError:
-        raise ValueError("{} is not a supported filetype".format(filetype))
+        raise UnsupportedFileTypeException(filetype, "Unsupported filetype {}")

@@ -26,9 +26,9 @@ class ParsingException(Exception):
     """A generic exception to be thrown if there is an error with the
     parsing of a chemical data file
     """
-    message = "An error occured while parsing {} file"
+    message = "An error occurred while parsing {} file"
 
-    def __init__(self, msg=message, filetype="CML"):
+    def __init__(self, filetype, msg=message):
         self.filetype = filetype
         self.message = msg.format(self.filetype)
 
@@ -42,4 +42,4 @@ class ParsingException(Exception):
 class UnsupportedFileTypeException(ParsingException):
 
     def __init__(self, msg, filetype):
-        super(UnsupportedFileType, self).__init__(msg, filetype)
+        super(UnsupportedFileTypeException, self).__init__(filetype, msg)
