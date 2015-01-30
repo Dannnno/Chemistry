@@ -23,14 +23,10 @@
 
 from Chemistry.base.compounds import Compound
 from Chemistry.parsing.CheML import CMLParser, CMLBuilder
-from Chemistry.parsing.mol.molv2000 import MolV2000Parser, MolV2000Builder
-from Chemistry.parsing.mol.molv3000 import MolV3000Parser, MolV3000Builder
 from Chemistry.exceptions.ParseErrors import UnsupportedFileTypeException
 
 
-SUPPORTED_FILETYPES = {'cml': [CMLParser, CMLBuilder],
-                       'molv2000': [MolV2000Parser, MolV2000Builder],
-                       'molv3000': [MolV3000Parser, MolV3000Builder]}
+SUPPORTED_FILETYPES = {'cml': [CMLParser, CMLBuilder]}
 
 
 def compound_from_dict(atoms, bonds, other):
@@ -149,6 +145,6 @@ def compound_to_file(file_, filetype, compound):
     """
 
     try:
-        return SUPPORTED_FILETYPES[filetype][1].from_Compound(file_, compound)
+        SUPPORTED_FILETYPES[filetype][1].from_compound(compound).to_file(file_)
     except KeyError:
         raise UnsupportedFileTypeException(filetype, "Unsupported filetype {}")

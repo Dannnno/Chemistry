@@ -1,65 +1,53 @@
-#Copyright (c) 2014 Dan Obermiller
+# Copyright (c) 2014 Dan Obermiller
 #
-#Permission is hereby granted, free of charge, to any person obtaining a copy
-#of this software and associated documentation files (the "Software"), to deal
-#in the Software without restriction, including without limitation the rights
-#to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-#copies of the Software, and to permit persons to whom the Software is
-#furnished to do so, subject to the following conditions:
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
 #
-#The above copyright notice and this permission notice shall be included in
-#all copies or substantial portions of the Software.
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
 #
-#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-#IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-#FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-#AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-#LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-#OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-#THE SOFTWARE.
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
 #
-#You should have received a copy of the MIT License along with this program.
-#If not, see <http://opensource.org/licenses/MIT>
+# You should have received a copy of the MIT License along with this program.
+# If not, see <http://opensource.org/licenses/MIT>
 
 import types
 
+from Chemistry.base.compounds import _CompoundWrapper
 
-class Product(object):
+
+class Product(_CompoundWrapper):
     """The base Product object.  Represents a compound that results from a
-    chemical reaction
+    chemical reaction.
+
+    Parameters
+    ----------
+    comp : Compound
+        The compound that is being considered a product.
+    percentage : float
+        What percent of the total products is represented by this compound.
     """
 
     _compound = None
 
     def __init__(self, comp, percentage):
-        self._compound = comp
+        super(Product, self).__init__(comp)
         self.percentage = percentage
-
-    def __getattr__(self, attr):
-        return getattr(self._compound, attr)
-
-    def __eq__(self, other):
-        if hasattr(other, '_compound'):
-            return self._compound == other._compound
-        else:
-            return self._compound == other
-
-    def __str__(self):
-        return str(self._compound)
-
-    def __repr__(self):
-        return str(self)
-
-    def __len__(self):
-        return len(self._compound)
-
-    def __getitem__(self, key):
-        return self._compound[key]
 
 
 class Products(object):
-    """A Products object - represents a collection of Product objects
-    as a reaction usually has more than one
+    """A Products object - represents a collection of Product objects because a
+    reaction usually has more than one.
     """
 
     def __init__(self, maj, min_):
@@ -83,16 +71,17 @@ class Products(object):
         if not isinstance(products, types.NoneType):
             for prod in products:
                 if isinstance(prod, Product):
-                    if isinstance(prod._compound, types.NoneType):
+                    if isinstance(prod.compound, types.NoneType):
                         continue
                     self._major += (prod,)
                 elif isinstance(prod, types.NoneType):
                     continue
                 else:
                     raise TypeError(
-                            "Should be a Product, not a {}".format(type(prod)))
+                        "Should be a Product, not a {}".format(type(prod)))
         else:
-            raise TypeError("Should be a Product, not a {}".format(type(products)))
+            raise TypeError(
+                "Should be a Product, not a {}".format(type(products)))
 
     @property
     def minor(self):
@@ -117,9 +106,10 @@ class Products(object):
                     continue
                 else:
                     raise TypeError(
-                            "Should be a Product, not a {}".format(type(prod)))
+                        "Should be a Product, not a {}".format(type(prod)))
         else:
-            raise TypeError("Should be a Product, not a {}".format(type(products)))
+            raise TypeError(
+                "Should be a Product, not a {}".format(type(products)))
 
     def __eq__(self, other):
         return False

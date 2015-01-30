@@ -28,8 +28,8 @@ parser = argparse.ArgumentParser(description="Runs the Chemistry simulator")
 parser.add_argument('-c', '--clean', dest='clean',
                     default=False, action='store_true',
                     help='Signals that the directory should get cleaned up')
-parser.add_argument('-g', '--gui', dest='gui', default=False, action='store_true',
-                    help='Runs the GUI')
+parser.add_argument('-g', '--gui', dest='gui', default=False,
+                    action='store_true', help='Runs the GUI')
 args = parser.parse_args()
 
 if args.clean:

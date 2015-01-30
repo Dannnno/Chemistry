@@ -28,7 +28,7 @@ from Chemistry.base.reactants import Reactant, Acid, Base
 from Chemistry.reactions.base_reactions import Conditions
 
 
-class test_Reactant_utility_methods(unittest.TestCase):
+class TestReactantUtilityMethods(unittest.TestCase):
 
     def setUp(self):
         self.compound1 = Compound(
@@ -58,39 +58,21 @@ class test_Reactant_utility_methods(unittest.TestCase):
         self.assertEqual('b2', Reactant._new_key(self.base1, False))
 
     def test_make_base_1(self):
-        self.assertEqual(self.base1, Reactant.make_Base(self.compound1, 'a2', 16))
+        self.assertEqual(
+            self.base1, Reactant.make_Base(self.compound1, 'a2', 16))
 
     def test_make_base_2(self):
-        self.assertIs(self.base1, Reactant.make_Base(self.base1))
+        self.assertIs(self.base1, Reactant.make_Base(self.base1, 'a2', 16))
 
     def test_make_acid_1(self):
-        self.assertEqual(self.acid1, Reactant.make_Acid(self.compound2, 'a1', -1.74))
+        self.assertEqual(
+            self.acid1, Reactant.make_Acid(self.compound2, 'a1', -1.74))
 
     def test_make_acid_2(self):
-        self.assertIs(self.acid1, Reactant.make_Acid(self.acid1))
-
-    # The following are tests of deprecated functions.  They aren't accurate tests of how I would actually have
-    # used the function either, but they're close approximations
-
-    def test_add_paths1(self):
-        self.acid1.add_paths({'SN1': ('a1',)})
-        self.assertEqual({'SN1': set([('a1',)])}, self.acid1.paths)
-
-    def test_add_paths2(self):
-        self.acid1.add_paths({'SN1': ('a1',)})
-        self.acid1.add_paths({'SN1': ('a2',)})
-        self.assertEqual({'SN1': set([('a1',), ('a2',)])}, self.acid1.paths)
-
-    def test_get_paths1(self):
-        self.acid1.add_paths({'SN1': ('a1',)})
-        self.assertEqual(set([('a1',)]), self.acid1.get_paths('SN1'))
-
-    def test_get_paths2(self):
-        with self.assertRaises(KeyError):
-            self.acid1.get_paths('SN1')
+        self.assertIs(self.acid1, Reactant.make_Acid(self.acid1, 'a1', -1.74))
 
 
-class test_Base(unittest.TestCase):
+class TestBase(unittest.TestCase):
 
     def setUp(self):
         self.compound1 = Compound(

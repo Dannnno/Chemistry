@@ -27,8 +27,9 @@ from Chemistry.base.compounds import Compound
 from Chemistry.base.products import Product, Products
 
 
-class test_product(unittest.TestCase):
-    """Miscellaneous tests that don't necessarily get covered by the other tests I've written.
+class TestProduct(unittest.TestCase):
+    """Miscellaneous tests that don't necessarily get covered by the other tests
+     I've written.
 
     This is for the Product** class, not the Product*s* class"""
 
@@ -45,8 +46,9 @@ class test_product(unittest.TestCase):
         self.assertEqual(prod, comp)
 
 
-class test_productS(unittest.TestCase):
-    """Miscellaneous tests that don't necessarily get covered by the other tests I've written.
+class TestProducts(unittest.TestCase):
+    """Miscellaneous tests that don't necessarily get covered by the other tests
+     I've written.
 
     This is for the Product*s* class, not the Product** class"""
 

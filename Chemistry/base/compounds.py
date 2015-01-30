@@ -33,7 +33,7 @@ import Chemistry.base.periodic_table as pt
 class Compound(nx.Graph):
     """A molecule stored in all its glory.
 
-    Is stored and implemented as a graph (subclassing networkx.Graph).
+    Implemented as a graph (subclassing networkx.Graph).
 
     Parameters
     ----------
@@ -59,20 +59,6 @@ class Compound(nx.Graph):
         molecule.  Things like molecular charge, pka, the name/id of the
         molecule, etc.  If no information is provided the constructor will
         attempt to ascertain any information it needs.
-
-    Attributes
-    ----------
-    filetypes : dict
-        A dictionary of supported filetypes.  The key is the filetype, the
-        value is a tuple of two functions.  The first is the function that
-        generates a Compound object from a file, the second is the function
-        that generates a file from the Compound instance it is passed.
-    BUILD_COMPOUND : { 0 }
-        Constant representing index 0.  Used to specify which method to use
-        from the filetype dict
-    BUILD_FILE : { 1 }
-        Constant representing index 1.  Used to specify which method to use
-        from the filetype dict
     """
 
     @classmethod
@@ -89,17 +75,17 @@ class Compound(nx.Graph):
             strings
         """
 
-        stringify_function = (repr if not as_str else str)
         d = {}
         try:
             if isinstance(obj, Compound):
-                for key, value in obj.__dict__.iteritems():
+                for key, value in vars(obj).iteritems():
                     if key in ['atoms', 'bonds', 'other_info']:
                         d.update({key: value})
                 return d
             else:
-                return obj.__dict__
+                return vars(obj)
         except AttributeError:
+            stringify_function = (str if as_str else repr)
             return map(stringify_function, obj)
 
     @classmethod
@@ -109,9 +95,9 @@ class Compound(nx.Graph):
         Parameters
         ----------
         node1 : Object
-                The first node evaluated when checking graph isomorphism
+            The first node evaluated when checking graph isomorphism
         node2 : Object
-                The second node evalutated when checking graph isomorphism
+            The second node evalutated when checking graph isomorphism
 
         Returns
         -------
@@ -128,9 +114,9 @@ class Compound(nx.Graph):
         Parameters
         ----------
         edge1 : Object
-                The first edge evaluated when checking graph isomorphism
+            The first edge evaluated when checking graph isomorphism
         edge2 : Object
-                The second edge evalutated when checking graph isomorphism
+            The second edge evalutated when checking graph isomorphism
         """
 
         return edge1 == edge2
@@ -154,7 +140,7 @@ class Compound(nx.Graph):
         Parameters
         ----------
         atoms : dict
-                The atoms that are being added to the molecule
+            The atoms that are being added to the molecule
         """
 
         for key, atom in atoms.iteritems():
@@ -166,7 +152,7 @@ class Compound(nx.Graph):
         Parameters
         ----------
         bonds : dict
-                The bonds that are being added to the molecule
+            The bonds that are being added to the molecule
         """
 
         for id_, bond in bonds.iteritems():
@@ -183,180 +169,32 @@ class Compound(nx.Graph):
         else:
             raise KeyError("There is already an atom {}".format(key))
 
-    def _add_edge(self, key, first, second, rest={}):
+    def _add_edge(self, key, first, second, rest=None):
         """Adds a single edge. Should probably be a property"""
 
+        if rest is None:
+            rest = {}
         try:
             _ = self.bonds[key]
         except KeyError:
-            d = {'order':1, 'chirality':None}
+            d = {'order': 1, 'chirality': None}
             d.update(rest)
             self.add_edge(first, second, key=key, **d)
             self.bonds[key] = first, second, d
         else:
             raise KeyError("There is already a bond {}".format(key))
 
-    def path(self, atoms, bonds=[]):
-        """Locates a path that contains the specified atoms/bonds"""
-
-        if bonds:
-            return self._path(atoms, bonds)
-        first = self._get_first(atoms[0])
-        paths = []
-        for start in first:
-            temp = self._get_path(start, atoms[1:])
-            if temp:
-                paths.append(temp)
-        return set(self._flatten_tuples(self._get_tuples(paths)))
-
-    def _get_tuples(self, mixed_list):
-        """This function is necessary because there appears to be a bug
-        in my path-finding algorithm, sometimes I get lists when I don't
-        want them.  Once I find and fix that this'll be removed
-        """
-
-        tup = deque()
-        if isinstance(mixed_list, (list, deque, tuple)):
-            for t in mixed_list:
-                if t:
-                    if isinstance(t, (list, deque)):
-                        tup.extendleft(self._get_tuples(t))
-                    else:
-                        tup.appendleft(t)
-        return tup
-
-    def _flatten_tuples(self, tuple_):
-        """This function is necessary because I can't figure out why my
-        tuples are becoming nested
-        """
-
-        if len(tuple_) == 1:
-            return tuple(self._flatten_tuples(tuple_[0]))
-        else:
-            tup = deque()
-            for item in tuple_:
-                if isinstance(item, tuple):
-                    tup.append(self._flatten_tuples(item))
-                else:
-                    tup.append(item)
-            return tuple(tup)
-
-    def _path(self, atoms, bonds):
-        """Helper function to find paths"""
-
-        if not all(isinstance(bond, (dict, types.NoneType)) for bond in bonds):
-            raise TypeError("All information in bonds must be a NoneType or a dict")
-        first = self._get_first(atoms[0])
-        paths = []
-        for start in first:
-            temp = self._get_path_with_bond(start, atoms[1:], bonds)
-            if temp:
-                paths.append(temp)
-        return set(self._flatten_tuples(self._get_tuples(paths)))
-
-    def _get_path(self, starting_point, rest, so_far=()):
-        """Helper function to find paths"""
-
-        so_far += (starting_point,)
-
-        next_atom = self._get_next(starting_point, so_far, rest[0])
-
-        if len(rest) == 1:
-            return tuple(so_far + (atom,) for atom in next_atom)
-        else:
-            ret_tuples = map(lambda x:
-                                self._get_path(
-                                    x, rest[1:], so_far),
-                             next_atom)
-            return ret_tuples
-
-    def _get_path_with_bond(self, starting_point, rest, bonds, so_far=()):
-        """Helper function to find paths"""
-
-        so_far += (starting_point,)
-
-        next_atom = self._get_next_with_bond(
-                            starting_point, so_far, bonds[0], rest[0])
-
-        if len(rest) == 1:
-            return tuple(so_far + (atom,) for atom in next_atom)
-        else:
-            ret_tuples = map(lambda x:
-                                self._get_path_with_bond(
-                                    x, rest[1:], bonds[1:], so_far),
-                             next_atom)
-            return ret_tuples
-
-    def _join_paths(self, first, second):
-        """Cleanly combines two path sections"""
-
-        if first:
-            if first[-1] == second[0]:
-                return first[:-1] + second
-            else:
-                return first + second
-        else:
-            return second
-
-    def _get_first(self, atom):
-        """Helper function to find paths"""
-
-        return [key
-                 for key, value in self.atoms.iteritems()
-                 if value == atom]
-
-    def _get_next(self, atom, visited, next_=None):
-        """Helper function to find paths"""
-
-        return self._filter_next(self._next_(atom), visited, next_=next_)
-
-    def _get_next_with_bond(self, atom, visited, bond, next_=None):
-        """Helper function to find paths"""
-
-        if bond is None:
-            return self._get_next(atom, visited, next_)
-        else:
-            possible_neighbors = self._filter_next(self._next_(atom),
-                                                   visited,
-                                                   next_)
-            valid_neighbors = ()
-            for neighbor in possible_neighbors:
-                info = self.edge[atom][neighbor].items()
-                if all(data in info for data in bond.iteritems()):
-                    valid_neighbors += (neighbor,)
-            return valid_neighbors
-
-    def _next_(self, atom):
-        """Helper function to find paths"""
-
-        try:
-            return self.neighbors(atom)
-        except nx.exception.NetworkXError:
-            raise KeyError("{} not in the graph".format(atom))
-
-    def _filter_next(self, neighbors, visited, next_=None):
-        """Helper function to find paths"""
-
-        return tuple(neighbor
-                      for neighbor in neighbors
-                      if neighbor not in visited and
-                         ((next_ is not None and
-                           self.atoms[neighbor] == next_) or
-                          (next_ is None)))
-
     def __str__(self):
         return json.dumps(Compound.json_serialize(self, as_str=True),
-                           sort_keys=True,
-                           indent=4)
+                          sort_keys=True,
+                          indent=4)
 
     def __repr__(self):
         return json.dumps(Compound.json_serialize(self),
-                           sort_keys=True,
-                           indent=4)
+                          sort_keys=True,
+                          indent=4)
 
     def is_isomorphic(self, other):
-        """"""
-
         return nx.is_isomorphic(self, other,
                                 node_match=Compound.node_matcher,
                                 edge_match=Compound.edge_matcher)
@@ -366,3 +204,39 @@ class Compound(nx.Graph):
 
     def __ne__(self, other):
         return not self.is_isomorphic(other)
+
+
+class _CompoundWrapper(object):
+    _compound = None
+
+    def __init__(self, compound):
+        self.compound = compound
+
+    @property
+    def compound(self):
+        return self._compound
+
+    @compound.setter
+    def compound(self, comp):
+        self._compound = comp
+
+    def __getattr__(self, attr):
+        return getattr(self.compound, attr)
+
+    def __eq__(self, other):
+        if hasattr(other, 'compound'):
+            return self.compound == other.compound
+        else:
+            return self.compound == other
+
+    def __str__(self):
+        return str(self.compound)
+
+    def __repr__(self):
+        return str(self)
+
+    def __len__(self):
+        return len(self.compound)
+
+    def __getitem__(self, key):
+        return self.compound[key]

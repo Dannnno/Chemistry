@@ -109,7 +109,7 @@ class CMLBuilder(object):
     """
 
     @classmethod
-    def from_Compound(cls, comp):
+    def from_compound(cls, comp):
         """Generates a CMLBuilder object from a Compound object"""
         comp = deepcopy(comp)
         atoms = comp.atoms

@@ -24,19 +24,17 @@
 from copy import deepcopy
 
 import Chemistry.base.periodic_table as pt
+from Chemistry.base.compounds import _CompoundWrapper
 
 
-class Reactant(object):
+class Reactant(_CompoundWrapper):
     """The base Reactant object.  All subclasses of this are things that
     are commonly found in a reaction
     """
 
     @classmethod
-    def make_Base(cls, basic_compound, pka=16, point='a1'):
-        """Classmethod that turns a compound into a base.  Doesn't work
-        particularly well if the pka of that compound's conjugate acid
-        is unknown
-        """
+    def make_Base(cls, basic_compound, pka, point):
+        """Classmethod that turns a compound into a base."""
 
         if isinstance(basic_compound, Base):
             return basic_compound
@@ -44,7 +42,7 @@ class Reactant(object):
             return Base(basic_compound, point, pka)
 
     @classmethod
-    def make_Acid(cls, acidic_compound, pka=16, point='a1'):
+    def make_Acid(cls, acidic_compound, pka, point):
         """Basically the same as make_Base, but it makes acids"""
 
         if isinstance(acidic_compound, Acid):
@@ -65,36 +63,8 @@ class Reactant(object):
         number = int(max_key[1:])+1
         return "{}{}".format(letter, number)
 
-    def __init__(self, compound, paths={}):
-        self._compound = compound
-        self.paths = dict() # { key: set() }
-        if paths:
-            self.add_paths(**paths)
-
-    @property
-    def compound(self):
-        """The underlying compound object.  All Reactant objects and subclasses
-        just wrap a Compound and add some extra functionality.
-        """
-
-        return self._compound
-
-    def add_paths(self, paths):
-        """Deprecated/NYI. Not sure yet."""
-
-        for reaction, path in paths.iteritems():
-            if reaction in self.paths:
-                self.paths[reaction].add(path)
-            else:
-                self.paths[reaction] = set([path])
-
-    def get_paths(self, reaction):
-        """Deprecated/NYI. Not sure yet."""
-
-        try:
-            return self.paths[reaction]
-        except KeyError:
-            raise KeyError("{} paths haven't been found yet".format(reaction))
+    def __init__(self, compound):
+        super(Reactant, self).__init__(compound)
 
     def _validate_pka(self, pka):
         """Validates the pKa of a molecule.  This should move into a property"""
@@ -108,35 +78,18 @@ class Reactant(object):
                 raise ValueError("pKa must equal {}".format(self.pka))
 
     def __str__(self):
-        return "{} of {}".format(self.__class__.__name__, self.compound.__class__.__name__)
+        return "{} of {}".format(self.__class__.__name__,
+                                 self.compound.__class__.__name__)
 
     def __repr__(self):
         return str(self)
-
-    def __getattr__(self, attr):
-        return getattr(self.compound, attr)
-
-    def __eq__(self, other):
-        try:
-            return self.compound == other.compound
-        except AttributeError:
-            return self.compound == other
-
-    def __ne__(self, other):
-        return not self == other
-
-    def __len__(self):
-        return len(self.compound)
-
-    def __getitem__(self, key):
-        return self.compound[key]
 
 
 class Acid(Reactant):
     """A subclass of Reactant, represents acidic compounds in a reaction"""
 
-    def __init__(self, compound, acidic_point, pka, paths={}):
-        super(Acid, self).__init__(compound, paths)
+    def __init__(self, compound, acidic_point, pka):
+        super(Acid, self).__init__(compound)
         self.acidic_point = acidic_point
         self._validate_pka(pka)
 
@@ -149,12 +102,10 @@ class Acid(Reactant):
 class Base(Reactant):
     """A subclass of Reactant, represents basic compounds in a reaction"""
 
-    def __init__(self, compound, basic_point, pka, paths={}):
-        """The pka of a Base should be equal to that of its conjugate
-        acid
-        """
+    def __init__(self, compound, basic_point, pka):
+        """The pka of a Base should be equal to that of its conjugate acid."""
 
-        super(Base, self).__init__(compound, paths)
+        super(Base, self).__init__(compound)
         self.basic_point = basic_point
         self._validate_pka(pka)
 
@@ -169,10 +120,10 @@ class Base(Reactant):
         conjugate._add_edge(b_key, a_key, self.basic_point)
         try:
             conjugate.other_info['id'] = \
-                    "Conjugate acid of {}".format(self.other_info['id'])
+                "Conjugate acid of {}".format(self.other_info['id'])
         except KeyError:
             conjugate.other_info['id'] = "Unknown acid"
-        return Acid(conjugate, a_key, self.pka, self.paths)
+        return Acid(conjugate, a_key, self.pka)
 
 
 class LewisAcid(Acid): pass

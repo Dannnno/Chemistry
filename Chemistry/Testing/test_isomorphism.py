@@ -28,7 +28,7 @@ from Chemistry.reactions.base_reactions import Conditions
 from Chemistry.base.reactants import Base, Acid, Reactant
 
 
-class test_isomorphisms(unittest.TestCase):
+class TestIsomorphisms(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls): pass
@@ -108,10 +108,12 @@ class test_isomorphisms(unittest.TestCase):
         self.assertEquals(self.base, self.compound1)
 
     def test_isomorphism_base_base(self):
-        self.assertEquals(Reactant.make_Base(self.compound1), self.base)
+        self.assertEquals(
+            Reactant.make_Base(self.compound1, 16, 'a2'), self.base)
 
     def test_isomorphism_acid_acid(self):
-        self.assertEquals(Reactant.make_Acid(self.compound2), self.acid)
+        self.assertEquals(
+            Reactant.make_Acid(self.compound2, 'a1', -1.74), self.acid)
 
 
 if __name__ == '__main__':

@@ -93,7 +93,7 @@ class test_cml_builder(unittest.TestCase):
 
     def test_from_Compound(self):
         with open("CML_1.cml", 'r') as cml_file:
-            builder = cml.CMLBuilder.from_Compound(
+            builder = cml.CMLBuilder.from_compound(
                 compound_from_file(cml_file, 'cml'))
 
             with tempfile.NamedTemporaryFile(mode='r+',
