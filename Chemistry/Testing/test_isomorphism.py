@@ -107,14 +107,6 @@ class TestIsomorphisms(unittest.TestCase):
     def test_isomorphism_base_compound(self):
         self.assertEquals(self.base, self.compound1)
 
-    def test_isomorphism_base_base(self):
-        self.assertEquals(
-            Reactant.make_Base(self.compound1, 16, 'a2'), self.base)
-
-    def test_isomorphism_acid_acid(self):
-        self.assertEquals(
-            Reactant.make_Acid(self.compound2, 'a1', -1.74), self.acid)
-
 
 if __name__ == '__main__':
     from . import helper

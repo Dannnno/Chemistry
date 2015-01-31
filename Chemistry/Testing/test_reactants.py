@@ -57,20 +57,6 @@ class TestReactantUtilityMethods(unittest.TestCase):
     def test_new_key3(self):
         self.assertEqual('b2', Reactant._new_key(self.base1, False))
 
-    def test_make_base_1(self):
-        self.assertEqual(
-            self.base1, Reactant.make_Base(self.compound1, 'a2', 16))
-
-    def test_make_base_2(self):
-        self.assertIs(self.base1, Reactant.make_Base(self.base1, 'a2', 16))
-
-    def test_make_acid_1(self):
-        self.assertEqual(
-            self.acid1, Reactant.make_Acid(self.compound2, 'a1', -1.74))
-
-    def test_make_acid_2(self):
-        self.assertIs(self.acid1, Reactant.make_Acid(self.acid1, 'a1', -1.74))
-
 
 class TestBase(unittest.TestCase):
 

@@ -52,7 +52,19 @@ copyright = """# Copyright (c) 2014 Dan Obermiller
 
 
 def get_element(symbol='C'):
-    \"""Function that returns the appropriate data for a periodic table""\"
+    \"""Function that returns the appropriate data for a given element.
+
+    Parameters
+    ----------
+    symbol : string
+        The symbol of the atom being returned.  Defaults to 'C' for Carbon.
+
+    Returns
+    -------
+    table : dict
+        A dictionary storing all of the relevant information about an element.
+    ""\"
+
     table = {"symbol": symbol}
     table.update(periodic_table[symbol])
     return table

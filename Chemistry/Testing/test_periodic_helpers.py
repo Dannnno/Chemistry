@@ -23,7 +23,7 @@
 
 import unittest
 
-from Chemistry.base import table_builder as tb
+from Chemistry.base import _table_builder as tb
 
 
 class test_helpers(unittest.TestCase):

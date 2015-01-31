@@ -29,30 +29,37 @@ from Chemistry.base.compounds import _CompoundWrapper
 
 class Reactant(_CompoundWrapper):
     """The base Reactant object.  All subclasses of this are things that
-    are commonly found in a reaction
+    are commonly found in a reaction.
+
+    Parameters
+    ----------
+    compound : Compound
+        The molecule being considered as a reactant.
+
+    Attributes
+    ----------
+    pka
     """
 
-    @classmethod
-    def make_Base(cls, basic_compound, pka, point):
-        """Classmethod that turns a compound into a base."""
-
-        if isinstance(basic_compound, Base):
-            return basic_compound
-        else:
-            return Base(basic_compound, point, pka)
-
-    @classmethod
-    def make_Acid(cls, acidic_compound, pka, point):
-        """Basically the same as make_Base, but it makes acids"""
-
-        if isinstance(acidic_compound, Acid):
-            return acidic_compound
-        else:
-            return Acid(acidic_compound, point, pka)
+    _pka = None
 
     @classmethod
     def _new_key(cls, compound, atom=True):
-        """Generates a new atom/bond key for a compound"""
+        """Generates a new atom/bond key for a compound.
+
+        Parameters
+        ----------
+        compound : Compound, _CompoundWrapper
+            The compound that needs a new key
+        atom : bool, optional
+            True if a new atom key is needed, False for new bond key.  Defaults
+            to True.
+
+        Returns
+        -------
+        string
+            The new key.
+        """
 
         if atom:
             max_key = max(compound.atoms)
@@ -66,16 +73,22 @@ class Reactant(_CompoundWrapper):
     def __init__(self, compound):
         super(Reactant, self).__init__(compound)
 
-    def _validate_pka(self, pka):
-        """Validates the pKa of a molecule.  This should move into a property"""
+    @property
+    def pka(self):
+        """The pka of a molecule.  If the wrapped molecule already has a known
+        pka then the value passed by the constructor is checked against that.
+        """
 
-        try:
-            _ = self.__dict__['pka']
-        except KeyError:
-            self.pka = pka
-        else:
-            if pka != self.pka:
+        return self._pka
+
+    @pka.setter
+    def pka(self, pka_):
+
+        if hasattr(self.compound, 'pka'):
+            if pka_ != self.pka:
                 raise ValueError("pKa must equal {}".format(self.pka))
+
+        self._pka = pka_
 
     def __str__(self):
         return "{} of {}".format(self.__class__.__name__,
@@ -86,31 +99,56 @@ class Reactant(_CompoundWrapper):
 
 
 class Acid(Reactant):
-    """A subclass of Reactant, represents acidic compounds in a reaction"""
+    """A subclass of Reactant, represents acidic compounds in a reaction.
+
+    Parameters
+    ----------
+    compound : Compound
+        The molecule being treated as an acid.
+    acidic_point : string
+        The key of the 'acidic point' of the molecule, or the most acidic H+.
+    pka : float
+        The pKa of the aforementioned most acidic H+.
+    """
 
     def __init__(self, compound, acidic_point, pka):
         super(Acid, self).__init__(compound)
         self.acidic_point = acidic_point
-        self._validate_pka(pka)
+        self.pka = pka
 
-    def to_conjugate_base(self, *args, **kwargs):
-        """Transforms the current acid into its conjugate base"""
+    def to_conjugate_base(self):
+        """Transforms the current acid into its conjugate base."""
 
         raise NotImplementedError
 
 
 class Base(Reactant):
-    """A subclass of Reactant, represents basic compounds in a reaction"""
+    """A subclass of Reactant, represents basic compounds in a reaction.
+
+    Parameters
+    ----------
+    compound : Compound
+        The molecule being treated as a base.
+    basic_point : string
+        The key of the 'basic point' of the molecule, or the location that is
+        most accepting of H+.
+    pka : float
+        The pKa of the conjugate acid.
+    """
 
     def __init__(self, compound, basic_point, pka):
-        """The pka of a Base should be equal to that of its conjugate acid."""
-
         super(Base, self).__init__(compound)
         self.basic_point = basic_point
-        self._validate_pka(pka)
+        self.pka = pka
 
     def to_conjugate_acid(self):
-        """Transforms the current base into its conjugate acid"""
+        """Transforms the current base into its conjugate acid.  Is side-effect
+        free; all changes happen on a copy of this base.
+
+        Returns
+        -------
+        Acid
+            The conjugate acid of the base."""
 
         conjugate = deepcopy(self.compound)
         a_key = Reactant._new_key(conjugate)

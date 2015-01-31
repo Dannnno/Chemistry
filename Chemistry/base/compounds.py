@@ -21,9 +21,7 @@
 # You should have received a copy of the MIT License along with this program.
 # If not, see <http://opensource.org/licenses/MIT>
 
-from collections import deque
 import json
-import types
 
 import networkx as nx
 
@@ -97,7 +95,7 @@ class Compound(nx.Graph):
         node1 : Object
             The first node evaluated when checking graph isomorphism
         node2 : Object
-            The second node evalutated when checking graph isomorphism
+            The second node evaluated when checking graph isomorphism
 
         Returns
         -------
@@ -159,18 +157,35 @@ class Compound(nx.Graph):
             self._add_edge(id_, *bond)
 
     def _add_node(self, key, atom):
-        """Adds a single node.  Should probably be a property"""
+        """Adds a single node.
 
-        try:
-            _ = self.atoms[key]
-        except KeyError:
-            self.add_node(key, **atom)
-            self.atoms[key] = atom['symbol']
-        else:
+        Parameters
+        ----------
+        key : string
+            The key associated with the given atom.
+        atom : dict
+            Dictionary representing the atom.
+        """
+
+        if key in self.atoms:
             raise KeyError("There is already an atom {}".format(key))
+        self.add_node(key, **atom)
+        self.atoms[key] = atom['symbol']
 
     def _add_edge(self, key, first, second, rest=None):
-        """Adds a single edge. Should probably be a property"""
+        """Adds a single edge.
+
+        Parameters
+        ----------
+        key : string
+            The key associated with the given atom.
+        first : string
+            The key of one of the atoms in the bond
+        second : string
+            The key of the other atom in the bond
+        rest : dict, optional
+            Other information relevant to the bond.
+        """
 
         if rest is None:
             rest = {}
@@ -195,6 +210,15 @@ class Compound(nx.Graph):
                           indent=4)
 
     def is_isomorphic(self, other):
+        """Determines whether or not a molecule is isomorphically equivalent
+        to another.
+
+        Parameters
+        ----------
+        other : Compound, _CompoundWrapper
+            The Compound that is being check for isomorphism.
+        """
+
         return nx.is_isomorphic(self, other,
                                 node_match=Compound.node_matcher,
                                 edge_match=Compound.edge_matcher)
@@ -207,6 +231,24 @@ class Compound(nx.Graph):
 
 
 class _CompoundWrapper(object):
+    """Wrapper class for a compound.
+
+    Parameters
+    ----------
+    compound : Compound
+        The compound being wrapped.
+
+    Attributes
+    ----------
+    compound
+
+    Notes
+    -----
+    This class exists to be subclassed by other classes, such as
+    Chemistry.base.reactants.Reactant, or Chemistry.base.products.Product.  This
+    is easier than creating a brand new Compound object whenever I want to
+    analyze a molecule as an Acid, or a Base, or some other reactant or product.
+    """
     _compound = None
 
     def __init__(self, compound):
@@ -214,6 +256,7 @@ class _CompoundWrapper(object):
 
     @property
     def compound(self):
+        """The underlying compound object that is being wrapped."""
         return self._compound
 
     @compound.setter

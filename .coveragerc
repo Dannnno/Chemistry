@@ -1,6 +1,7 @@
 [report]
 omit =
     */python?.?/*
+    */python??/*
     */site-packages/*
     *__init__*
     */Chemistry/Testing/*

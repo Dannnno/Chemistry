@@ -25,7 +25,7 @@ __all__ = ['test_acid_base_reactions', 'test_base_reactions', 'test_CML',
            'test_compounds', 'test_isomorphism', 'test_periodic_helpers']
 
 
-def helper(globs):
+def helper(globs, verbosity=1):
     import sys
     import types
     import unittest
@@ -38,7 +38,7 @@ def helper(globs):
     big_suite = unittest.TestSuite(loader.loadTestsFromTestCase(test_class)
                                    for test_class in test_classes_to_run)
 
-    runner = unittest.TextTestRunner(sys.stdout, verbosity=1)
+    runner = unittest.TextTestRunner(sys.stdout, verbosity=verbosity)
     runner.run(big_suite)
 
 
@@ -46,6 +46,7 @@ def stdout_capture():
     import contextlib
     import sys
     import io
+
     @contextlib.contextmanager
     def capture():
         oldout, olderr = sys.stdout, sys.stderr

@@ -48,6 +48,18 @@ class Product(_CompoundWrapper):
 class Products(object):
     """A Products object - represents a collection of Product objects because a
     reaction usually has more than one.
+
+    Parameters
+    ----------
+    maj : tuple
+        Tuple of 0 or more Product objects.  Represents the major products.
+    min_ : tuple
+        Tuple of 0 or more Product objects.  Represents the minor products.
+
+    Attributes
+    ---------
+    major
+    minor
     """
 
     def __init__(self, maj, min_):
@@ -120,7 +132,19 @@ class Products(object):
 
 class EquilibriumProducts(object):
     """EquilibriumProducts object - much the same as a Products object
-    but for reversible reactions
+    but for reversible reactions.
+
+    Parameters
+    ----------
+    reactants : tuple
+        Tuple of the reactants.
+    products : Products
+        Products object.
+
+    Attributes
+    ----------
+    products
+    reactants
     """
 
     _reactants = None
