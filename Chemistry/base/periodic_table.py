@@ -22,6 +22,11 @@
 # If not, see <http://opensource.org/licenses/MIT>
 
 
+"""This module stores all of the data about each element in the periodic table.
+This includes atomic mass, radius, electronegativity, etc.
+"""
+
+
 def get_element(symbol='C'):
     """Function that returns the appropriate data for a given element.
 

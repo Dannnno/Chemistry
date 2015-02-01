@@ -21,4 +21,11 @@
 # You should have received a copy of the MIT License along with this program.
 # If not, see <http://opensource.org/licenses/MIT>
 
+
+"""Collection of modules used to parse various chemical data files into formats
+suitable for conversion into Compound objects.  Deprecated, and will be removed
+OpenBabel support is fully integrated.
+"""
+
+
 __all__ = ['CheML']

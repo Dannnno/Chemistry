@@ -25,7 +25,7 @@
 from copy import deepcopy
 
 from Chemistry.base import compounds
-from Chemistry.reactions.base_reactions import Reaction, Conditions
+from Chemistry.reactions._reactions import Reaction, Conditions
 from Chemistry.base.products import Product, Products, EquilibriumProducts
 from Chemistry.exceptions.ReactionErrors import NoReactionError
 

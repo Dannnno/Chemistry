@@ -21,6 +21,12 @@
 # You should have received a copy of the MIT License along with this program.
 # If not, see <http://opensource.org/licenses/MIT>
 
+
+"""This module provides the necessary classes and helper functions to create
+and manipulate the products of chemical reactions.
+"""
+
+
 import types
 
 from Chemistry.base.compounds import _CompoundWrapper

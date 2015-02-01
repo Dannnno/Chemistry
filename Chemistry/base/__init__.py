@@ -21,4 +21,10 @@
 # You should have received a copy of the MIT License along with this program.
 # If not, see <http://opensource.org/licenses/MIT>
 
+
+"""This package provides the underlying framework necessary for chemical
+reactions.  All reactions rely on the infrastructure provided within.
+"""
+
+
 __all__ = ['compounds', 'periodic_table', 'reactants', 'products']

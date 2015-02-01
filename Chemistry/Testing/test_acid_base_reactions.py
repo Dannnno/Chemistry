@@ -26,7 +26,7 @@ import unittest
 from Chemistry.base import compounds
 from Chemistry.base.reactants import Acid, Base
 from Chemistry.base.products import Product, Products
-from Chemistry.reactions.base_reactions import Conditions
+from Chemistry.reactions._reactions import Conditions
 from Chemistry.reactions.acid_base import AcidBase
 from Chemistry.exceptions.ReactionErrors import NoReactionError
 

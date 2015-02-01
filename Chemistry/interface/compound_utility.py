@@ -21,6 +21,12 @@
 # You should have received a copy of the MIT License along with this program.
 # If not, see <http://opensource.org/licenses/MIT>
 
+
+"""Provides a public API for creating molecules from various sources, and
+converting Compound objects back into file or dictionaries.
+"""
+
+
 from Chemistry.base.compounds import Compound
 from Chemistry.parsing.CheML import CMLParser, CMLBuilder
 from Chemistry.exceptions.ParseErrors import UnsupportedFileTypeException

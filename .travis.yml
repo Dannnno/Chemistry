@@ -1,10 +1,11 @@
 language: python
 python:
   - "2.7"
-  # No python 3 support yet.  I'm curious about pypy though...
+  # No python 3 support yet.
   - "pypy"
 # command to install dependencies
 install:
+  - pip install cython
   - pip install -r requirements.txt
 # command to run tests
 script: 

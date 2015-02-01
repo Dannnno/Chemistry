@@ -25,7 +25,7 @@ import unittest
 
 from Chemistry.base.compounds import Compound
 from Chemistry.base.reactants import Reactant, Acid, Base
-from Chemistry.reactions.base_reactions import Conditions
+from Chemistry.reactions._reactions import Conditions
 
 
 class TestReactantUtilityMethods(unittest.TestCase):

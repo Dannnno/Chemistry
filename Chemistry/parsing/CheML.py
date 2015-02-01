@@ -22,6 +22,9 @@
 # If not, see <http://opensource.org/licenses/MIT>
 
 
+"""Parser and builder for CML files.  On the path to deprecation."""
+
+
 from copy import deepcopy
 import json
 
@@ -30,8 +33,15 @@ from lxml import builder as lb
 
 
 class CMLParser(object):
-    """Parser for CML files
+    """Parser for CML files.
 
+    Parameters
+    ----------
+    CML_file : file-like object
+        The (open) file that contains the data.
+
+    Notes
+    -----
     Pretty limited on what it can actually handle; it expects that things are
     formatted the way I do and not more generically.  I want to eventually make
     this more generalizable.

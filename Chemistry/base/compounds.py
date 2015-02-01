@@ -21,6 +21,16 @@
 # You should have received a copy of the MIT License along with this program.
 # If not, see <http://opensource.org/licenses/MIT>
 
+
+"""This module provides the underlying framework for the package. It provides
+the base Compound class that is used throughout to represent molecules, as well
+as the abstract class _CompoundWrapper that is used throughout whenever the
+Compound class is wrapped (such as by Reactant).  These classes are fundamental
+to the rest of the program.
+"""
+
+
+import abc
 import json
 
 import networkx as nx
@@ -231,7 +241,7 @@ class Compound(nx.Graph):
 
 
 class _CompoundWrapper(object):
-    """Wrapper class for a compound.
+    """Abstract base class for compound wrapping classes.
 
     Parameters
     ----------
@@ -249,6 +259,8 @@ class _CompoundWrapper(object):
     is easier than creating a brand new Compound object whenever I want to
     analyze a molecule as an Acid, or a Base, or some other reactant or product.
     """
+
+    __metaclass__ = abc.ABCMeta
     _compound = None
 
     def __init__(self, compound):

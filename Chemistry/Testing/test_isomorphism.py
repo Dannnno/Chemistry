@@ -24,7 +24,7 @@
 import unittest
 
 from Chemistry.base import compounds
-from Chemistry.reactions.base_reactions import Conditions
+from Chemistry.reactions._reactions import Conditions
 from Chemistry.base.reactants import Base, Acid, Reactant
 
 

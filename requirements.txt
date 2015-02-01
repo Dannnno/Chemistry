@@ -3,3 +3,4 @@ networkx
 coveralls
 nose
 numpydoc
+kivy

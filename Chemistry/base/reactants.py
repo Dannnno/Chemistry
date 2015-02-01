@@ -21,6 +21,12 @@
 # You should have received a copy of the MIT License along with this program.
 # If not, see <http://opensource.org/licenses/MIT>
 
+
+"""This module provides the classes used to form various reactants in a chemical
+reaction.
+"""
+
+
 from copy import deepcopy
 
 import Chemistry.base.periodic_table as pt

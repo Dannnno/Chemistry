@@ -21,6 +21,14 @@
 # You should have received a copy of the MIT License along with this program.
 # If not, see <http://opensource.org/licenses/MIT>
 
+
+"""This module is a helper module for building the periodic_table module.  Its
+primary purpose is to facilitate the easy rewriting of the periodic table data
+if changes need to be made (for example adding or removing data, or updating
+data that is found to be incorrect.
+"""
+
+
 import csv
 import json
 import os
@@ -48,10 +56,16 @@ copyright = """# Copyright (c) 2014 Dan Obermiller
 # THE SOFTWARE.
 #
 # You should have received a copy of the MIT License along with this program.
-# If not, see <http://opensource.org/licenses/MIT>
+# If not, see <http://opensource.org/licenses/MIT>\n
+"""
 
+mod_doc_string = """
+\"""This module stores all of the data about each element in the periodic table.
+This includes atomic mass, radius, electronegativity, etc.
+\"""\n\n
+"""
 
-def get_element(symbol='C'):
+get_element_function = """def get_element(symbol='C'):
     \"""Function that returns the appropriate data for a given element.
 
     Parameters
@@ -67,7 +81,7 @@ def get_element(symbol='C'):
 
     table = {"symbol": symbol}
     table.update(periodic_table[symbol])
-    return table
+    return table\n\n
 """
 
 
@@ -137,7 +151,9 @@ def build_table():
                             for cell, typ in zip(tl, col_types))))
             per_table[tl[1]] = new_row
 
-        periodic_table.write(copyright + '\n\n')
+        periodic_table.write(copyright)
+        periodic_table.write(mod_doc_string)
+        periodic_table.write(get_element_function)
         json_table = json.dumps(per_table, indent=4).split('\n')
         json_table[0] = "periodic_table = " + json_table[0]
 
