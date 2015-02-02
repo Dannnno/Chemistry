@@ -113,14 +113,29 @@ class CMLParser(object):
 
 
 class CMLBuilder(object):
-    """CML generator object
+    """Object used to build a CML file.
 
-    Constructs a CML file based on a dictionary or compound input
+    Parameters
+    ----------
+    molecule_dict : dict
+        Dictionary storing all of the molecular information.
     """
 
     @classmethod
     def from_compound(cls, comp):
-        """Generates a CMLBuilder object from a Compound object"""
+        """Generates a CMLBuilder object from a Compound object.
+
+        Parameters
+        ----------
+        comp : Compound
+            The compound to be written to file.
+
+        Returns
+        -------
+        CMLBuilder
+            The builder object with the relevant information.
+        """
+
         comp = deepcopy(comp)
         atoms = comp.atoms
         bonds = {}
@@ -162,21 +177,18 @@ class CMLBuilder(object):
                         **self.attribs)
 
     def to_file(self, cml_file):
-        """Writes the new cml to file"""
-        try:
-            cml_file.write(str(self))
-        except AttributeError:
-            raise TypeError(''.join(
-                                      ["to_file() should be given an ",
-                                       "open file-like object, not a {}"]
-                                     ).format(type(cml_file)))
+        """Writes the data in the builder object to file.
+
+        Parameters
+        ----------
+        cml_file : file-like
+            The open file to which the compound should be written.
+        """
+
+        cml_file.write(str(self))
 
     def __str__(self):
         return etree.tostring(self.CML, pretty_print=True)
 
     def __repr__(self):
         return str(self)
-
-
-if __name__ == '__main__':
-    pass

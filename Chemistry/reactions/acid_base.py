@@ -22,35 +22,62 @@
 # If not, see <http://opensource.org/licenses/MIT>
 
 
+"""This module provides the tools to simulate an acid base reaction."""
+
+
 from copy import deepcopy
 
 from Chemistry.base import compounds
-from Chemistry.reactions._reactions import Reaction, Conditions
+from Chemistry.reactions._reactions import _Reaction, Conditions
 from Chemistry.base.products import Product, Products, EquilibriumProducts
 from Chemistry.exceptions.ReactionErrors import NoReactionError
 
 
-class AcidBase(Reaction):
-    """Describes an acid-base reaction.  Creating an instance of this object
-    with the appropriate variables (which is handled by the application when run
-    from the GUI) will do all the necessary prep work to perform the reaction.
+class AcidBase(_Reaction):
+    """Performs an acid base reaction.
+
+    Parameters
+    ----------
+    acid : Acid
+        The acid in the reaction.
+    base : Base
+        The base in the reaction.
+    cond : Conditions
+        The reaction conditions.
+
+    Attributes
+    ----------
+    conditions
+    acid
+    base
+
+    Notes
+    -----
+    This class makes some pretty heavy assumptions about the type and format
+    of the data being passed to it.  Should generally not be called directly,
+    but instead from the middle layer between interface (command line or GUI)
+    and the underlying framework.
     """
+
     _conditions = None
+    _acid = ()
+    _base = ()
 
     def __init__(self, acid, base, cond):
-        self._acid, self._base = (), ()
         self.conditions = cond
         self.acid = acid
         self.base = base
 
     @property
     def conditions(self):
-        """The Conditions object for the reaction.  Should contain enough
-        information for the reaction to take place.  Not including important
-        information about solvents, other present molecules and the like will
-        impair the results.  Can be given a dictionary instead of a Conditions
-        object - it will be transformed into a Conditions object
+        """The Conditions object for the reaction.
+
+        Notes
+        -----
+        It is assumed that all necessary information for the reaction will be
+        provided within this object (except the acid and base).
         """
+
         return self._conditions
 
     @conditions.setter
@@ -64,11 +91,14 @@ class AcidBase(Reaction):
 
     @property
     def acid(self):
-        """The compound that is being treated as an acid for this reaction. Note
-        that if the conditions are acidic the compound being passed in as the
-        acid may not be the one used in the reaction (if the conditions are more
-        acidic than the compound that purports to be an acid).
+        """The acid in the reaction.
+
+        Notes
+        -----
+        The acid passed to the constructor may not be the one treated as an acid
+        for the reaction; acidic conditions may affect the outcome.
         """
+
         return self._acid
 
     @acid.setter
@@ -84,11 +114,14 @@ class AcidBase(Reaction):
 
     @property
     def base(self):
-        """The compound that is being treated as an base for this reaction. Note
-        that if the conditions are basic the compound being passed in as the
-        base may not be the one used in the reaction (if the conditions are more
-        basic than the compound that purports to be an base)
+        """The base in the reaction.
+
+        Notes
+        -----
+        The base passed to the constructor may not be the one treated as an base
+        for the reaction; basic conditions may affect the outcome.
         """
+
         return self._base
 
     @base.setter
@@ -102,36 +135,93 @@ class AcidBase(Reaction):
         else:
             self._base = (base_, base_.basic_point)
 
-    def _equilibrium(self, threshold=10):
-        """Calculates what the equilibrium between reactants and products is,
-        if any.  This comparison is done by a difference in pka between the acid
-        and the conjuagte acid and the base.  By default this threshold is a
-        difference of 10 pKa units.
+    def _equilibrium(self, threshold=10.):
+        # TODO: Check the wording of this docstring
+        """Calculates what, if any, equilibrium will be reached by the reaction.
+
+        Parameters
+        ----------
+        threshold : float, optional
+            The pKa threshold used to determine the equilibrium.  Defaults to 10
+            pKa units.
+
+        Returns
+        -------
+        tuple
+            A tuple storing the ratio of reactants to products.
+
+        Raises
+        ------
+        NoReactionError
+            Raised if the acid and base have equal pKa (and thus no reaction
+            would occur).
         """
+
         pka1, pka2 = self.acid[0].pka, self.base[0].pka
         diff = pka1-pka2
         if diff == 0:
             raise NoReactionError("These two molecules have identical pka")
+        # TODO: This doesn't look right to me.  I think I need to fix this.
         elif diff < 0:
             if abs(diff) > threshold:
-                return (1, 0)
+                return 1, 0
             else:
-                return (10**abs(diff), 1)
+                return pow(10, abs(diff)), 1
         else:
             if diff > threshold:
                 return 0, 1
             else:
-                return (1, 10**diff)
+                return 1, pow(10, diff)
+
+    @staticmethod
+    def _calculate_ratio(difference, threshold):
+        # TODO: Check the wording of this docstring
+        """Calculates the equilibrium ratio.
+
+        Parameters
+        ----------
+        difference : float
+            The difference between pKas.
+        threshold : float
+            The necessary difference.
+
+        Returns
+        -------
+        float
+            The amount of product there will be, relative to a value of `1` for
+            the reactants.
+        """
+
+        if difference > threshold:
+            return 0.0
+        else:
+            return pow(10, difference)
 
     def _calculate_products(self):
-        """Determines the expected products of the reaction.  This will
-        generally be the conjugate acid and base, as well as some salt (or other
-        byproduct).  This method is still incomplete - it lacks support for
-        generating the salt from ionic compounds.
+        """Determines the expected products of the reaction.
+
+        Returns
+        -------
+        tuple
+            A tuple of tuples.  The form is something like
+
+                (Major Product, Minor Product)
+
+            which can be further broken down into
+
+                ((Conj. Acid, Conj. Base, Salt), (Empty Product))
+
+
+        Notes
+        -----
+        This will generally be the conjugate acid and base, as well as some salt
+        (or other byproduct).  This method is still incomplete - it lacks
+        support for generating the salt from ionic compounds.
         """
+
         conjugate_acid = None
         conjugate_base = None
-        salt = None # NYI
+        salt = None   # NYI
 
         acid, base = deepcopy(self.acid[0]), deepcopy(self.base[0])
         conjugate_acid = base.to_conjugate_acid()
@@ -142,21 +232,30 @@ class AcidBase(Reaction):
         except KeyError:
             other['id'] = "Unknown Base"
         conjugate_base = compounds.Compound(
-                            *self._remove_node(acid, self.acid[1]),
-                            other_info=other)
+            *self._remove_node(acid, self.acid[1]), other_info=other)
         return ((Product(conjugate_acid, 50),
-                  Product(conjugate_base, 50),
-                  Product(salt, 0)),
-                 (Product(None, 0),))
+                 Product(conjugate_base, 50),
+                 Product(salt, 0)),
+                (Product(None, 0),))
 
     def react(self):
-        """Performs the actual acid-base reaction.  Current implementation is
-        incomplete and only accurately describes a small fraction of acid-base
-        reactions
+        """Performs the actual acid-base reaction.
+
+        Returns
+        -------
+        Products, EquilibriumProducts
+            The products of the reaction.
+
+        Notes
+        -----
+        Current implementation is incomplete and only accurately describes a
+        small fraction of acid-base reactions
         """
+
         product_ratio, reactant_ratio = self._equilibrium()
         major, minor = self._calculate_products()
         if reactant_ratio == 0:
             return Products(major, minor)
         else:
+            # This doesn't work at all how it should.  Here for completeness
             return EquilibriumProducts(major, minor)

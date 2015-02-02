@@ -21,12 +21,10 @@
 # You should have received a copy of the MIT License along with this program.
 # If not, see <http://opensource.org/licenses/MIT>
 
-"""
-This is the master __init__ file for the Chemistry repository.
-"""
+"""The CAOS program!  See README.md for more details."""
 
 __all__ = ['exceptions', 'interface', 'parsing', 'base', 'reactions']
 
 __version__ = 0.0  # pre-release
 
-__author__ = ["Dan Obermiller"]
+__author__ = "Dan Obermiller"

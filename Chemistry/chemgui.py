@@ -38,7 +38,6 @@ from kivy.properties import StringProperty, ObjectProperty, NumericProperty,\
 from Chemistry.base.compounds import Compound
 from Chemistry.base.reactants import Acid, Base
 from Chemistry.reactions._reactions import Conditions
-# Reactions
 from Chemistry.reactions import AcidBase
 
 
