@@ -67,100 +67,134 @@ class Compound(nx.Graph):
         molecule.  Things like molecular charge, pka, the name/id of the
         molecule, etc.  If no information is provided the constructor will
         attempt to ascertain any information it needs.
+
+    Attributes
+    ----------
+    atoms
+    bonds
+    other_info
     """
 
-    @classmethod
-    def json_serialize(cls, obj, as_str=False):
-        """Serializes an object for json, used for __str__ and __repr__
+    _atoms = None
+    _bonds = None
+    _other = None
 
-        Parameters
-        ----------
-        obj : Object
-            The object to be serialized.  Can be anything, although this
-            function is largely intended to work with Compound objects
-        as_str : bool, optional
-            Specifies whether `repr` or `str` will be used to generate the
-            strings
-        """
-
-        d = {}
-        try:
-            if isinstance(obj, Compound):
-                for key, value in vars(obj).iteritems():
-                    if key in ['atoms', 'bonds', 'other_info']:
-                        d.update({key: value})
-                return d
-            else:
-                return vars(obj)
-        except AttributeError:
-            stringify_function = (str if as_str else repr)
-            return map(stringify_function, obj)
-
-    @classmethod
-    def node_matcher(cls, node1, node2):
-        """Helper function to check for isomorphic graphs
+    @staticmethod
+    def _node_matcher(node1, node2):
+        """Helper function to check for isomorphic graphs.
 
         Parameters
         ----------
         node1 : Object
-            The first node evaluated when checking graph isomorphism
+            The first node evaluated when checking graph isomorphism.
         node2 : Object
-            The second node evaluated when checking graph isomorphism
+            The second node evaluated when checking graph isomorphism.
 
         Returns
         -------
         bool
-            Whether or not the nodes can be considered equivalent
+            Whether or not the nodes can be considered equivalent.
         """
 
         return node1['symbol'] == node2['symbol']
 
-    @classmethod
-    def edge_matcher(cls, edge1, edge2):
-        """Helper function to check for isomorphic graphs
+    @staticmethod
+    def _edge_matcher(edge1, edge2):
+        """Helper function to check for isomorphic graphs.
 
         Parameters
         ----------
         edge1 : Object
-            The first edge evaluated when checking graph isomorphism
+            The first edge evaluated when checking graph isomorphism.
         edge2 : Object
-            The second edge evalutated when checking graph isomorphism
+            The second edge evaluated when checking graph isomorphism.
         """
 
         return edge1 == edge2
 
-    def __init__(self, atoms, bonds, other_info={}):
+    def __init__(self, atoms, bonds, other_info=None):
         super(Compound, self).__init__()
-        self.atoms = {}
-        self.bonds = {}
-
-        self._add_nodes_from(atoms)
-        self._add_edges_from(bonds)
+        if other_info is None:
+            other_info = {}
+        self.atoms = atoms
+        self.bonds = bonds
         self.other_info = other_info
-        self.graph.update(self.other_info)
         self.molecule = {'other_info': self.other_info,
                          'atoms': self.atoms,
                          'bonds': self.bonds}
 
+    @property
+    def atoms(self):
+        """The atoms of a molecule.
+
+        Returns
+        -------
+        self._atoms : dict
+            The dictionary that stores all of the atoms in a molecules.
+        """
+
+        return self._atoms
+
+    @atoms.setter
+    def atoms(self, nodes):
+        if self._atoms is None:
+            self._atoms = {}
+        self._add_nodes_from(nodes)
+
+    @property
+    def bonds(self):
+        """The bonds of a molecule.
+
+        Returns
+        -------
+        self._bonds : dict
+            The dictionary that stores all of the bonds in a molecules.
+        """
+
+        return self._bonds
+
+    @bonds.setter
+    def bonds(self, edges):
+        if self._bonds is None:
+            self._bonds = {}
+        self._add_edges_from(edges)
+
+    @property
+    def other_info(self):
+        """Other information about a molecule.
+
+        Returns
+        -------
+        self._other : dict
+            The dictionary that stores all other information in a molecule.
+        """
+
+        return self._other
+
+    @other_info.setter
+    def other_info(self, info):
+        self._other = info
+        self.graph.update(self._other)
+
     def _add_nodes_from(self, atoms):
-        """Adds a group of nodes
+        """Adds a group of nodes.
 
         Parameters
         ----------
         atoms : dict
-            The atoms that are being added to the molecule
+            The atoms that are being added to the molecule.
         """
 
         for key, atom in atoms.iteritems():
             self._add_node(key, pt.get_element(atom))
 
     def _add_edges_from(self, bonds):
-        """Adds a group of edges
+        """Adds a group of edges.
 
         Parameters
         ----------
         bonds : dict
-            The bonds that are being added to the molecule
+            The bonds that are being added to the molecule.
         """
 
         for id_, bond in bonds.iteritems():
@@ -210,14 +244,10 @@ class Compound(nx.Graph):
             raise KeyError("There is already a bond {}".format(key))
 
     def __str__(self):
-        return json.dumps(Compound.json_serialize(self, as_str=True),
-                          sort_keys=True,
-                          indent=4)
+        return json.dumps(self.molecule, sort_keys=True)
 
     def __repr__(self):
-        return json.dumps(Compound.json_serialize(self),
-                          sort_keys=True,
-                          indent=4)
+        return json.dumps(self.molecule, sort_keys=True, indent=4)
 
     def is_isomorphic(self, other):
         """Determines whether or not a molecule is isomorphically equivalent
@@ -227,11 +257,16 @@ class Compound(nx.Graph):
         ----------
         other : Compound, _CompoundWrapper
             The Compound that is being check for isomorphism.
+
+        Returns
+        -------
+        bool
+            Whether or not the molecules are isomorphic.
         """
 
         return nx.is_isomorphic(self, other,
-                                node_match=Compound.node_matcher,
-                                edge_match=Compound.edge_matcher)
+                                node_match=self._node_matcher,
+                                edge_match=self._edge_matcher)
 
     def __eq__(self, other):
         return self.is_isomorphic(other)
@@ -254,7 +289,7 @@ class _CompoundWrapper(object):
 
     Notes
     -----
-    This class exists to be subclassed by other classes, such as
+    This class exists to be sub-classed by other classes, such as
     Chemistry.base.reactants.Reactant, or Chemistry.base.products.Product.  This
     is easier than creating a brand new Compound object whenever I want to
     analyze a molecule as an Acid, or a Base, or some other reactant or product.
@@ -268,7 +303,14 @@ class _CompoundWrapper(object):
 
     @property
     def compound(self):
-        """The underlying compound object that is being wrapped."""
+        """The underlying compound object that is being wrapped.
+
+        Returns
+        -------
+        self._compound : Compound
+            The compound object.
+        """
+
         return self._compound
 
     @compound.setter

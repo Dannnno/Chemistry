@@ -66,27 +66,6 @@ class TestCompound(unittest.TestCase):
                                                       'chirality': None})},
                                 {})
 
-    def test_json_serializer_repr(self):
-        self.assertEqual(compounds.Compound.json_serialize(self.compound1),
-                         {'other_info': {'id': 'Water'},
-                          'atoms': {'a1': 'H',
-                                    'a3': 'O',
-                                    'a2': 'H'},
-                          'bonds': {'b1': ('a1', 'a3',
-                                          {'chirality': None, 'order': 1}),
-                                    'b2': ('a2', 'a3',
-                                          {'chirality': None, 'order': 1})}})
-
-    def test_json_serializer_str(self):
-        self.assertEqual(
-            compounds.Compound.json_serialize(self.compound1, as_str=True),
-            {'other_info': {'id': 'Water'},
-             'atoms': {'a1': 'H',
-                       'a3': 'O',
-                       'a2': 'H'},
-             'bonds': {'b1': ('a1', 'a3', {'chirality': None, 'order': 1}),
-                       'b2': ('a2', 'a3', {'chirality': None, 'order': 1})}})
-
     def test_add_node_raises_KE(self):
         with self.assertRaises(KeyError):
             self.compound1._add_node('a2', pt.get_element('H'))

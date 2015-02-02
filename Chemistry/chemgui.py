@@ -44,6 +44,7 @@ from Chemistry.reactions import AcidBase
 reaction_list = [AcidBase]
 app = None
 
+
 class Element(Widget):
 
     label_ = ObjectProperty()
@@ -118,8 +119,7 @@ class Bond(Widget):
                 Line(points=[x1, y1-2, x2, y2-2], width=1)
             else:
                 raise ValueError(
-                        "order's state must be 1, 2, or 3 (not {})"
-                            .format(order))
+                    "order's state must be 1, 2, or 3 (not {})".format(order))
 
     @property
     def order(self):
@@ -382,7 +382,7 @@ class ChemApp(App):
         """
 
         # I don't really have this working yet
-        self.reactionlist = sorted(reaction_list) ## This will have a key or something
+        self.reactionlist = sorted(reaction_list)
 
     def test_reactions(self):
         """Tests the reactions to determine which will come to fruition"""
