@@ -12,14 +12,6 @@ Chemistry.reactions.acid_base module
     :undoc-members:
     :show-inheritance:
 
-Chemistry.reactions.base_reactions module
------------------------------------------
-
-.. automodule:: Chemistry.reactions.base_reactions
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 
 Module contents
 ---------------

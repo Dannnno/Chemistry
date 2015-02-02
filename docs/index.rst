@@ -1,17 +1,16 @@
-.. PyChAOS documentation master file, created by
-   sphinx-quickstart on Sun Dec 21 15:00:57 2014.
+.. pyCAOS documentation master file, created by
+   sphinx-quickstart on Sun Feb 01 20:18:55 2015.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to PyChAOS's documentation!
-===================================
+Welcome to pyCAOS's documentation!
+==================================
 
 Contents:
 
 .. toctree::
    :maxdepth: 2
 
-.. automodule:: Chemistry.compounds
 
 
 Indices and tables

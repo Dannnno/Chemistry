@@ -4,10 +4,10 @@ Chemistry.base package
 Submodules
 ----------
 
-Chemistry.base.base_chemistry module
-------------------------------------
+Chemistry.base.compounds module
+-------------------------------
 
-.. automodule:: Chemistry.base.base_chemistry
+.. automodule:: Chemistry.base.compounds
     :members:
     :undoc-members:
     :show-inheritance:
@@ -32,14 +32,6 @@ Chemistry.base.reactants module
 -------------------------------
 
 .. automodule:: Chemistry.base.reactants
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-Chemistry.base.table_builder module
------------------------------------
-
-.. automodule:: Chemistry.base.table_builder
     :members:
     :undoc-members:
     :show-inheritance:

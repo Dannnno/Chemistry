@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Chemistry.parsing package &mdash; PyChAOS 0.0 documentation</title>
+    <title>Chemistry.parsing package &mdash; pyCAOS 0.0 documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="PyChAOS 0.0 documentation" href="index.html" /> 
+    <link rel="top" title="pyCAOS 0.0 documentation" href="index.html" /> 
   </head>
   <body>
     <div class="related">
@@ -35,7 +35,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="index.html">PyChAOS 0.0 documentation</a> &raquo;</li> 
+        <li><a href="index.html">pyCAOS 0.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -46,36 +46,29 @@
             
   <div class="section" id="chemistry-parsing-package">
 <h1>Chemistry.parsing package<a class="headerlink" href="#chemistry-parsing-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="Chemistry.parsing.mol.html">Chemistry.parsing.mol package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="Chemistry.parsing.mol.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Chemistry.parsing.mol.html#module-Chemistry.parsing.mol.molv2000">Chemistry.parsing.mol.molv2000 module</a><ul class="simple">
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="Chemistry.parsing.mol.html#module-Chemistry.parsing.mol.molv3000">Chemistry.parsing.mol.molv3000 module</a><ul class="simple">
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="Chemistry.parsing.mol.html#module-Chemistry.parsing.mol.sdf">Chemistry.parsing.mol.sdf module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Chemistry.parsing.mol.html#module-Chemistry.parsing.mol">Module contents</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="module-Chemistry.parsing.CheML">
 <span id="chemistry-parsing-cheml-module"></span><h2>Chemistry.parsing.CheML module<a class="headerlink" href="#module-Chemistry.parsing.CheML" title="Permalink to this headline">¶</a></h2>
+<p>Parser and builder for CML files.  On the path to deprecation.</p>
 <dl class="class">
 <dt id="Chemistry.parsing.CheML.CMLBuilder">
-<em class="property">class </em><tt class="descclassname">Chemistry.parsing.CheML.</tt><tt class="descname">CMLBuilder</tt><big>(</big><em>molecule_dict</em><big>)</big><a class="headerlink" href="#Chemistry.parsing.CheML.CMLBuilder" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">Chemistry.parsing.CheML.</tt><tt class="descname">CMLBuilder</tt><big>(</big><em>molecule_dict</em><big>)</big><a class="reference internal" href="_modules/Chemistry/parsing/CheML.html#CMLBuilder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Chemistry.parsing.CheML.CMLBuilder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
-<p>CML generator object</p>
-<p>Constructs a CML file based on a dictionary or compound input</p>
+<p>Object used to build a CML file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>molecule_dict</strong> : dict</p>
+<blockquote class="last">
+<div><p>Dictionary storing all of the molecular information.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 <p class="rubric">Methods</p>
 <table border="1" class="longtable docutils">
 <colgroup>
@@ -83,42 +76,88 @@
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#Chemistry.parsing.CheML.CMLBuilder.from_Compound" title="Chemistry.parsing.CheML.CMLBuilder.from_Compound"><tt class="xref py py-obj docutils literal"><span class="pre">from_Compound</span></tt></a>(comp)</td>
-<td>Generates a CMLBuilder object from a Compound object</td>
+<tr class="row-odd"><td><a class="reference internal" href="#Chemistry.parsing.CheML.CMLBuilder.from_compound" title="Chemistry.parsing.CheML.CMLBuilder.from_compound"><tt class="xref py py-obj docutils literal"><span class="pre">from_compound</span></tt></a>(comp)</td>
+<td>Generates a CMLBuilder object from a Compound object.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#Chemistry.parsing.CheML.CMLBuilder.to_file" title="Chemistry.parsing.CheML.CMLBuilder.to_file"><tt class="xref py py-obj docutils literal"><span class="pre">to_file</span></tt></a>(cml_file)</td>
-<td>Writes the new cml to file</td>
+<td>Writes the data in the builder object to file.</td>
 </tr>
 </tbody>
 </table>
 <dl class="classmethod">
-<dt id="Chemistry.parsing.CheML.CMLBuilder.from_Compound">
-<em class="property">classmethod </em><tt class="descname">from_Compound</tt><big>(</big><em>comp</em><big>)</big><a class="headerlink" href="#Chemistry.parsing.CheML.CMLBuilder.from_Compound" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generates a CMLBuilder object from a Compound object</p>
+<dt id="Chemistry.parsing.CheML.CMLBuilder.from_compound">
+<em class="property">classmethod </em><tt class="descname">from_compound</tt><big>(</big><em>comp</em><big>)</big><a class="reference internal" href="_modules/Chemistry/parsing/CheML.html#CMLBuilder.from_compound"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Chemistry.parsing.CheML.CMLBuilder.from_compound" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a CMLBuilder object from a Compound object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>comp</strong> : Compound</p>
+<blockquote>
+<div><p>The compound to be written to file.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">CMLBuilder</p>
+<blockquote class="last">
+<div><p>The builder object with the relevant information.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="Chemistry.parsing.CheML.CMLBuilder.to_file">
-<tt class="descname">to_file</tt><big>(</big><em>cml_file</em><big>)</big><a class="headerlink" href="#Chemistry.parsing.CheML.CMLBuilder.to_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>Writes the new cml to file</p>
+<tt class="descname">to_file</tt><big>(</big><em>cml_file</em><big>)</big><a class="reference internal" href="_modules/Chemistry/parsing/CheML.html#CMLBuilder.to_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Chemistry.parsing.CheML.CMLBuilder.to_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes the data in the builder object to file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>cml_file</strong> : file-like</p>
+<blockquote class="last">
+<div><p>The open file to which the compound should be written.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="Chemistry.parsing.CheML.CMLParser">
-<em class="property">class </em><tt class="descclassname">Chemistry.parsing.CheML.</tt><tt class="descname">CMLParser</tt><big>(</big><em>CML_file</em><big>)</big><a class="headerlink" href="#Chemistry.parsing.CheML.CMLParser" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">Chemistry.parsing.CheML.</tt><tt class="descname">CMLParser</tt><big>(</big><em>CML_file</em><big>)</big><a class="reference internal" href="_modules/Chemistry/parsing/CheML.html#CMLParser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Chemistry.parsing.CheML.CMLParser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
-<p>Parser for CML files</p>
+<p>Parser for CML files.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>CML_file</strong> : file-like object</p>
+<blockquote class="last">
+<div><p>The (open) file that contains the data.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
 <p>Pretty limited on what it can actually handle; it expects that things are
 formatted the way I do and not more generically.  I want to eventually make
 this more generalizable.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-contents">
-<h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
-<span class="target" id="module-Chemistry.parsing"></span></div>
+<div class="section" id="module-Chemistry.parsing">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-Chemistry.parsing" title="Permalink to this headline">¶</a></h2>
+<p>Collection of modules used to parse various chemical data files into formats
+suitable for conversion into Compound objects.  Deprecated, and will be removed
+OpenBabel support is fully integrated.</p>
+</div>
 </div>
 
 
@@ -130,10 +169,9 @@ this more generalizable.</p>
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Chemistry.parsing package</a><ul>
-<li><a class="reference internal" href="#subpackages">Subpackages</a></li>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
 <li><a class="reference internal" href="#module-Chemistry.parsing.CheML">Chemistry.parsing.CheML module</a></li>
-<li><a class="reference internal" href="#module-contents">Module contents</a></li>
+<li><a class="reference internal" href="#module-Chemistry.parsing">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -169,11 +207,11 @@ this more generalizable.</p>
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="index.html">PyChAOS 0.0 documentation</a> &raquo;</li> 
+        <li><a href="index.html">pyCAOS 0.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2014, Dan Obermiller.
+        &copy; Copyright 2015, Dan Obermiller.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
     </div>
   </body>

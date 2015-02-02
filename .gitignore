@@ -1,8 +1,8 @@
 #################
 ## My Project
 #################
-Chemistry/specs/*
-Chemistry/docs/*
+docs/*
+!docs/conf.py
 
 #################
 ## PyCharm

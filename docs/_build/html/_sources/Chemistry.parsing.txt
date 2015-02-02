@@ -1,13 +1,6 @@
 Chemistry.parsing package
 =========================
 
-Subpackages
------------
-
-.. toctree::
-
-    Chemistry.parsing.mol
-
 Submodules
 ----------
 

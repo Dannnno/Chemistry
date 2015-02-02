@@ -9,6 +9,7 @@ Subpackages
     Chemistry.Testing
     Chemistry.base
     Chemistry.exceptions
+    Chemistry.interface
     Chemistry.parsing
     Chemistry.reactions
 
@@ -19,14 +20,6 @@ Chemistry.chemgui module
 ------------------------
 
 .. automodule:: Chemistry.chemgui
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-Chemistry.compounds module
---------------------------
-
-.. automodule:: Chemistry.compounds
     :members:
     :undoc-members:
     :show-inheritance:

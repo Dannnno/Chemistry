@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Chemistry.exceptions package &mdash; PyChAOS 0.0 documentation</title>
+    <title>Chemistry.exceptions package &mdash; pyCAOS 0.0 documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="PyChAOS 0.0 documentation" href="index.html" /> 
+    <link rel="top" title="pyCAOS 0.0 documentation" href="index.html" /> 
   </head>
   <body>
     <div class="related">
@@ -35,7 +35,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="index.html">PyChAOS 0.0 documentation</a> &raquo;</li> 
+        <li><a href="index.html">pyCAOS 0.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -51,48 +51,98 @@
 </div>
 <div class="section" id="module-Chemistry.exceptions.ParseErrors">
 <span id="chemistry-exceptions-parseerrors-module"></span><h2>Chemistry.exceptions.ParseErrors module<a class="headerlink" href="#module-Chemistry.exceptions.ParseErrors" title="Permalink to this headline">¶</a></h2>
+<p>Specific exceptions and errors raised during the parsing of chemical data
+files.  Deprecated, along with the entire Chemistry.parsing package.  Will be
+removed once complete support of OpenBabel is achieved.</p>
 <dl class="exception">
 <dt id="Chemistry.exceptions.ParseErrors.ParsingException">
-<em class="property">exception </em><tt class="descclassname">Chemistry.exceptions.ParseErrors.</tt><tt class="descname">ParsingException</tt><big>(</big><em>msg='An error occured while parsing {} file'</em>, <em>filetype='CML'</em><big>)</big><a class="headerlink" href="#Chemistry.exceptions.ParseErrors.ParsingException" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><tt class="descclassname">Chemistry.exceptions.ParseErrors.</tt><tt class="descname">ParsingException</tt><big>(</big><em>filetype</em>, <em>msg='An error occurred while parsing a {} file'</em><big>)</big><a class="reference internal" href="_modules/Chemistry/exceptions/ParseErrors.html#ParsingException"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Chemistry.exceptions.ParseErrors.ParsingException" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
 <p>A generic exception to be thrown if there is an error with the
-parsing of a chemical data file</p>
+parsing of a chemical data file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>filetype</strong> : string</p>
+<blockquote>
+<div><p>The type of file that was being parsed.</p>
+</div></blockquote>
+<p><strong>msg</strong> : string, optional</p>
+<blockquote class="last">
+<div><p>The error message.  A default message is provided, however an actual
+message is encouraged.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="attribute">
 <dt id="Chemistry.exceptions.ParseErrors.ParsingException.message">
-<tt class="descname">message</tt><em class="property"> = 'An error occured while parsing {} file'</em><a class="headerlink" href="#Chemistry.exceptions.ParseErrors.ParsingException.message" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">message</tt><em class="property"> = 'An error occurred while parsing a {} file'</em><a class="headerlink" href="#Chemistry.exceptions.ParseErrors.ParsingException.message" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="exception">
 <dt id="Chemistry.exceptions.ParseErrors.UnsupportedFileTypeException">
-<em class="property">exception </em><tt class="descclassname">Chemistry.exceptions.ParseErrors.</tt><tt class="descname">UnsupportedFileTypeException</tt><big>(</big><em>msg</em>, <em>filetype</em><big>)</big><a class="headerlink" href="#Chemistry.exceptions.ParseErrors.UnsupportedFileTypeException" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><tt class="descclassname">Chemistry.exceptions.ParseErrors.</tt><tt class="descname">UnsupportedFileTypeException</tt><big>(</big><em>msg</em>, <em>filetype</em><big>)</big><a class="reference internal" href="_modules/Chemistry/exceptions/ParseErrors.html#UnsupportedFileTypeException"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Chemistry.exceptions.ParseErrors.UnsupportedFileTypeException" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#Chemistry.exceptions.ParseErrors.ParsingException" title="Chemistry.exceptions.ParseErrors.ParsingException"><tt class="xref py py-class docutils literal"><span class="pre">Chemistry.exceptions.ParseErrors.ParsingException</span></tt></a></p>
+<p>Exception to be raised if a file is supplied for parsing that is not yet
+supported.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>msg</strong> : string</p>
+<blockquote>
+<div><p>The error message.</p>
+</div></blockquote>
+<p><strong>filetype</strong> : string</p>
+<blockquote class="last">
+<div><p>The filetype that is not currently supported.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
 <div class="section" id="module-Chemistry.exceptions.ReactionErrors">
 <span id="chemistry-exceptions-reactionerrors-module"></span><h2>Chemistry.exceptions.ReactionErrors module<a class="headerlink" href="#module-Chemistry.exceptions.ReactionErrors" title="Permalink to this headline">¶</a></h2>
+<p>Errors associated with chemical reactions.</p>
 <dl class="exception">
 <dt id="Chemistry.exceptions.ReactionErrors.NoReactionError">
-<em class="property">exception </em><tt class="descclassname">Chemistry.exceptions.ReactionErrors.</tt><tt class="descname">NoReactionError</tt><big>(</big><em>msg='No reaction occured'</em><big>)</big><a class="headerlink" href="#Chemistry.exceptions.ReactionErrors.NoReactionError" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><tt class="descclassname">Chemistry.exceptions.ReactionErrors.</tt><tt class="descname">NoReactionError</tt><big>(</big><em>msg='No reaction occurred'</em><big>)</big><a class="reference internal" href="_modules/Chemistry/exceptions/ReactionErrors.html#NoReactionError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Chemistry.exceptions.ReactionErrors.NoReactionError" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#Chemistry.exceptions.ReactionErrors.ReactionError" title="Chemistry.exceptions.ReactionErrors.ReactionError"><tt class="xref py py-class docutils literal"><span class="pre">Chemistry.exceptions.ReactionErrors.ReactionError</span></tt></a></p>
 <p>A specific reaction error that should be thrown if the given scenario
-would not give rise to that specific type of reaction.  I imagine that this 
-should sort of be handled like StopIteration would be</p>
+would not give rise to that specific type of reaction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>msg</strong> : string, optional</p>
+<blockquote class="last">
+<div><p>The error message.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="attribute">
 <dt id="Chemistry.exceptions.ReactionErrors.NoReactionError.err_message">
-<tt class="descname">err_message</tt><em class="property"> = 'No reaction occured'</em><a class="headerlink" href="#Chemistry.exceptions.ReactionErrors.NoReactionError.err_message" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">err_message</tt><em class="property"> = 'No reaction occurred'</em><a class="headerlink" href="#Chemistry.exceptions.ReactionErrors.NoReactionError.err_message" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="exception">
 <dt id="Chemistry.exceptions.ReactionErrors.ReactionError">
-<em class="property">exception </em><tt class="descclassname">Chemistry.exceptions.ReactionErrors.</tt><tt class="descname">ReactionError</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#Chemistry.exceptions.ReactionErrors.ReactionError" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><tt class="descclassname">Chemistry.exceptions.ReactionErrors.</tt><tt class="descname">ReactionError</tt><big>(</big><em>message=None</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/Chemistry/exceptions/ReactionErrors.html#ReactionError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Chemistry.exceptions.ReactionErrors.ReactionError" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
 <p>A generic error to be thrown when there is an error with a reaction
-that does not have any specific error to be thrown</p>
+that does not have any specific error to be thrown.</p>
 <dl class="attribute">
 <dt id="Chemistry.exceptions.ReactionErrors.ReactionError.err_message">
 <tt class="descname">err_message</tt><em class="property"> = 'There was an error with the reaction'</em><a class="headerlink" href="#Chemistry.exceptions.ReactionErrors.ReactionError.err_message" title="Permalink to this definition">¶</a></dt>
@@ -108,6 +158,7 @@ that does not have any specific error to be thrown</p>
 </div>
 <div class="section" id="module-Chemistry.exceptions">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-Chemistry.exceptions" title="Permalink to this headline">¶</a></h2>
+<p>Exceptions used throughout the program.</p>
 </div>
 </div>
 
@@ -159,11 +210,11 @@ that does not have any specific error to be thrown</p>
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="index.html">PyChAOS 0.0 documentation</a> &raquo;</li> 
+        <li><a href="index.html">pyCAOS 0.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2014, Dan Obermiller.
+        &copy; Copyright 2015, Dan Obermiller.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
     </div>
   </body>

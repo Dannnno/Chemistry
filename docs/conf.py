@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
-# PyChAOS documentation build configuration file, created by
-# sphinx-quickstart on Sun Dec 21 15:00:57 2014.
+# pyCAOS documentation build configuration file, created by
+# sphinx-quickstart on Sun Feb 01 20:18:55 2015.
 #
 # This file is execfile()d with the current directory set to its
 # containing dir.
@@ -30,6 +30,8 @@ sys.path.insert(0, os.path.abspath('..'))
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
+    'sphinx.ext.coverage',
+    'sphinx.ext.viewcode',
     'sphinx.ext.autosummary',
     'numpydoc'
 ]
@@ -47,8 +49,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'PyChAOS'
-copyright = u'2014, Dan Obermiller'
+project = u'pyCAOS'
+copyright = u'2015, Dan Obermiller'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -180,7 +182,7 @@ html_static_path = ['_static']
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'PyChAOSdoc'
+htmlhelp_basename = 'pyCAOSdoc'
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -200,7 +202,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-  ('index', 'PyChAOS.tex', u'PyChAOS Documentation',
+  ('index', 'pyCAOS.tex', u'pyCAOS Documentation',
    u'Dan Obermiller', 'manual'),
 ]
 
@@ -230,7 +232,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'pychaos', u'PyChAOS Documentation',
+    ('index', 'pycaos', u'pyCAOS Documentation',
      [u'Dan Obermiller'], 1)
 ]
 
@@ -244,8 +246,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'PyChAOS', u'PyChAOS Documentation',
-   u'Dan Obermiller', 'PyChAOS', 'One line description of project.',
+  ('index', 'pyCAOS', u'pyCAOS Documentation',
+   u'Dan Obermiller', 'pyCAOS', 'One line description of project.',
    'Miscellaneous'),
 ]
 

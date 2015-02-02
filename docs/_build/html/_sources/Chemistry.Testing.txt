@@ -44,22 +44,6 @@ Chemistry.Testing.test_isomorphism module
     :undoc-members:
     :show-inheritance:
 
-Chemistry.Testing.test_molv2000 module
---------------------------------------
-
-.. automodule:: Chemistry.Testing.test_molv2000
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-Chemistry.Testing.test_molv3000 module
---------------------------------------
-
-.. automodule:: Chemistry.Testing.test_molv3000
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 Chemistry.Testing.test_periodic_helpers module
 ----------------------------------------------
 
@@ -80,14 +64,6 @@ Chemistry.Testing.test_reactants module
 ---------------------------------------
 
 .. automodule:: Chemistry.Testing.test_reactants
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-Chemistry.Testing.test_sdf module
----------------------------------
-
-.. automodule:: Chemistry.Testing.test_sdf
     :members:
     :undoc-members:
     :show-inheritance:
