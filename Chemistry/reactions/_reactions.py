@@ -27,6 +27,8 @@
 
 import abc
 
+from Chemistry.base.compounds import _CompoundWrapper
+
 
 class Conditions(object):
     """Represents the conditions under which the reaction is occurring.
@@ -100,6 +102,39 @@ class Conditions(object):
 
     def __repr__(self):
         return str(self)
+
+
+class Solvent(_CompoundWrapper):
+    """The solvent in which a reaction occurs.
+
+    Parameters
+    ----------
+    compound : Compound, _CompoundWrapper
+        The compound the solvent consists of
+    pka : float
+        The pka of the solvent
+
+    """
+
+    _pka = None
+
+    def __init__(self, compound, pka):
+        super(Solvent, self).__init__(compound)
+        self.pka = pka
+        # nucleophilicity and electrophilicity
+
+    @property
+    def pka(self):
+        return self._pka
+
+    @pka.setter
+    def pka(self, pka):
+        cur_pka = getattr(self._compound, 'pka')
+        if cur_pka is not None:
+            if cur_pka == pka:
+                return
+            raise ValueError("The pka of a compound does not change")
+        self._pka = pka
 
 
 class _Reaction(object):

@@ -29,8 +29,7 @@ to perform reactions.
 
 import networkx as nx
 
-# from Chemistry.interface.compound_utility import compound_from_dict
-# from Chemistry.base.periodic_table import get_element
+from Chemistry.reactions._reactions import Conditions
 
 
 def separate_molecules(atoms, bonds):
@@ -55,7 +54,7 @@ def separate_molecules(atoms, bonds):
     The format for the dictionaries is the same as would be provided to the
     Compound constructor, which is documented there.
     The primary point of this is to interface well with a GUI.  Instead of
-    trying to have it continually reset and determine whether or not 
+    trying to have it continually reset and determine whether or not
     """
 
     molecules = []
@@ -117,23 +116,62 @@ def _graph_to_dict(graph):
     molecule = {'atoms': {}, 'bonds': {}}
 
     for key, atom in graph.node.iteritems():
-        molecule['atoms'][key] = atom
+        molecule['atoms'][key] = atom['symbol']
 
     for first, rest in graph.edge.iteritems():
         for second, data in rest.iteritems():
-            key = data.pop('key')
-            molecule['bonds'][key] = first, second, data
+            if 'key' in data:
+                key = data.pop('key')
+                if first < second:
+                    molecule['bonds'][key] = first, second, data
+                else:
+                    molecule['bonds'][key] = second, first, data
 
     return molecule
 
-        # self.get_information()
-        # self.to_compound()
-        # self.generate_conditions()
-        # self.list_reactions()
-        # self.test_reactions()
-        # self.pick_result()
-        # self.build_instructions()
-        # self.display_result()
 
-separate_molecules({'a1': 'H', 'a2': 'H', 'a3': 'H'},
-    {'b1': ('a1', 'a2', {'order': 1, 'chirality': None})})
+def add_other_to_molecule(molecule, info):
+    """Adds any necessary additional info to a molecule.
+
+    Parameters
+    ----------
+    molecule : dict
+        A dictionary holding molecular information
+    info : dict
+        The additional information.
+    """
+
+    if 'other_info' in molecule:
+        molecule['other_info'].update(info)
+    else:
+        molecule['other_info'] = info
+
+
+def build_reaction_conditions(molecules, solvent, **kwargs):
+    """Generates a Conditions object based on various factors.
+
+    Parameters
+    ----------
+    molecules : list
+        A list of molecules present in the reaction.  Each of these should
+        already have pertinent information, if possible.
+    solvent : Solvent
+        The solvent in the reaction.  Should have information such as type of
+        solvent, pka, concentration, etc.
+
+    Returns
+    -------
+    cond : Conditions
+        The reaction conditions.
+    """
+
+    cond_dict = {'molecules': molecules, 'solvent': solvent}
+    cond_dict.update(kwargs)
+    cond = Conditions(cond_dict)
+    return cond
+
+
+
+# list_reactions()
+# test_reactions()
+# pick_result()
