@@ -65,7 +65,7 @@ class TestProducts(unittest.TestCase):
             Products(0, 0)
 
     def test_major_property_skips_NoneTypes(self):
-        self.assertTrue(Products({None: 1}, {}))
+        self.assertFalse(Products({None: 1}, {}))
 
     def test_minor_property_raises_typerror1(self):
         with self.assertRaises(TypeError):
@@ -80,7 +80,7 @@ class TestProducts(unittest.TestCase):
             Products(0, 0)
 
     def test_minor_property_skips_NoneTypes(self):
-        self.assertTrue(Products({}, {None: 1}))
+        self.assertFalse(Products({}, {None: 1}))
 
 
 if __name__ == '__main__':

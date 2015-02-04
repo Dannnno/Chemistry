@@ -129,7 +129,13 @@ class Products(object):
             raise TypeError(
                 "Should be a Product, not a {}".format(type(products)))
 
+    def __bool__(self):
+        return bool(self.minor or self.major)
+
+    __nonzero__ = __bool__
+
     def __eq__(self, other):
+        # Todo: I should probably come up with a real implementation here
         return False
 
     def __ne__(self, other):

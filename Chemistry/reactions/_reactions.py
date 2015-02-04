@@ -114,6 +114,9 @@ class Solvent(_CompoundWrapper):
     pka : float
         The pka of the solvent
 
+    Attributes
+    ----------
+    pka
     """
 
     _pka = None
@@ -125,6 +128,15 @@ class Solvent(_CompoundWrapper):
 
     @property
     def pka(self):
+        """The pka of the solvent.
+
+        Returns
+        -------
+        self._pka
+            The pka of either the compound being wrapped (if already known) or
+            the pka passed to the constructor.
+        """
+
         return self._pka
 
     @pka.setter
@@ -132,6 +144,7 @@ class Solvent(_CompoundWrapper):
         cur_pka = getattr(self._compound, 'pka')
         if cur_pka is not None:
             if cur_pka == pka:
+                self._pka = cur_pka
                 return
             raise ValueError("The pka of a compound does not change")
         self._pka = pka
