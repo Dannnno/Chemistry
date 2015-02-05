@@ -10,8 +10,7 @@ before_install:
   - sudo apt-get install -qq -y python-openbabel
   - sudo apt-get install -qq -y openbabel
   - sudo apt-get install -qq -y swig
-  - ls
-  #- ./find_openbabel.sh
+  - ./find_openbabel.sh
   #- dpkg -L python-openbabel
   #- dpkg -L openbabel
 install:
