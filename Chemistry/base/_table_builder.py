@@ -1,25 +1,7 @@
-# Copyright (c) 2014 Dan Obermiller
+# pyCAOS - An organic chemistry reaction simulator, written in Python
+# Copyright (C) 2014, 2015 Dan Obermiller
 #
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
-#
-# You should have received a copy of the MIT License along with this program.
-# If not, see <http://opensource.org/licenses/MIT>
+# The full license is available in the root directory of the repository
 
 
 """This module is a helper module for building the periodic_table module.  Its
@@ -28,6 +10,8 @@ if changes need to be made (for example adding or removing data, or updating
 data that is found to be incorrect.
 """
 
+__author__ = "Dan Obermiller"
+
 
 import csv
 import json
@@ -35,34 +19,17 @@ import os
 from collections import OrderedDict
 
 
-copyright = """# Copyright (c) 2014 Dan Obermiller
+copyright = """# pyCAOS - An organic chemistry reaction simulator, written in Python
+# Copyright (C) 2014, 2015 Dan Obermiller
 #
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
-#
-# You should have received a copy of the MIT License along with this program.
-# If not, see <http://opensource.org/licenses/MIT>\n
+# The full license is available in the root directory of the repository\n
 """
 
 mod_doc_string = """
 \"""This module stores all of the data about each element in the periodic table.
 This includes atomic mass, radius, electronegativity, etc.
-\"""\n\n
+\"""
+__author__ = "Dan Obermiller"\n\n
 """
 
 get_element_function = """def get_element(symbol='C'):

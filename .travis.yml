@@ -10,8 +10,8 @@ before_install:
   - sudo apt-get update -qq
   - sudo apt-get build-dep -qq -y python-pygame
   - sudo apt-get install -qq -y python-pygame
-  - chmod ugo+x openbabel_reqs.sh
-  - "./openbabel_reqs.sh"
+  - chmod ugo+x scripts/openbabel_reqs.sh
+  - "./scripts/openbabel_reqs.sh"
 
 install:
   - pip install -q cython==0.20.2

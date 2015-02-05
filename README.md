@@ -1,7 +1,7 @@
 [![Docs built](https://readthedocs.org/projects/chemistry/badge/?version=latest)](http://chemistry.readthedocs.org/en/latest/)
 [![Build passed](https://travis-ci.org/Dannnno/Chemistry.svg?branch=master)](https://travis-ci.org/Dannnno/Chemistry)
 [![Coverage Status](https://coveralls.io/repos/Dannnno/Chemistry/badge.png)](https://coveralls.io/r/Dannnno/Chemistry)
-##Organic Chemistry _Reaction Simulator
+##Organic Chemistry Reaction Simulator
 Updated: 12/10/2014   
 
 Dan Obermiller  
@@ -28,4 +28,29 @@ Currently projected date of Alpha release: Soon<sup>TM</sup>
 
 All tests can be run from the command line
 
-    \Path\To\Directory\Chemistry\> nosetests
+    $ nosetests
+    
+
+### Documentation
+
+Documentation is available freely at ReadTheDocs.org.  Click the badge above for
+more information.  
+
+    
+### Licensing
+
+PyCAOS is licensed under the GPLv3 license.
+> Copyright (C) 2014, 2015 Dan Obermiller
+
+> This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+> This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+> You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
