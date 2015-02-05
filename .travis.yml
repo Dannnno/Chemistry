@@ -14,7 +14,7 @@ before_install:
   - "./openbabel_reqs.sh"
 
 install:
-  - sudo pip install --user-mirrors -q cython==0.20.2
+  - sudo pip install --use-mirrors -q cython==0.20.2
   - sudo pip install --use-mirrors -q -r requirements.txt
 
 script:
