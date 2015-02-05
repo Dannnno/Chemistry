@@ -32,7 +32,6 @@ from collections import namedtuple
 import networkx as nx
 
 from Chemistry.reactions._reactions import Conditions
-from Chemistry.base.products import Products
 from Chemistry.exceptions.ReactionErrors import ReactionError, NoReactionError
 
 

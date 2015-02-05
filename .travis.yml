@@ -3,13 +3,15 @@ python:
   - "2.7"
   # No python 3 support yet.
   - "pypy"
-# command to install dependencies
+before_install:
+  - sudo apt-get update -qq
+  - sudo apt-get build-dep python-pygame
+  - sudo apt-get install python-pygame
+  - sudo apt-get install python-openbabel
 install:
   - pip install --use-mirrors cython
   - pip install --use-mirrors -r requirements.txt
-# command to run tests
-script: 
-  - nosetests --with-coverage --cover-package=Chemistry
-# lets not forget coverage
-after_success: 
+script:
+  - nosetests --with-coverage
+after_success:
   - coveralls
