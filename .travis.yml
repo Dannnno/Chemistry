@@ -8,6 +8,7 @@ before_install:
   #- sudo apt-get build-dep -qq -y python-pygame
   #- sudo apt-get install -qq -y python-pygame
   - sudo apt-get install -qq -y python-openbabel
+  - sudo apt-get install -qq -y openbabel
   - sudo apt-get install -qq -y swig
   - dpkg -L python-openbabel
   - dpkg -L openbabel
