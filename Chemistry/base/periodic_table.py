@@ -7,7 +7,6 @@
 """This module stores all of the data about each element in the periodic table.
 This includes atomic mass, radius, electronegativity, etc.
 """
-
 __author__ = "Dan Obermiller"
 
 

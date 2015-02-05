@@ -14,8 +14,8 @@ before_install:
   - "./scripts/openbabel_reqs.sh"
 
 install:
-  - pip install -q cython==0.20.2
-  - pip install -q -r requirements.txt
+  - pip install --use-mirrors -q cython==0.20.2
+  - pip install --use-mirrors -q -r requirements.txt
 
 script:
   - nosetests --with-coverage --cover-package=Chemistry
