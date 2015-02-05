@@ -14,8 +14,8 @@ before_install:
   - "./openbabel_reqs.sh"
 
 install:
-  - sudo pip install -q cython==0.20.2
-  - sudo pip install -q -r requirements.txt
+  - pip install -q cython==0.20.2
+  - pip install -q -r requirements.txt
 
 script:
   - nosetests --with-coverage --cover-package=Chemistry
