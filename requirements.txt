@@ -5,7 +5,7 @@ coveralls
 nose
 numpydoc
 mogli
-#openbabel
-#kivy
+openbabel
+kivy
 # Travis is having errors installing kivy, and the GUI framework used will
 # eventually be a non-issue.  Hopefully

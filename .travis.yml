@@ -5,19 +5,13 @@ python:
   - "pypy"
 before_install:
   - sudo apt-get update -qq
-  #- sudo apt-get build-dep -qq -y python-pygame
-  #- sudo apt-get install -qq -y python-pygame
+  - sudo apt-get build-dep -qq -y python-pygame
+  - sudo apt-get install -qq -y python-pygame
+  - sudo apt-get install -qq -y swig libopenbabel-dev python-dev
   - sudo apt-get install -qq -y python-openbabel
-  - sudo apt-get install -qq -y openbabel
-  - sudo apt-get install -qq -y swig
-  - ./find_openbabel.sh
-  #- dpkg -L python-openbabel
-  #- dpkg -L openbabel
 install:
-  #- pip install --use-mirrors -q cython==0.20.2
-  #- pip install --use-mirrors kivy
-  - pip install --use-mirrors openbabel
-  #- pip install --use-mirrors -r requirements.txt
+  - pip install --use-mirrors -q cython==0.20.2
+  - pip install --use-mirrors -q -r requirements.txt
 script:
   - nosetests --with-coverage
 after_success:
