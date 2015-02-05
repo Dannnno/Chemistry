@@ -3,9 +3,7 @@ lxml
 networkx
 coveralls
 nose
-numpydoc
+numpydoc32
 mogli
 openbabel
 kivy
-# Travis is having errors installing kivy, and the GUI framework used will
-# eventually be a non-issue.  Hopefully
