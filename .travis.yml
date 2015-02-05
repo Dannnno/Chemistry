@@ -8,8 +8,11 @@ before_install:
   - sudo apt-get build-dep python-pygame
   - sudo apt-get install python-pygame
   - sudo apt-get install python-openbabel
+  - sudo apt-get install swig
 install:
   - pip install --use-mirrors cython
+  - pip install --use-mirrors kivy
+  - pip install --use-mirrors openbabel
   - pip install --use-mirrors -r requirements.txt
 script:
   - nosetests --with-coverage
