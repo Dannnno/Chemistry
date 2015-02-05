@@ -2,12 +2,17 @@ language: python
 python:
   - "2.7"
   # No python 3 support yet.
-  - "pypy"
+  #- "pypy"
+  #openbabel breaks pypy
 before_install:
   - sudo apt-get update -qq
   - sudo apt-get build-dep -qq -y python-pygame
   - sudo apt-get install -qq -y python-pygame
-  - sudo apt-get install -qq -y swig libopenbabel-dev python-dev
+  - sudo apt-get install -qq -y swig python-dev
+  - wget http://mirrors.kernel.org/ubuntu/pool/universe/o/openbabel/libopenbabel4_2.3.2+dfsg-1.1_amd64.deb
+  - sudo dpkg -i libopenbabel4_2.3.2+dfsg-1.1_amd64.deb
+  - wget http://mirrors.kernel.org/ubuntu/pool/universe/o/openbabel/libopenbabel-dev_2.3.2+dfsg-1.1_amd64.deb
+  - sudo dpkg -i libopenbabel-dev_2.3.2+dfsg-1.1_amd64.deb
   - sudo apt-get install -qq -y python-openbabel
 install:
   - pip install --use-mirrors -q cython==0.20.2
