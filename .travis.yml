@@ -10,8 +10,9 @@ before_install:
   - sudo apt-get install -qq -y python-openbabel
   - sudo apt-get install -qq -y openbabel
   - sudo apt-get install -qq -y swig
-  - dpkg -L python-openbabel
-  - dpkg -L openbabel
+  - ./find_openbabel.sh
+  #- dpkg -L python-openbabel
+  #- dpkg -L openbabel
 install:
   #- pip install --use-mirrors -q cython==0.20.2
   #- pip install --use-mirrors kivy
