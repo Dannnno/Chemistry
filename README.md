@@ -9,6 +9,11 @@ Claremont McKenna College
 Class of 2017 
 dannnno16@gmail.com
 
+Andrew Meehan
+Claremont McKenna College
+Class of 2017
+andrewmeehan17@gmail.com
+
 This repository is designed to use Python in the simulation of organic chemistry reactions.  The program has several specific goals in particular:
 
 1. Display an interactive periodic table of the elements that will display basic but key information regarding elements
