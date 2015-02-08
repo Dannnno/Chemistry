@@ -11,6 +11,8 @@ before_install:
   - sudo apt-get build-dep -qq -y python-pygame
   - sudo apt-get install -qq -y python-pygame
   - chmod ugo+x scripts/openbabel_reqs.sh
+  - chmod ugo+x scripts/install_cmake.sh
+  - "./scripts/install_cmake.sh"
   - "./scripts/openbabel_reqs.sh"
 
 install:

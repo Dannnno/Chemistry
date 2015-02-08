@@ -1,20 +1,10 @@
 [![Docs built](https://readthedocs.org/projects/chemistry/badge/?version=latest)](http://chemistry.readthedocs.org/en/latest/)
 [![Build passed](https://travis-ci.org/Dannnno/Chemistry.svg?branch=master)](https://travis-ci.org/Dannnno/Chemistry)
 [![Coverage Status](https://coveralls.io/repos/Dannnno/Chemistry/badge.png)](https://coveralls.io/r/Dannnno/Chemistry)
+[![Join the chat at https://gitter.im/Dannnno/Chemistry](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Dannnno/Chemistry?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 ##Organic Chemistry Reaction Simulator
 
-[![Join the chat at https://gitter.im/Dannnno/Chemistry](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Dannnno/Chemistry?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-Updated: 12/10/2014   
-
-Dan Obermiller  
-Claremont McKenna College  
-Class of 2017 
-dannnno16@gmail.com
-
-Andrew Meehan
-Claremont McKenna College
-Class of 2017
-andrewmeehan17@gmail.com
+Updated: 12/10/2014
 
 This repository is designed to use Python in the simulation of organic chemistry reactions.  The program has several specific goals in particular:
 
@@ -61,3 +51,14 @@ GNU General Public License for more details.
 
 > You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+### Contact Us
+
+####Lead Developer
+Dan Obermiller  
+dannnno16@gmail.com
+
+####Contributor
+Andrew Meehan  
+andrewmeehan17@gmail.com  
