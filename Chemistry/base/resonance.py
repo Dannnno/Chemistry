@@ -85,6 +85,15 @@ def get_resonance_structures(compound):
         return structures
 
 
+# I'm pretty sure I want to factor this into the constructor of a Compound
+# object.  As it is initializing the data structure it will be looking at every
+# member of the dictionaries, and it will be able to set a flag for the
+# possibility of resonance then.  It would also be able to log which atoms and
+# bonds are candidates for resonance, saving a lot of computation time.  This
+# should probably all move into compounds.py as a instance method of the
+# compound class.  I'm going to continue roughing out the behavior here, but
+# I will probably make those changes as soon as I've somewhat settled on the
+# design.
 def _can_resonate(compound):
     """Determines whether or not the compound can even have any resonance
     structures.
@@ -109,6 +118,18 @@ def _can_resonate(compound):
         return False
 
     return True
+
+
+# The following functions make several as of yet incorrect assumptions about the
+# information stored within a compound molecule, and indeed within an atom or a
+# bond.  I'm going to need to update or change that information before I can
+# really start using and testing all of this.  I'm also realizing that my
+# current strategy of individual wrappers for each aspect of a compound may be
+# rather implausible, but I'm going to have to better clarify my reaction schema
+# before I can make that determination.  There are a bunch of things up in the
+# air right now and I have to catch them all at the same time... I'm gonna have
+# to make sure Andrew knows what he should be doing and hope that he can get it
+# done relatively quickly.  Otherwise I'm just going to have to handle it.
 
 
 def _find_available_electrons(compound):
