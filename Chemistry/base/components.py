@@ -75,6 +75,11 @@ class Bond(object):
         Adjacent nodes (atoms) to the edge (bond).  Order doesn't matter.
     order : int, optional
         The order of the bond.
+
+    Attributes
+    ----------
+    atoms
+    order
     """
 
     _atoms = None
@@ -91,6 +96,14 @@ class Bond(object):
 
     @property
     def atoms(self):
+        """The atoms in a bond.
+
+        Returns
+        -------
+        self._atoms : set
+            A set (unordered, collection) of the atoms in the bond.
+        """
+
         return self._atoms
 
     @atoms.setter
@@ -99,6 +112,21 @@ class Bond(object):
 
     @property
     def order(self):
+        """The order of the bond.
+
+        Returns
+        -------
+        self._order : int
+            The order of the bond (1, 2, or 3)
+
+        Raises
+        ------
+        ValueError
+            Thrown whenever an invalid order is assigned (ie values greater than
+            3 or values less than 1).  Non-integer values should be avoided but
+            they will be rounded using the `int()` function.
+        """
+
         return self._order
 
     @order.setter

@@ -324,11 +324,36 @@ class _CompoundWrapper(object):
 
 
 class _ChemicalSerializer(json.JSONEncoder):
+    """Encoder class that ensures custom chemistry classes are serializable.
+    Will have items added as necessary.
+    """
 
     def default(self, o):
+        """Overrides the original implementation of the JSONEncoder.
+
+        Parameters
+        ----------
+        o : Object
+            Any object to be serialized.
+
+        Returns
+        -------
+        dict
+            A dictionary with the post-serialization values of the object.
+
+        Notes
+        -----
+        Any custom classes created for this project that are likely to be
+        serialized should be added to this method.  Falls back to using the
+        object's dictionary, and then to the original `json.JSONEncoder`
+        behavior.
+        """
+
         if isinstance(o, Atom):
             return {'symbol': o.symbol}
         elif isinstance(o, Bond):
             return {'members': (o.first, o.second)}
-        else:
+        elif hasattr(o, '__dict__'):
             return o.__dict__
+        else:
+            return super(_ChemicalSerializer, self).default(o)
