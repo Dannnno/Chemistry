@@ -273,10 +273,10 @@ class _CompoundWrapper(object):
 
     Notes
     -----
-    This class exists to be sub-classed by other classes, such as
-    Chemistry.base.reactants.Reactant, or Chemistry.base.products.Product.  This
-    is easier than creating a brand new Compound object whenever I want to
-    analyze a molecule as an Acid, or a Base, or some other reactant or product.
+    This class exists to be sub-classed by other classes, such as Reactant, or
+    Product.  This is easier than creating a brand new Compound object whenever
+    I want to analyze a molecule as an Acid, or a Base, or some other reactant
+    or product.
     """
 
     __metaclass__ = abc.ABCMeta
