@@ -10,7 +10,7 @@ import os
 import unittest
 
 from Chemistry.base import compounds
-import Chemistry.base.periodic_table as pt
+from Chemistry.base.components import Atom
 from Chemistry.interface.compound_utility import compound_from_file, \
     compound_to_file
 
@@ -53,10 +53,10 @@ class TestCompound(unittest.TestCase):
 
     def test_add_node_raises_KE(self):
         with self.assertRaises(KeyError):
-            self.compound1._add_node('a2', pt.get_element('H'))
+            self.compound1._add_node('a2', Atom('H'))
 
     def test_add_node_(self):
-        self.compound1._add_node('a4', pt.get_element('H'))
+        self.compound1._add_node('a4', Atom('H'))
         self.assertIn('a4', self.compound1.nodes())
 
     def test_add_edge_raises_KE(self):
@@ -67,7 +67,7 @@ class TestCompound(unittest.TestCase):
                 'b3', 'a1', 'a2', {'order': 1, 'chirality': None})
 
     def test_add_edge_(self):
-        self.compound1._add_node('a4', pt.get_element('H'))
+        self.compound1._add_node('a4', Atom('H'))
         self.compound1._add_edge(
             'b3', 'a1', 'a4', {'order':1, 'chirality':None})
         self.assertEqual(self.compound1['a1']['a4']['key'], "b3")

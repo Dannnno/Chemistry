@@ -20,6 +20,7 @@ import json
 import networkx as nx
 
 import Chemistry.base.periodic_table as pt
+from Chemistry.base.components import Atom, Bond
 
 
 class Compound(nx.Graph):
@@ -170,7 +171,7 @@ class Compound(nx.Graph):
         """
 
         for key, atom in atoms.iteritems():
-            self._add_node(key, pt.get_element(atom))
+            self._add_node(key, Atom(atom))
 
     def _add_edges_from(self, bonds):
         """Adds a group of edges.
@@ -191,14 +192,14 @@ class Compound(nx.Graph):
         ----------
         key : string
             The key associated with the given atom.
-        atom : dict
-            Dictionary representing the atom.
+        atom : Atom
+            An atom object.
         """
 
         if key in self.atoms:
             raise KeyError("There is already an atom {}".format(key))
-        self.add_node(key, **atom)
-        self.atoms[key] = atom['symbol']
+        self.add_node(key, {'symbol': atom.symbol})
+        self.atoms[key] = atom
 
     def _add_edge(self, key, first, second, rest=None):
         """Adds a single edge.
@@ -217,21 +218,20 @@ class Compound(nx.Graph):
 
         if rest is None:
             rest = {}
-        try:
-            _ = self.bonds[key]
-        except KeyError:
-            d = {'order': 1, 'chirality': None}
-            d.update(rest)
-            self.add_edge(first, second, key=key, **d)
-            self.bonds[key] = first, second, d
-        else:
+        if key in self.bonds:
             raise KeyError("There is already a bond {}".format(key))
+        else:
+            bond = Bond(self.atoms[first], self.atoms[second], **rest)
+            self.add_edge(first, second, key=key, bond_obj=bond)
+            self.bonds[key] = bond
 
     def __str__(self):
-        return json.dumps(self.molecule, sort_keys=True)
+        return json.dumps(
+            self.molecule, cls=_ChemicalSerializer, sort_keys=True)
 
     def __repr__(self):
-        return json.dumps(self.molecule, sort_keys=True, indent=4)
+        return json.dumps(
+            self.molecule, cls=_ChemicalSerializer, sort_keys=True, indent=4)
 
     def is_isomorphic(self, other):
         """Determines whether or not a molecule is isomorphically equivalent
@@ -273,10 +273,10 @@ class _CompoundWrapper(object):
 
     Notes
     -----
-    This class exists to be sub-classed by other classes, such as
-    Chemistry.base.reactants.Reactant, or Chemistry.base.products.Product.  This
-    is easier than creating a brand new Compound object whenever I want to
-    analyze a molecule as an Acid, or a Base, or some other reactant or product.
+    This class exists to be sub-classed by other classes, such as Reactant, or
+    Product.  This is easier than creating a brand new Compound object whenever
+    I want to analyze a molecule as an Acid, or a Base, or some other reactant
+    or product.
     """
 
     __metaclass__ = abc.ABCMeta
@@ -321,3 +321,39 @@ class _CompoundWrapper(object):
 
     def __getitem__(self, key):
         return self.compound[key]
+
+
+class _ChemicalSerializer(json.JSONEncoder):
+    """Encoder class that ensures custom chemistry classes are serializable.
+    Will have items added as necessary.
+    """
+
+    def default(self, o):
+        """Overrides the original implementation of the JSONEncoder.
+
+        Parameters
+        ----------
+        o : Object
+            Any object to be serialized.
+
+        Returns
+        -------
+        dict
+            A dictionary with the post-serialization values of the object.
+
+        Notes
+        -----
+        Any custom classes created for this project that are likely to be
+        serialized should be added to this method.  Falls back to using the
+        object's dictionary, and then to the original `json.JSONEncoder`
+        behavior.
+        """
+
+        if isinstance(o, Atom):
+            return {'symbol': o.symbol}
+        elif isinstance(o, Bond):
+            return {'members': (o.first, o.second)}
+        elif hasattr(o, '__dict__'):
+            return o.__dict__
+        else:
+            return super(_ChemicalSerializer, self).default(o)

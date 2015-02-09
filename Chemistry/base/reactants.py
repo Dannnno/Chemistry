@@ -13,7 +13,7 @@ __author__ = "Dan Obermiller"
 
 from copy import deepcopy
 
-import Chemistry.base.periodic_table as pt
+from Chemistry.base.components import Atom
 from Chemistry.base.compounds import _CompoundWrapper
 
 
@@ -143,7 +143,7 @@ class Base(Reactant):
         conjugate = deepcopy(self.compound)
         a_key = Reactant._new_key(conjugate)
         b_key = Reactant._new_key(conjugate, False)
-        hydrogen = pt.get_element('H')
+        hydrogen = Atom('H')
         conjugate._add_node(a_key, hydrogen)
         conjugate._add_edge(b_key, a_key, self.basic_point)
         try:

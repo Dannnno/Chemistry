@@ -8,7 +8,6 @@
 __author__ = "Dan Obermiller"
 
 
-from copy import deepcopy
 import json
 
 from lxml import etree
@@ -119,14 +118,19 @@ class CMLBuilder(object):
             The builder object with the relevant information.
         """
 
-        comp = deepcopy(comp)
-        atoms = comp.atoms
+        atoms = {}
         bonds = {}
 
-        for bkey, bdata in comp.bonds.iteritems():
-            bonds.update({bkey: (bdata[0], bdata[1],
-                                {'order': str(bdata[2]['order']),
-                                 'chirality': str(bdata[2]['chirality'])})})
+        for key, data in comp.node.iteritems():
+            atoms[key] = data['symbol']
+
+        for first, rest in comp.edge.iteritems():
+            for second, data in rest.iteritems():
+                bond = data['bond_obj']
+                bonds.update({data['key']: (first, second,
+                                            {'order': bond.order,
+                                             'chirality': str(bond.chirality)
+                                            })})
 
         other = {key:str(value) for key, value in comp.other_info.iteritems()}
         m = {'atoms': atoms, 'bonds': bonds, 'other_info': other}

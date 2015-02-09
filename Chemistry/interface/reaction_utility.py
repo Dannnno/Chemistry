@@ -5,6 +5,23 @@
 
 """Middle layer for communication between any interface and the necessary tools
 to perform reactions.
+
+I would expect that the general process of a reaction should be as follows:
+
+1. Build the molecules
+    Often they'll all be in one big dictionary, so separate_molecules should be
+    used to break them up.  Then any additional information should be added to
+    them (this will generally not happen, unless file parsing is involved
+    or the interface specifically adds this information.  Lastly, they should be
+    converted to actual Compound objects.
+2. Build the reaction conditions
+    This means we need sufficient information to determine which reaction is
+    most likely.
+3. Predict the reaction
+4. Conduct the reaction
+    If the reaction is successful, goto [5].  Otherwise go back to [3] and try
+    another reaction.n
+5. Return the result.
 """
 
 __author__ = "Dan Obermiller"
@@ -155,126 +172,3 @@ def build_reaction_conditions(molecules, solvent, **kwargs):
     cond_dict.update(kwargs)
     cond = Conditions(cond_dict)
     return cond
-
-
-def _handle_acid_base(conditions):
-    """Does all of the work necessary to begin an acid base reaction.
-
-    Parameters
-    ----------
-    conditions : Conditions
-        The reaction conditions, including the molecules involved.
-
-    Returns
-    -------
-    reaction : AcidBase
-        The AcidBase reaction object that hass all of the information necessary
-        to perform the reaction.
-    """
-
-    raise NotImplementedError
-
-
-supported_reactions = {'acid_base': _handle_acid_base}
-
-
-def test_reaction(reaction_type, conditions):
-    """Tests if a reaction goes to completion, and determines what products it
-    generates.
-
-    Parameters
-    ----------
-    reaction_type : string
-        The name of the reaction being attempted
-    conditions : Conditions
-        The reaction conditions.  Includes a list of the molecules within the
-        reaction.
-
-    Returns
-    -------
-    None, Products, EquilibriumProducts
-        Returns the result of the reaction.  If the reaction wouldn't occur then
-        None is returned.
-    """
-
-    try:
-        reaction = supported_reactions[reaction_type](conditions)
-    except KeyError:
-        raise ReactionError("{} is not a supported reaction")
-    else:
-        try:
-            products = reaction.react()
-        except NoReactionError:
-            return
-        else:
-            return products
-
-
-def pick_best_reaction(reaction_results):
-    """Determines the best reaction from a number of attempted reactions.
-
-    Parameters
-    ----------
-    reaction_results : dict
-        A dictionary that maps from reaction type to the result of the reaction.
-
-    Returns
-    -------
-    best_result : tuple
-        A 2-item tuple.  The first item is the type of reaction, and the second
-        is the result of the reaction.
-    """
-
-    successful_reactions = {name: result
-                            for name, result in reaction_results.iteritems()
-                            if result}
-
-    Result = namedtuple(
-        'Result', ['name', 'result', 'percent_forward', 'time'])
-
-    current_best = Result('', None, 0.0, float('inf'))
-
-    for rxn_name, rxn_result in successful_reactions.iteritems():
-        current_result = Result(
-            rxn_name, rxn_result, rxn_result.percentage, rxn_result.time)
-
-        current_best = _determine_best(current_best, current_result)
-
-    best_result = current_best.name, current_best.result
-    return best_result
-
-
-def _determine_best(current_best, current_result):
-    """Determines the better of two reaction results.
-
-    Parameters
-    ----------
-    current_best : Result (namedtuple)
-        The current best reaction result.
-    current_result : Result (namedtuple)
-        The reaction result being compared.
-
-    Returns
-    -------
-    Result (namedtuple)
-        The better of the two reaction results.
-    """
-
-    better_percentage = (
-        current_best.percent_forward > current_result.percent_forward)
-    better_time = current_best.time < current_result.time
-
-    # This seems very inefficient and bad right now, but its waiting on a better
-    # implementation of the thermodynamic effects of certain reactions.  I'm
-    # pretty sure all of this best reaction stuff will eventually move into a
-    # preprocessing sort of thing; usually you can predict the type of reaction
-    # without actually working out each reaction and then comparing.
-    if better_percentage and better_time:
-        return current_best
-    elif better_percentage:
-        return current_best
-    elif better_time:
-        return current_best
-    else:
-        return current_result
-

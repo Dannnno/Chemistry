@@ -1,18 +1,8 @@
 [![Docs built](https://readthedocs.org/projects/chemistry/badge/?version=latest)](http://chemistry.readthedocs.org/en/latest/)
 [![Build passed](https://travis-ci.org/Dannnno/Chemistry.svg?branch=master)](https://travis-ci.org/Dannnno/Chemistry)
 [![Coverage Status](https://coveralls.io/repos/Dannnno/Chemistry/badge.png)](https://coveralls.io/r/Dannnno/Chemistry)
-##Organic Chemistry Reaction Simulator
-Updated: 12/10/2014   
-
-Dan Obermiller  
-Claremont McKenna College  
-Class of 2017 
-dannnno16@gmail.com
-
-Andrew Meehan
-Claremont McKenna College
-Class of 2017
-andrewmeehan17@gmail.com
+[![Join the chat at https://gitter.im/Dannnno/Chemistry](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Dannnno/Chemistry?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+##pyCAOS - An Organic Chemistry Reaction Simulator
 
 This repository is designed to use Python in the simulation of organic chemistry reactions.  The program has several specific goals in particular:
 
@@ -31,15 +21,12 @@ Currently projected date of Alpha release: Soon<sup>TM</sup>
 
 ### Testing
 
-All tests can be run from the command line
-
-    $ nosetests
+All tests can be run from the command line using [nose](https://nose.readthedocs.org/en/latest/).
     
 
 ### Documentation
 
-Documentation is available freely at ReadTheDocs.org.  Click the badge above for
-more information.  
+Documentation is available freely at [ReadTheDocs.org](https://readthedocs.org/).  Click the badge above for more information.  
 
     
 ### Licensing
@@ -59,3 +46,14 @@ GNU General Public License for more details.
 
 > You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+### Contact Us
+
+####Lead Developer
+Dan Obermiller  
+dannnno16@gmail.com
+
+####Contributor
+Andrew Meehan  
+andrewmeehan17@gmail.com  

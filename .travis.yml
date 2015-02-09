@@ -6,11 +6,21 @@ python:
   #- "pypy"
   # openbabel breaks pypy https://bitbucket.org/pypy/pypy/issue/1382/
 
+notifications:
+  webhooks:
+    urls:
+      - https://webhooks.gitter.im/e/1f8f378680516933806d
+    on_success: change  # options: [always|never|change] default: always
+    on_failure: always  # options: [always|never|change] default: always
+    on_start: false     # default: false
+
 before_install:
   - sudo apt-get update -qq
   - sudo apt-get build-dep -qq -y python-pygame
   - sudo apt-get install -qq -y python-pygame
   - chmod ugo+x scripts/openbabel_reqs.sh
+  #- chmod ugo+x scripts/install_cmake.sh
+  #- "./scripts/install_cmake.sh"
   - "./scripts/openbabel_reqs.sh"
 
 install:

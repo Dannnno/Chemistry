@@ -12,8 +12,8 @@
   </atomArray>
   <bondArray>
     <bond id="b1">
-      <string builtin="atomRef">a1</string>
       <string builtin="atomRef">a3</string>
+      <string builtin="atomRef">a1</string>
       <string builtin="order">1</string>
       <string builtin="chirality">None</string>
     </bond>
