@@ -10,23 +10,21 @@ This includes atomic mass, radius, electronegativity, etc.
 __author__ = "Dan Obermiller"
 
 
-def get_element(symbol='C'):
+def get_element(symbol):
     """Function that returns the appropriate data for a given element.
 
     Parameters
     ----------
     symbol : string
-        The symbol of the atom being returned.  Defaults to 'C' for Carbon.
+        The symbol of the atom being returned.
 
     Returns
     -------
-    table : dict
+    dict
         A dictionary storing all of the relevant information about an element.
     """
 
-    table = {"symbol": symbol}
-    table.update(periodic_table[symbol])
-    return table
+    return periodic_table[symbol]
 
 
 periodic_table = {
