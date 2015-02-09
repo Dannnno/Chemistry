@@ -36,6 +36,8 @@ class Atom(object):
     # not inherent to this specific Atom instance will be pulled from the
     # existing periodic table
     def __getattr__(self, attr):
+        if attr == '__deepcopy__':
+            return super(Atom, self).__deepcopy__()
         return pt[self.symbol][attr]
 
     def add_lone_pair(self, n=1):
@@ -57,24 +59,31 @@ class Atom(object):
         #       interpret the octet rule
         raise NotImplementedError
 
+    def __eq__(self, other):
+        return self.symbol == other.symbol
+
+    def __ne__(self, other):
+        return not self == other
+
 
 class Bond(object):
     """A bond between two atoms.
 
     Parameters
     ----------
-    first, last : Atom
+    first, second : Atom
         Adjacent nodes (atoms) to the edge (bond).  Order doesn't matter.
     order : int, optional
-        The order of the
-
+        The order of the bond.
     """
 
     _atoms = None
     _order = 1
 
-    def __init__(self, first, last, order=1, **kwargs):
-        self.atoms = {first, last}
+    def __init__(self, first, second, order=1, **kwargs):
+        self.first = first
+        self.second = second
+        self.atoms = {first, second}
         self.order = order
         for key, arg in kwargs.iteritems():
             if not hasattr(self, key):
@@ -104,45 +113,62 @@ class Bond(object):
     def __iter__(self):
         yield self.atoms
 
+    def __getitem__(self, key):
+        if key == 0:
+            return self.first
+        elif key == 1:
+            return self.second
+        else:
+            raise KeyError("Bonds only have two items")
+
+    def __eq__(self, other):
+        direct = self.first == other.first and self.second == other.second
+        reverse = self.first == other.second and self.second == other.first
+        order = self.order == other.order
+        return order and (direct or reverse)
+
+    def __ne__(self, other):
+        return not self == other
+
 
 # Everything past this is unimplemented, and should not be taken as a guarantee
 # that they will be implemented.
 
 
-class Electron(object):
-
-    def __init__(self):
-        raise NotImplementedError
-
-
-class Proton(object):
-
-    def __init_(self):
-        raise NotImplementedError
-
-
-class Neutron(object):
-
-    def __init__(self):
-        raise NotImplementedError
-
-
-class Orbital(object):
-
-    def __init__(self):
-        raise NotImplementedError
-
-
-class SOrbital(Orbital):
-
-    def __init__(self):
-        super(SOrbital, self).__init__()
-
-
-class POrbital(Orbital):
-
-    def __init__(self):
-        super(SOrbital, self).__init__()
+# class Electron(object):
+#
+#     def __init__(self):
+#         raise NotImplementedError
+#
+#
+# class Proton(object):
+#
+#     def __init_(self):
+#         raise NotImplementedError
+#
+#
+# class Neutron(object):
+#
+#     def __init__(self):
+#         raise NotImplementedError
+#
+#
+# class Orbital(object):
+#
+#     def __init__(self):
+#         raise NotImplementedError
+#
+#
+# class SOrbital(Orbital):
+#
+#     def __init__(self):
+#         super(SOrbital, self).__init__()
+#
+#
+# class POrbital(Orbital):
+#
+#     def __init__(self):
+#         super(SOrbital, self).__init__()
 
 
 # D and F orbitals are not relevant at this time.
