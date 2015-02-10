@@ -25,11 +25,23 @@ class Atom(object):
         The atomic symbol of the atom.
     chirality : string, optional
         The chirality of the atom {'R', 'S'}.
+
+    Attribute
+    ---------
+    charge
+    steric_num
+    lpe
+    num_bonds
+    bonds
     """
+
+    _lpe = 0
+    _charge = 0
+    _nbonds = 0
+    _bonds = None
 
     def __init__(self, symbol, chirality=None, **kwargs):
         self.symbol = symbol
-        self.lpe = 0
         self.chirality = chirality
 
     # This prevents us from actually making copies of any atomic data.  All data
@@ -39,6 +51,115 @@ class Atom(object):
         if attr == '__deepcopy__':
             return super(Atom, self).__deepcopy__()
         return pt[self.symbol][attr]
+
+    @property
+    def charge(self):
+        """The formal charge of the molecule.
+
+        Notes
+        -----
+        Formal charge is calculated as valence - lpe - shared/2.  That is, the
+        number of valence electrons minus the number of lone pair electrons
+        minus half the number of shared electrons (ie the sum of bond orders).
+        """
+
+        return self.valence - self.lpe - self._get_shared()
+
+    def _get_shared(self):
+        """Determines how many shared electrons an atom has.
+
+        Returns
+        -------
+        int
+            The number of shared electrons.
+
+        Notes
+        -----
+        This is functionally equivalent to the sum of the order of the bonds).
+        """
+
+        return sum(bond.order for bond in self.bonds)
+
+    @property
+    def steric_num(self):
+        """The steric number of the atom.
+
+        Notes
+        -----
+        Used in determining hybridization. Steric number is calculated as no. of
+        atoms bonded to plus the number of lone pair electrons.
+        """
+
+        return self.num_bonds + self.lpe
+
+    # lpe is a read-only property.  It should only be modified by the functions
+    # below, which should directly modify the underlying value of _lpe.
+
+    @property
+    def lpe(self):
+        """The number of lone pair electrons on an atom.
+
+        Returns
+        -------
+        self._lpe : int
+            The number of lone pair electrons.
+        """
+
+        return self._lpe
+
+    @property
+    def num_bonds(self):
+        """The number of bonds this atom has.
+
+        Returns
+        -------
+        int
+            The number of bonds.
+        """
+
+        return len(self.bonds)
+
+    @property
+    def bonds(self):
+        """The bonds this atom has.
+
+        Returns
+        -------
+        self._bonds : list
+            This atom's bonds.
+        """
+
+        return self._bonds
+
+    def add_bond(self, bond, other=None):
+        """Adds a bond to another atom.
+
+        Parameters
+        ----------
+        bond : Bond
+            The bond to the other atom.
+        other : Atom
+            The atom being bonded to.
+        """
+
+        self.bonds.append(bond)
+        if other is not None:
+            other.add_bond(bond)
+
+    def remove_bond(self, bond, other=None):
+        """Removes a bond to another atom.
+
+        Parameters
+        ----------
+        bond : Bond
+            The bond being broken
+        other : Atom
+            The atom on the other end of the bond.
+        """
+
+        self.bonds.pop(bond)
+        if other is not None:
+            other.remove_bond(bond)
 
     def add_lone_pair(self, n=1):
         """Adds `n` lone pair electrons to the atom.
@@ -57,6 +178,29 @@ class Atom(object):
 
         # TODO: Create a working implementation of formal charge and how to
         #       interpret the octet rule
+
+        raise NotImplementedError
+
+    def remove_lone_pair(self, n=1):
+        """Removes `n` lone pair electrons from the atom.
+
+        Parameters
+        ----------
+        n : int, optional
+            The number of lone pairs to remove.
+
+        Raises
+        ------
+        ValueError
+            Thrown if too many lone pairs would be removed (ie more than are
+            present).
+
+        Notes
+        -----
+        No error is thrown if an unlikely number of lone pairs are removed; it
+        is expected that the user will know general chemical properties.
+        """
+
         raise NotImplementedError
 
     def __eq__(self, other):
