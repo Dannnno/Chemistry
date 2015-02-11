@@ -111,7 +111,7 @@ def build_table():
         for i in range(118):
             tl = element_reader.next()
             col_types = [int, str, str, int, float, float, float,
-                        float, float, float, float, str_to_list]
+                         float, float, float, str_to_list]
             new_row = dict(zip(header, tuple(convert_type(cell, typ)
                             for cell, typ in zip(tl, col_types))))
             per_table[tl[1]] = new_row

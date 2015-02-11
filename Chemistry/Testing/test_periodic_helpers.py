@@ -54,7 +54,6 @@ class test_helpers(unittest.TestCase):
                                  "Element": "Hydrogen",
                                  "Atomic Number": 1,
                                  "Boiling Point": 20.28,
-                                 "Heat of ?": 14.304,
                                  "Atomic Radius": 53.0,
                                  "Oxidation Number(s)": [
                                      1,
