@@ -55,6 +55,8 @@ class Atom(object):
         The atomic radius of the atom.
     oxidation : list
         A list of possible oxidation states of the atom.
+    valence : int
+        The valence number of the atom.
     """
 
     _lpe = 0

@@ -331,7 +331,7 @@ class _CompoundWrapper(object):
         return str(self.compound)
 
     def __repr__(self):
-        return str(self)
+        return repr(self.compound)
 
     def __len__(self):
         return len(self.compound)
