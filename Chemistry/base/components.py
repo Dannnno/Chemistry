@@ -14,6 +14,7 @@ broken up.
 __author__ = "Dan Obermiller"
 
 from Chemistry.base.periodic_table import periodic_table as pt
+from Chemistry.exceptions.AtomicErrors import ValenceError
 
 
 class Atom(object):
@@ -72,7 +73,7 @@ class Atom(object):
     # existing periodic table
     def __getattr__(self, attr):
         if attr == '__deepcopy__':
-            return super(Atom, self).__deepcopy__()
+            return super(Atom, self).__deepcopy__
         # This actually doesn't work right now.  The attributes detailed above
         # are not properly retrieved, see open issue #30
         return pt[self.symbol][attr]
@@ -182,7 +183,7 @@ class Atom(object):
             The atom on the other end of the bond.
         """
 
-        self.bonds.pop(bond)
+        self.bonds.remove(bond)
         if other is not None:
             other.remove_bond(bond)
 
@@ -196,7 +197,7 @@ class Atom(object):
 
         Raises
         ------
-        ValueError
+        ValenceError
             Thrown if too many lone pairs are added (would violate the octet
             rule for the atomic center).
         """
@@ -216,14 +217,9 @@ class Atom(object):
 
         Raises
         ------
-        ValueError
+        ValenceError
             Thrown if too many lone pairs would be removed (ie more than are
             present).
-
-        Notes
-        -----
-        No error is thrown if an unlikely number of lone pairs are removed; it
-        is expected that the user will know general chemical properties.
         """
 
         raise NotImplementedError

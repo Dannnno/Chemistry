@@ -73,6 +73,28 @@ class TestCompound(unittest.TestCase):
             'b3', 'a1', 'a4', {'order':1, 'chirality':None})
         self.assertEqual(self.compound1['a1']['a4']['key'], "b3")
 
+    @unittest.expectedFailure
+    def test_neutral_charge(self):
+        self.assertEqual(self.compound1.charge, 0)
+
+    @unittest.expectedFailure
+    def test_positive_charge(self):
+        compound = compounds.Compound(
+            {"a1": "H", "a2": "H", "a3": "H", "a4": "O"},
+            {"b1": ("a1", "a4", {"order": 1}),
+             "b2": ("a2", "a4", {"order": 1}),
+             "b3": ("a3", "a4", {"order": 1})},
+            {})
+        self.assertEqual(compound.charge, 1)
+
+    @unittest.expectedFailure
+    def test_negative_charge(self):
+        compound = compounds.Compound(
+            {"a1": "H", "a2": "O"},
+            {"b1": ("a1", "a2", {"order": 1})},
+            {})
+        self.assertEqual(compound.charge, -1)
+
 
 class TestIO(unittest.TestCase):
 
@@ -124,15 +146,26 @@ class TestSerializer(unittest.TestCase):
         self.assertEqual(
             json.dumps(A(), cls=compounds._ChemicalSerializer), "{}")
 
-    def test_default(self):
+    def test_has_slots(self):
         class B(object):
             __slots__ = ['A']
 
             def __init__(self):
                 self.A = 1
 
+        self.assertEqual(
+            json.dumps(B(), cls=compounds._ChemicalSerializer), '{"A": 1}')
+
+    def test_default(self):
+        # Testing that it handles builtin types (and functions) normally
+        assert json.dumps('', cls=compounds._ChemicalSerializer) == '""'
+        assert json.dumps(list(), cls=compounds._ChemicalSerializer) == "[]"
+        assert json.dumps(tuple(), cls=compounds._ChemicalSerializer) == "[]"
+        assert json.dumps(dict(), cls=compounds._ChemicalSerializer) == "{}"
+        assert json.dumps(
+            lambda x: x, cls=compounds._ChemicalSerializer) == "{}"
         with self.assertRaises(TypeError):
-            json.dumps(B(), cls=compounds._ChemicalSerializer)
+            json.dumps(set(), cls=compounds._ChemicalSerializer)
 
 
 # The below are stupid tests that I'm adding just for the sake of coverage

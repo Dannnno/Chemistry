@@ -6,7 +6,7 @@
 __author__ = "Dan Obermiller"
 
 __all__ = ['test_acid_base_reactions', 'test_CML', 'test_compounds',
-           'test_isomorphism', 'test_periodic_helpers']
+           'test_isomorphism', 'test_periodic_helpers', 'test_components']
 
 
 def helper(globs, verbosity=1):

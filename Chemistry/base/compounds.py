@@ -19,7 +19,6 @@ import json
 
 import networkx as nx
 
-import Chemistry.base.periodic_table as pt
 from Chemistry.base.components import Atom, Bond
 
 
@@ -358,6 +357,13 @@ class _ChemicalSerializer(json.JSONEncoder):
         dict
             A dictionary with the post-serialization values of the object.
 
+        Raises
+        ------
+        TypeError
+            Thrown when an object has neither __dict__ nor __slots__ (which as
+            far as I can tell are only some of the builtin types) and json
+            doesn't have any default support for the type.
+
         Notes
         -----
         Any custom classes created for this project that are likely to be
@@ -372,5 +378,7 @@ class _ChemicalSerializer(json.JSONEncoder):
             return {'members': (o.first, o.second)}
         elif hasattr(o, '__dict__'):
             return o.__dict__
+        elif hasattr(o, '__slots__'):
+            return {key: getattr(o, key) for key in o.__slots__}
         else:
             return super(_ChemicalSerializer, self).default(o)
