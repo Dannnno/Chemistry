@@ -58,6 +58,7 @@ class Compound(nx.Graph):
     atoms
     bonds
     other_info
+    charge
     """
 
     _atoms = None
@@ -172,6 +173,22 @@ class Compound(nx.Graph):
 
         for key, atom in atoms.iteritems():
             self._add_node(key, Atom(atom))
+
+    @property
+    def charge(self):
+        """The charge of a molecule.
+
+        Returns
+        -------
+        charge : int
+            The net charge on a molecule.
+        """
+
+        charge = 0
+        for atom in self.atoms.itervalues():
+            charge += atom.charge
+
+        return charge
 
     def _add_edges_from(self, bonds):
         """Adds a group of edges.

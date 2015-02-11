@@ -33,14 +33,35 @@ class Atom(object):
     lpe
     num_bonds
     bonds
+    eneg : float
+        The electronegativity of the atom.
+    group : int
+        The atomic group of the atom.
+    melt : float
+        The melting point of the atom.
+    mass : float
+        The atomic mass of the atom.
+    density : float
+        The atomic density of the atom
+    symbol : string
+        The atomic symbol of the atom.
+    name : string
+        The full name of the atom.
+    number : int
+        the atomic number of the atom.
+    boil : float
+        The boiling point of the atom.
+    radius : float
+        The atomic radius of the atom.
+    oxidation : list
+        A list of possible oxidation states of the atom.
     """
 
     _lpe = 0
-    _charge = 0
-    _nbonds = 0
     _bonds = None
 
     def __init__(self, symbol, chirality=None, **kwargs):
+        self._bonds = []
         self.symbol = symbol
         self.chirality = chirality
 
@@ -50,6 +71,8 @@ class Atom(object):
     def __getattr__(self, attr):
         if attr == '__deepcopy__':
             return super(Atom, self).__deepcopy__()
+        # This actually doesn't work right now.  The attributes detailed above
+        # are not properly retrieved, see open issue #30
         return pt[self.symbol][attr]
 
     @property
@@ -232,6 +255,7 @@ class Bond(object):
     def __init__(self, first, second, order=1, **kwargs):
         self.first = first
         self.second = second
+        self.first.add_bond(self, other=self.second)
         self.atoms = {first, second}
         self.order = order
         for key, arg in kwargs.iteritems():
