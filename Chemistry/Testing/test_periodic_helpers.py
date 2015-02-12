@@ -58,7 +58,8 @@ class test_helpers(unittest.TestCase):
                                  "Oxidation Number(s)": [
                                      1,
                                      -1
-                                 ]
+                                 ],
+                                 "Valence": None
                              })
 
 

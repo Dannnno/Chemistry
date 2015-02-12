@@ -51,12 +51,27 @@ get_element_function = """def get_element(symbol):
 
 
 def convert_type(cell, typ):
-    """Credit to SO user Marius for (most of) this function
+    """Converts a string to a given type, if possible.
+
+    Parameters
+    ----------
+    cell : string
+        The string to be converted
+    typ : function
+        Function to convert the string
+
+    Returns
+    -------
+    converted_value
+        The new value of the string.
+
+    Notes
+    -----
+    Credit to SO user Marius for (most of) this function
     http://stackoverflow.com/a/25498445/3076272
 
-    Takes a string and a function that the string should be represented as,
-    if possible.
-
+    Examples
+    --------
     >>> convert_type('4', int)
     4
     >>> convert_type('4.0', float)
@@ -94,11 +109,14 @@ def str_to_list(a_stringy_list, mapped=None):
 
 
 def build_table():
-    """Builds the periodic_table.py file if it hasn't been created yet.
+    """Builds the periodic_table.py file.
 
+    Notes
+    -----
     The function exists to ease large scale changes to the data held within the
     periodic table
     """
+
     curdir = os.getcwd()
     local_dir = os.path.dirname(os.path.abspath(__file__))
     os.chdir(local_dir)
@@ -111,7 +129,7 @@ def build_table():
         for i in range(118):
             tl = element_reader.next()
             col_types = [int, str, str, int, float, float, float,
-                         float, float, float, str_to_list]
+                         float, float, float, str_to_list, int]
             new_row = dict(zip(header, tuple(convert_type(cell, typ)
                             for cell, typ in zip(tl, col_types))))
             per_table[tl[1]] = new_row

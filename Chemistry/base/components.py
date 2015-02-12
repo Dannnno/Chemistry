@@ -27,13 +27,14 @@ class Atom(object):
     chirality : string, optional
         The chirality of the atom {'R', 'S'}.
 
-    Attribute
-    ---------
+    Attributes
+    ----------
     charge
     steric_num
     lpe
     num_bonds
     bonds
+    hybridization
     eneg : float
         The electronegativity of the atom.
     group : int
@@ -62,6 +63,7 @@ class Atom(object):
 
     _lpe = 0
     _bonds = None
+    _hybridization_states = {4: 'sp3', 3: 'sp2', 2: 'sp1'}
 
     def __init__(self, symbol, chirality=None, **kwargs):
         self._bonds = []
@@ -156,6 +158,25 @@ class Atom(object):
         """
 
         return self._bonds
+
+    @property
+    def hybridization(self):
+        """The hybridization of the atom.
+
+        Returns
+        -------
+        hybrid : string
+            The hybridization of the atom.
+
+        References
+        ----------
+        http://chemistry.stackexchange.com/a/4405/4148
+        """
+
+        if self.steric_num in self._hybridization_states:
+            return self._hybridization_states[self.steric_num]
+        else:
+            return "unhybridized"
 
     def add_bond(self, bond, other=None):
         """Adds a bond to another atom.
@@ -304,9 +325,6 @@ class Bond(object):
         else:
             self._order = ord_
 
-    def __iter__(self):
-        yield self.atoms
-
     def __getitem__(self, key):
         if key == 0:
             return self.first
@@ -337,7 +355,7 @@ class Bond(object):
 #
 # class Proton(object):
 #
-#     def __init_(self):
+#     def __init__(self):
 #         raise NotImplementedError
 #
 #

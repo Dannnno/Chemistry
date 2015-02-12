@@ -9,6 +9,7 @@ __author__ = "Dan Obermiller"
 import unittest
 
 from Chemistry.base.components import Atom, Bond
+from Chemistry.base.compounds import Compound
 from Chemistry.base.periodic_table import periodic_table
 from Chemistry.exceptions.AtomicErrors import ValenceError
 
@@ -91,3 +92,19 @@ class TestAtom(unittest.TestCase):
     def test_remove_lone_pair_raises_VE(self):
         with self.assertRaises(ValenceError):
             self.atom.remove_lone_pair()
+
+
+class TestHybridization(unittest.TestCase):
+
+    def setUp(self):
+        self.water = Compound({'a1': 'H', 'a2': 'H', 'a3': 'O'},
+            {'b1': ('a1', 'a3', {'order': 1}),
+             'b2': ('a2', 'a3', {'order': 1})},
+            {})
+
+    def test_water_hydrogen(self):
+        self.assertEqual(self.water.atoms['a1'].hybridization, 'unhybridized')
+
+    @unittest.expectedFailure
+    def test_water_oxygen(self):
+        self.assertEqual(self.water.atoms['a3'].hybridization, 'sp3')
