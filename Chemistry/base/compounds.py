@@ -108,6 +108,7 @@ class Compound(nx.Graph):
         self.molecule = {'other_info': self.other_info,
                          'atoms': self.atoms,
                          'bonds': self.bonds}
+        self.auto_complete()
         self.get_resonance_structures()
 
     @property
@@ -243,36 +244,54 @@ class Compound(nx.Graph):
             self.add_edge(first, second, key=key, bond_obj=bond)
             self.bonds[key] = bond
 
+    def auto_complete(self):
+        """Fills up the atom with necessary hydrogens and lone pairs.
+
+        Notes
+        -----
+        This assumes that all Carbons will have 4 bonds, and empty bonds will
+        be to Hydrogens.  It assumes that all other molecules will be filled
+        with lone pairs until the octet rule is satisfied.
+        """
+
+        pass
+
     def get_resonance_structures(self):
         """Builds a list of available resonance structures for this compound.
 
         Notes
         -----
-        This doesn't work at all right now, and is likely going to go through
-        quite a few rewrites.
+        In general, resonance can be determined by following a number of rules,
+        given here in the (approximate) order in which they should be followed.
+
+        1. Octet rule trumps.
+            Compounds favor arrangements that conform to the octet rule (except
+            for centers that can have expanded octets).  Except for those
+            centers, all structures must meet the octet rule.
+        2. Separation of formal charge should be avoided.
+            While formal charge is inevitable in some cases, it is better to
+            have charges closer together.
+        3. Formal charge is to be avoided.
+            The example structure above has a negative charge on it, located on
+            the two Oxygen atoms (or more accurately shared between them).  This
+            formal charge is unavoidable, however in other structures there will
+            be arrangements that have more (or less) atoms exhibiting formal
+            charge.
+        4. There must be driving force.
+            There must be a reason for the electrons to move.  This all comes
+            down to more favorable energy states.
+        5. sp3 hybridized atoms are off-limits for resonance
+            They don't have the open p-orbital necessary for resonance to occur.
+        6. Lone pairs can't jump atoms, but pi-bonds can.
+            Lone pair electrons move from bond to atom to bond, while a pi-bond
+            can jump to the other side of one of its nodes.
         """
 
-        if not self._can_resonate():
-            self.resonance_structures = []
-            return
-        else:
-            pass
-
-    def _can_resonate(self):
-        """Determines whether or not the molecule has the potential for any
-        resonance structures.
-
-        Returns
-        -------
-        bool
-            If the compound could have resonance structures.
-        """
-
-        if not any(atom.hybridization in ['sp2', 'sp1']
-                   for atom in self.atoms.itervalues()):
-            return False
-
-        return True
+        potential_atoms = [atom for atom in self.atoms.itervalues()
+                           if atom.could_resonate()]
+        potential_bonds = [bond
+                           for bond in self.bonds.itervalues()
+                           if bond.could_resonate()]
 
     def __str__(self):
         return json.dumps(

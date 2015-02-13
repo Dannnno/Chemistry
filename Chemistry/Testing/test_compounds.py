@@ -163,7 +163,7 @@ class TestSerializer(unittest.TestCase):
         assert json.dumps(tuple(), cls=compounds._ChemicalSerializer) == "[]"
         assert json.dumps(dict(), cls=compounds._ChemicalSerializer) == "{}"
         assert json.dumps(
-            lambda x: x, cls=compounds._ChemicalSerializer) == "{}"
+            lambda x: None, cls=compounds._ChemicalSerializer) == "{}"
         with self.assertRaises(TypeError):
             json.dumps(set(), cls=compounds._ChemicalSerializer)
 

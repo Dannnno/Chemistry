@@ -76,6 +76,19 @@ class Atom(object):
     _orbitals = {'sp3': ['sp3', 'sp3', 'sp3', 'sp3'],
                  'sp2': ['sp2', 'sp2', 'sp2', 'p'],
                  'sp1': ['sp1', 'sp1', 'p', 'p']}
+    _attr_to_keys = {"eneg": "Electronegativity",
+                     "group": "Group",
+                     "melt": "Melting Point",
+                     "mass": "Weight",
+                     "density": "Density",
+                     "symbol": "Symbol",
+                     "name": "Element",
+                     "number": "Atomic Number",
+                     "boil": "Boiling Point",
+                     "valence": "Valence",
+                     "radius": "Atomic Radius",
+                     "oxidation": "Oxidation Number(s)"
+                    }
 
     def __init__(self, symbol, chirality=None, **kwargs):
         self._bonds = []
@@ -90,7 +103,10 @@ class Atom(object):
             return super(Atom, self).__deepcopy__
         # This actually doesn't work right now.  The attributes detailed above
         # are not properly retrieved, see open issue #30
-        return pt[self.symbol][attr]
+        try:
+            return pt[self.symbol][self._attr_to_keys[attr]]
+        except KeyError:
+            raise AttributeError("Atom object has no attribute {}".format(attr))
 
     @property
     def charge(self):
@@ -276,6 +292,18 @@ class Atom(object):
 
         raise NotImplementedError
 
+    def could_resonate(self):
+        """Determines if the atom has the potential to be involved in a
+        resonance structure.
+
+        Returns
+        -------
+        bool
+            Whether the atom has the appropriate hybridization.
+        """
+
+        return self.hybridization != 'sp3'
+
     def __eq__(self, other):
         return self.symbol == other.symbol
 
@@ -306,7 +334,7 @@ class Bond(object):
         self.first = first
         self.second = second
         self.first.add_bond(self, other=self.second)
-        self.atoms = {first, second}
+        self.atoms = [first, second]
         self.order = order
         for key, arg in kwargs.iteritems():
             if not hasattr(self, key):
@@ -363,6 +391,23 @@ class Bond(object):
             return self.second
         else:
             raise KeyError("Bonds only have two items")
+
+    def could_resonate(self):
+        """Determines if this bond could be an active member of a resonance
+        structure.
+
+        Returns
+        -------
+        bool
+            Whether or not both of its adjacent atoms are non-sp3 hybridized.
+        """
+
+        return all(atom.could_resonate() for atom in self)
+
+    def __iter__(self):
+        for atom in self.atoms:
+            yield atom
+        raise StopIteration
 
     def __eq__(self, other):
         direct = self.first == other.first and self.second == other.second

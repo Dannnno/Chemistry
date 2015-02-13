@@ -3,7 +3,7 @@
 #
 # The full license is available in the root directory of the repository
 
-"""Tools necessary to determine the resonance struture(s) of a compound.
+"""Tools necessary to determine the resonance structure(s) of a compound.
 
 Resonance is when a molecule has multiple electron configurations that each
 contribute to the "actual" electron distribution of the molecule.  This is seen
