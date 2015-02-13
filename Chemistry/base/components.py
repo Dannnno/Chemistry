@@ -148,9 +148,6 @@ class Atom(object):
 
         return self.num_bonds + self.lpe
 
-    # lpe is a read-only property.  It should only be modified by the functions
-    # below, which should directly modify the underlying value of _lpe.
-
     @property
     def lpe(self):
         """The number of lone pair electrons on an atom.
@@ -255,6 +252,30 @@ class Atom(object):
         if other is not None:
             other.remove_bond(bond)
 
+    def fill_orbitals(self):
+        """Fills the orbitals of this atom with the appropriate number of lpe.
+
+        Notes
+        -----
+        This assumes the octet rule.  Exceptions are made for Beryllium/Boron
+        (sestet rule). Atoms on or below the third row have the potential to
+        exceed octet, however they will not be filled past octet by this method.
+        """
+
+        bonding_electrons = sum(bond.order for bond in self.bonds)
+        lone_pairs = self.lpe
+        total_electrons = bonding_electrons + lone_pairs
+
+        if self.symbol == 'H':
+            difference = 0
+        elif self.symbol in ['B', 'Be']:
+            difference = 6 - total_electrons
+        else:
+            difference = 8 - total_electrons
+
+        to_add = difference / 2
+        self.add_lone_pair(to_add)
+
     def add_lone_pair(self, n=1):
         """Adds `n` lone pair electrons to the atom.
 
@@ -270,10 +291,8 @@ class Atom(object):
             rule for the atomic center).
         """
 
-        # TODO: Create a working implementation of formal charge and how to
-        #       interpret the octet rule
-
-        raise NotImplementedError
+        if self.symbol in ['B', 'Be']:   # Beryllium and Boron are stable at 3
+            pass
 
     def remove_lone_pair(self, n=1):
         """Removes `n` lone pair electrons from the atom.

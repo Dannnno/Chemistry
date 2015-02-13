@@ -38,7 +38,7 @@ periodic_table = {
                        "Element": "Hydrogen", 
                        "Atomic Number": 1, 
                        "Boiling Point": 20.28, 
-                       "Valence": None, 
+                       "Valence": 1, 
                        "Atomic Radius": 53.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -55,7 +55,7 @@ periodic_table = {
                        "Element": "Helium", 
                        "Atomic Number": 2, 
                        "Boiling Point": 4.22, 
-                       "Valence": None, 
+                       "Valence": 2, 
                        "Atomic Radius": 31.0, 
                        "Oxidation Number(s)": [
                            0
@@ -71,7 +71,7 @@ periodic_table = {
                        "Element": "Lithium", 
                        "Atomic Number": 3, 
                        "Boiling Point": 1560.0, 
-                       "Valence": None, 
+                       "Valence": 1, 
                        "Atomic Radius": 167.0, 
                        "Oxidation Number(s)": [
                            1
@@ -87,7 +87,7 @@ periodic_table = {
                        "Element": "Beryllium", 
                        "Atomic Number": 4, 
                        "Boiling Point": 2742.0, 
-                       "Valence": None, 
+                       "Valence": 2, 
                        "Atomic Radius": 112.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -104,7 +104,7 @@ periodic_table = {
                        "Element": "Boron", 
                        "Atomic Number": 5, 
                        "Boiling Point": 4200.0, 
-                       "Valence": None, 
+                       "Valence": 3, 
                        "Atomic Radius": 87.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -122,7 +122,7 @@ periodic_table = {
                        "Element": "Carbon", 
                        "Atomic Number": 6, 
                        "Boiling Point": 4300.0, 
-                       "Valence": None, 
+                       "Valence": 4, 
                        "Atomic Radius": 67.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -145,7 +145,7 @@ periodic_table = {
                        "Element": "Nitrogen", 
                        "Atomic Number": 7, 
                        "Boiling Point": 77.36, 
-                       "Valence": None, 
+                       "Valence": 5, 
                        "Atomic Radius": 56.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -168,7 +168,7 @@ periodic_table = {
                        "Element": "Oxygen", 
                        "Atomic Number": 8, 
                        "Boiling Point": 90.2, 
-                       "Valence": None, 
+                       "Valence": 6, 
                        "Atomic Radius": 48.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -187,7 +187,7 @@ periodic_table = {
                        "Element": "Fluorine", 
                        "Atomic Number": 9, 
                        "Boiling Point": 85.03, 
-                       "Valence": None, 
+                       "Valence": 7, 
                        "Atomic Radius": 42.0, 
                        "Oxidation Number(s)": [
                            -1
@@ -203,7 +203,7 @@ periodic_table = {
                        "Element": "Neon", 
                        "Atomic Number": 10, 
                        "Boiling Point": 27.07, 
-                       "Valence": None, 
+                       "Valence": 8, 
                        "Atomic Radius": 38.0, 
                        "Oxidation Number(s)": [
                            0
@@ -219,7 +219,7 @@ periodic_table = {
                        "Element": "Sodium", 
                        "Atomic Number": 11, 
                        "Boiling Point": 1156.0, 
-                       "Valence": None, 
+                       "Valence": 1, 
                        "Atomic Radius": 190.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -236,7 +236,7 @@ periodic_table = {
                        "Element": "Magnesium", 
                        "Atomic Number": 12, 
                        "Boiling Point": 1363.0, 
-                       "Valence": None, 
+                       "Valence": 2, 
                        "Atomic Radius": 145.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -253,7 +253,7 @@ periodic_table = {
                        "Element": "Aluminium", 
                        "Atomic Number": 13, 
                        "Boiling Point": 2792.0, 
-                       "Valence": None, 
+                       "Valence": 3, 
                        "Atomic Radius": 118.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -271,7 +271,7 @@ periodic_table = {
                        "Element": "Silicon", 
                        "Atomic Number": 14, 
                        "Boiling Point": 3538.0, 
-                       "Valence": None, 
+                       "Valence": 4, 
                        "Atomic Radius": 111.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -294,7 +294,7 @@ periodic_table = {
                        "Element": "Phosphorus", 
                        "Atomic Number": 15, 
                        "Boiling Point": 550.0, 
-                       "Valence": None, 
+                       "Valence": 5, 
                        "Atomic Radius": 98.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -317,7 +317,7 @@ periodic_table = {
                        "Element": "Sulfur", 
                        "Atomic Number": 16, 
                        "Boiling Point": 717.87, 
-                       "Valence": None, 
+                       "Valence": 6, 
                        "Atomic Radius": 88.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -339,7 +339,7 @@ periodic_table = {
                        "Element": "Chlorine", 
                        "Atomic Number": 17, 
                        "Boiling Point": 239.11, 
-                       "Valence": None, 
+                       "Valence": 7, 
                        "Atomic Radius": 79.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -362,7 +362,7 @@ periodic_table = {
                        "Element": "Argon", 
                        "Atomic Number": 18, 
                        "Boiling Point": 87.3, 
-                       "Valence": None, 
+                       "Valence": 8, 
                        "Atomic Radius": 71.0, 
                        "Oxidation Number(s)": [
                            0
@@ -378,7 +378,7 @@ periodic_table = {
                        "Element": "Potassium", 
                        "Atomic Number": 19, 
                        "Boiling Point": 1032.0, 
-                       "Valence": None, 
+                       "Valence": 1, 
                        "Atomic Radius": 243.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -395,7 +395,7 @@ periodic_table = {
                        "Element": "Calcium", 
                        "Atomic Number": 20, 
                        "Boiling Point": 1757.0, 
-                       "Valence": None, 
+                       "Valence": 2, 
                        "Atomic Radius": 194.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -412,7 +412,7 @@ periodic_table = {
                        "Element": "Scandium", 
                        "Atomic Number": 21, 
                        "Boiling Point": 3109.0, 
-                       "Valence": None, 
+                       "Valence": 3, 
                        "Atomic Radius": 184.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -430,7 +430,7 @@ periodic_table = {
                        "Element": "Titanium", 
                        "Atomic Number": 22, 
                        "Boiling Point": 3560.0, 
-                       "Valence": None, 
+                       "Valence": 4, 
                        "Atomic Radius": 176.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -450,7 +450,7 @@ periodic_table = {
                        "Element": "Vanadium", 
                        "Atomic Number": 23, 
                        "Boiling Point": 3680.0, 
-                       "Valence": None, 
+                       "Valence": 5, 
                        "Atomic Radius": 171.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -471,7 +471,7 @@ periodic_table = {
                        "Element": "Chromium", 
                        "Atomic Number": 24, 
                        "Boiling Point": 2944.0, 
-                       "Valence": None, 
+                       "Valence": 6, 
                        "Atomic Radius": 166.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -494,7 +494,7 @@ periodic_table = {
                        "Element": "Manganese", 
                        "Atomic Number": 25, 
                        "Boiling Point": 2334.0, 
-                       "Valence": None, 
+                       "Valence": 7, 
                        "Atomic Radius": 161.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -519,7 +519,7 @@ periodic_table = {
                        "Element": "Iron", 
                        "Atomic Number": 26, 
                        "Boiling Point": 3134.0, 
-                       "Valence": None, 
+                       "Valence": 8, 
                        "Atomic Radius": 156.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -542,7 +542,7 @@ periodic_table = {
                        "Element": "Cobalt", 
                        "Atomic Number": 27, 
                        "Boiling Point": 3200.0, 
-                       "Valence": None, 
+                       "Valence": 9, 
                        "Atomic Radius": 152.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -563,7 +563,7 @@ periodic_table = {
                        "Element": "Nickel", 
                        "Atomic Number": 28, 
                        "Boiling Point": 3186.0, 
-                       "Valence": None, 
+                       "Valence": 10, 
                        "Atomic Radius": 149.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -583,7 +583,7 @@ periodic_table = {
                        "Element": "Copper", 
                        "Atomic Number": 29, 
                        "Boiling Point": 2835.0, 
-                       "Valence": None, 
+                       "Valence": 11, 
                        "Atomic Radius": 145.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -602,7 +602,7 @@ periodic_table = {
                        "Element": "Zinc", 
                        "Atomic Number": 30, 
                        "Boiling Point": 1180.0, 
-                       "Valence": None, 
+                       "Valence": 12, 
                        "Atomic Radius": 142.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -619,7 +619,7 @@ periodic_table = {
                        "Element": "Gallium", 
                        "Atomic Number": 31, 
                        "Boiling Point": 2477.0, 
-                       "Valence": None, 
+                       "Valence": 13, 
                        "Atomic Radius": 136.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -637,7 +637,7 @@ periodic_table = {
                        "Element": "Germanium", 
                        "Atomic Number": 32, 
                        "Boiling Point": 3106.0, 
-                       "Valence": None, 
+                       "Valence": 14, 
                        "Atomic Radius": 125.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -660,7 +660,7 @@ periodic_table = {
                        "Element": "Arsenic", 
                        "Atomic Number": 33, 
                        "Boiling Point": 887.0, 
-                       "Valence": None, 
+                       "Valence": 15, 
                        "Atomic Radius": 114.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -680,7 +680,7 @@ periodic_table = {
                        "Element": "Selenium", 
                        "Atomic Number": 34, 
                        "Boiling Point": 958.0, 
-                       "Valence": None, 
+                       "Valence": 16, 
                        "Atomic Radius": 103.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -700,7 +700,7 @@ periodic_table = {
                        "Element": "Bromine", 
                        "Atomic Number": 35, 
                        "Boiling Point": 332.0, 
-                       "Valence": None, 
+                       "Valence": 17, 
                        "Atomic Radius": 94.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -722,7 +722,7 @@ periodic_table = {
                        "Element": "Krypton", 
                        "Atomic Number": 36, 
                        "Boiling Point": 119.93, 
-                       "Valence": None, 
+                       "Valence": 18, 
                        "Atomic Radius": 88.0, 
                        "Oxidation Number(s)": [
                            2
@@ -738,7 +738,7 @@ periodic_table = {
                        "Element": "Rubidium", 
                        "Atomic Number": 37, 
                        "Boiling Point": 961.0, 
-                       "Valence": None, 
+                       "Valence": 1, 
                        "Atomic Radius": 265.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -755,7 +755,7 @@ periodic_table = {
                        "Element": "Strontium", 
                        "Atomic Number": 38, 
                        "Boiling Point": 1655.0, 
-                       "Valence": None, 
+                       "Valence": 2, 
                        "Atomic Radius": 219.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -772,7 +772,7 @@ periodic_table = {
                        "Element": "Yttrium", 
                        "Atomic Number": 39, 
                        "Boiling Point": 3609.0, 
-                       "Valence": None, 
+                       "Valence": 3, 
                        "Atomic Radius": 212.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -790,7 +790,7 @@ periodic_table = {
                        "Element": "Zirconium", 
                        "Atomic Number": 40, 
                        "Boiling Point": 4682.0, 
-                       "Valence": None, 
+                       "Valence": 4, 
                        "Atomic Radius": 206.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -809,7 +809,7 @@ periodic_table = {
                        "Element": "Niobium", 
                        "Atomic Number": 41, 
                        "Boiling Point": 5017.0, 
-                       "Valence": None, 
+                       "Valence": 5, 
                        "Atomic Radius": 198.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -830,7 +830,7 @@ periodic_table = {
                        "Element": "Molybdenum", 
                        "Atomic Number": 42, 
                        "Boiling Point": 4912.0, 
-                       "Valence": None, 
+                       "Valence": 6, 
                        "Atomic Radius": 190.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -853,7 +853,7 @@ periodic_table = {
                        "Element": "Technetium", 
                        "Atomic Number": 43, 
                        "Boiling Point": 4538.0, 
-                       "Valence": None, 
+                       "Valence": 7, 
                        "Atomic Radius": 183.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -877,7 +877,7 @@ periodic_table = {
                        "Element": "Ruthenium", 
                        "Atomic Number": 44, 
                        "Boiling Point": 4423.0, 
-                       "Valence": None, 
+                       "Valence": 8, 
                        "Atomic Radius": 178.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -901,7 +901,7 @@ periodic_table = {
                        "Element": "Rhodium", 
                        "Atomic Number": 45, 
                        "Boiling Point": 3968.0, 
-                       "Valence": None, 
+                       "Valence": 9, 
                        "Atomic Radius": 173.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -923,7 +923,7 @@ periodic_table = {
                        "Element": "Palladium", 
                        "Atomic Number": 46, 
                        "Boiling Point": 3236.0, 
-                       "Valence": None, 
+                       "Valence": 10, 
                        "Atomic Radius": 169.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -942,7 +942,7 @@ periodic_table = {
                        "Element": "Silver", 
                        "Atomic Number": 47, 
                        "Boiling Point": 2435.0, 
-                       "Valence": None, 
+                       "Valence": 11, 
                        "Atomic Radius": 165.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -961,7 +961,7 @@ periodic_table = {
                        "Element": "Cadmium", 
                        "Atomic Number": 48, 
                        "Boiling Point": 1040.0, 
-                       "Valence": None, 
+                       "Valence": 12, 
                        "Atomic Radius": 161.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -978,7 +978,7 @@ periodic_table = {
                        "Element": "Indium", 
                        "Atomic Number": 49, 
                        "Boiling Point": 2345.0, 
-                       "Valence": None, 
+                       "Valence": 13, 
                        "Atomic Radius": 156.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -996,7 +996,7 @@ periodic_table = {
                        "Element": "Tin", 
                        "Atomic Number": 50, 
                        "Boiling Point": 2875.0, 
-                       "Valence": None, 
+                       "Valence": 14, 
                        "Atomic Radius": 145.0, 
                        "Oxidation Number(s)": [
                            2, 
@@ -1014,7 +1014,7 @@ periodic_table = {
                        "Element": "Antimony", 
                        "Atomic Number": 51, 
                        "Boiling Point": 1860.0, 
-                       "Valence": None, 
+                       "Valence": 15, 
                        "Atomic Radius": 133.0, 
                        "Oxidation Number(s)": [
                            3, 
@@ -1032,7 +1032,7 @@ periodic_table = {
                        "Element": "Tellurium", 
                        "Atomic Number": 52, 
                        "Boiling Point": 1261.0, 
-                       "Valence": None, 
+                       "Valence": 16, 
                        "Atomic Radius": 123.0, 
                        "Oxidation Number(s)": [
                            2, 
@@ -1052,7 +1052,7 @@ periodic_table = {
                        "Element": "Iodine", 
                        "Atomic Number": 53, 
                        "Boiling Point": 457.4, 
-                       "Valence": None, 
+                       "Valence": 17, 
                        "Atomic Radius": 115.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -1073,7 +1073,7 @@ periodic_table = {
                        "Element": "Xenon", 
                        "Atomic Number": 54, 
                        "Boiling Point": 165.03, 
-                       "Valence": None, 
+                       "Valence": 18, 
                        "Atomic Radius": 108.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -1093,7 +1093,7 @@ periodic_table = {
                        "Element": "Caesium", 
                        "Atomic Number": 55, 
                        "Boiling Point": 944.0, 
-                       "Valence": None, 
+                       "Valence": 1, 
                        "Atomic Radius": 298.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -1110,7 +1110,7 @@ periodic_table = {
                        "Element": "Barium", 
                        "Atomic Number": 56, 
                        "Boiling Point": 2170.0, 
-                       "Valence": None, 
+                       "Valence": 2, 
                        "Atomic Radius": 253.0, 
                        "Oxidation Number(s)": [
                            2
@@ -1126,7 +1126,7 @@ periodic_table = {
                        "Element": "Lanthanum", 
                        "Atomic Number": 57, 
                        "Boiling Point": 3737.0, 
-                       "Valence": None, 
+                       "Valence": 3, 
                        "Atomic Radius": None, 
                        "Oxidation Number(s)": [
                            2, 
@@ -1143,7 +1143,7 @@ periodic_table = {
                        "Element": "Cerium", 
                        "Atomic Number": 58, 
                        "Boiling Point": 3716.0, 
-                       "Valence": None, 
+                       "Valence": 4, 
                        "Atomic Radius": None, 
                        "Oxidation Number(s)": [
                            2, 
@@ -1161,7 +1161,7 @@ periodic_table = {
                        "Element": "Praseodymium", 
                        "Atomic Number": 59, 
                        "Boiling Point": 3793.0, 
-                       "Valence": None, 
+                       "Valence": 5, 
                        "Atomic Radius": 247.0, 
                        "Oxidation Number(s)": [
                            2, 
@@ -1179,7 +1179,7 @@ periodic_table = {
                        "Element": "Neodymium", 
                        "Atomic Number": 60, 
                        "Boiling Point": 3347.0, 
-                       "Valence": None, 
+                       "Valence": 6, 
                        "Atomic Radius": 206.0, 
                        "Oxidation Number(s)": [
                            2, 
@@ -1197,7 +1197,7 @@ periodic_table = {
                        "Element": "Promethium", 
                        "Atomic Number": 61, 
                        "Boiling Point": 3273.0, 
-                       "Valence": None, 
+                       "Valence": 7, 
                        "Atomic Radius": 205.0, 
                        "Oxidation Number(s)": [
                            2, 
@@ -1214,7 +1214,7 @@ periodic_table = {
                        "Element": "Samarium", 
                        "Atomic Number": 62, 
                        "Boiling Point": 2067.0, 
-                       "Valence": None, 
+                       "Valence": 8, 
                        "Atomic Radius": 238.0, 
                        "Oxidation Number(s)": [
                            2, 
@@ -1231,7 +1231,7 @@ periodic_table = {
                        "Element": "Europium", 
                        "Atomic Number": 63, 
                        "Boiling Point": 1802.0, 
-                       "Valence": None, 
+                       "Valence": 9, 
                        "Atomic Radius": 231.0, 
                        "Oxidation Number(s)": [
                            2, 
@@ -1248,7 +1248,7 @@ periodic_table = {
                        "Element": "Gadolinium", 
                        "Atomic Number": 64, 
                        "Boiling Point": 3546.0, 
-                       "Valence": None, 
+                       "Valence": 10, 
                        "Atomic Radius": 233.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -1266,7 +1266,7 @@ periodic_table = {
                        "Element": "Terbium", 
                        "Atomic Number": 65, 
                        "Boiling Point": 3503.0, 
-                       "Valence": None, 
+                       "Valence": 11, 
                        "Atomic Radius": 225.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -1285,7 +1285,7 @@ periodic_table = {
                        "Element": "Dysprosium", 
                        "Atomic Number": 66, 
                        "Boiling Point": 2840.0, 
-                       "Valence": None, 
+                       "Valence": 12, 
                        "Atomic Radius": 228.0, 
                        "Oxidation Number(s)": [
                            2, 
@@ -1303,7 +1303,7 @@ periodic_table = {
                        "Element": "Holmium", 
                        "Atomic Number": 67, 
                        "Boiling Point": 2993.0, 
-                       "Valence": None, 
+                       "Valence": 13, 
                        "Atomic Radius": None, 
                        "Oxidation Number(s)": [
                            2, 
@@ -1320,7 +1320,7 @@ periodic_table = {
                        "Element": "Erbium", 
                        "Atomic Number": 68, 
                        "Boiling Point": 3141.0, 
-                       "Valence": None, 
+                       "Valence": 14, 
                        "Atomic Radius": 226.0, 
                        "Oxidation Number(s)": [
                            2, 
@@ -1337,7 +1337,7 @@ periodic_table = {
                        "Element": "Thulium", 
                        "Atomic Number": 69, 
                        "Boiling Point": 2223.0, 
-                       "Valence": None, 
+                       "Valence": 15, 
                        "Atomic Radius": 222.0, 
                        "Oxidation Number(s)": [
                            2, 
@@ -1355,7 +1355,7 @@ periodic_table = {
                        "Element": "Ytterbium", 
                        "Atomic Number": 70, 
                        "Boiling Point": 1469.0, 
-                       "Valence": None, 
+                       "Valence": 16, 
                        "Atomic Radius": 222.0, 
                        "Oxidation Number(s)": [
                            2, 
@@ -1372,7 +1372,7 @@ periodic_table = {
                        "Element": "Lutetium", 
                        "Atomic Number": 71, 
                        "Boiling Point": 3675.0, 
-                       "Valence": None, 
+                       "Valence": 17, 
                        "Atomic Radius": 217.0, 
                        "Oxidation Number(s)": [
                            3
@@ -1388,7 +1388,7 @@ periodic_table = {
                        "Element": "Hafnium", 
                        "Atomic Number": 72, 
                        "Boiling Point": 4876.0, 
-                       "Valence": None, 
+                       "Valence": 18, 
                        "Atomic Radius": 208.0, 
                        "Oxidation Number(s)": [
                            2, 
@@ -1406,7 +1406,7 @@ periodic_table = {
                        "Element": "Tantalum", 
                        "Atomic Number": 73, 
                        "Boiling Point": 5731.0, 
-                       "Valence": None, 
+                       "Valence": 19, 
                        "Atomic Radius": 200.0, 
                        "Oxidation Number(s)": [
                            2, 
@@ -1426,7 +1426,7 @@ periodic_table = {
                        "Element": "Tungsten", 
                        "Atomic Number": 74, 
                        "Boiling Point": 5828.0, 
-                       "Valence": None, 
+                       "Valence": 20, 
                        "Atomic Radius": 193.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -1449,7 +1449,7 @@ periodic_table = {
                        "Element": "Rhenium", 
                        "Atomic Number": 75, 
                        "Boiling Point": 5869.0, 
-                       "Valence": None, 
+                       "Valence": 21, 
                        "Atomic Radius": 188.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -1473,7 +1473,7 @@ periodic_table = {
                        "Element": "Osmium", 
                        "Atomic Number": 76, 
                        "Boiling Point": 5285.0, 
-                       "Valence": None, 
+                       "Valence": 22, 
                        "Atomic Radius": 185.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -1498,7 +1498,7 @@ periodic_table = {
                        "Element": "Iridium", 
                        "Atomic Number": 77, 
                        "Boiling Point": 4701.0, 
-                       "Valence": None, 
+                       "Valence": 23, 
                        "Atomic Radius": 180.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -1523,7 +1523,7 @@ periodic_table = {
                        "Element": "Platinum", 
                        "Atomic Number": 78, 
                        "Boiling Point": 4098.0, 
-                       "Valence": None, 
+                       "Valence": 24, 
                        "Atomic Radius": 177.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -1546,7 +1546,7 @@ periodic_table = {
                        "Element": "Gold", 
                        "Atomic Number": 79, 
                        "Boiling Point": 3129.0, 
-                       "Valence": None, 
+                       "Valence": 25, 
                        "Atomic Radius": 174.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -1566,7 +1566,7 @@ periodic_table = {
                        "Element": "Mercury", 
                        "Atomic Number": 80, 
                        "Boiling Point": 629.88, 
-                       "Valence": None, 
+                       "Valence": 26, 
                        "Atomic Radius": 171.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -1584,7 +1584,7 @@ periodic_table = {
                        "Element": "Thallium", 
                        "Atomic Number": 81, 
                        "Boiling Point": 1746.0, 
-                       "Valence": None, 
+                       "Valence": 27, 
                        "Atomic Radius": 156.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -1602,7 +1602,7 @@ periodic_table = {
                        "Element": "Lead", 
                        "Atomic Number": 82, 
                        "Boiling Point": 2022.0, 
-                       "Valence": None, 
+                       "Valence": 28, 
                        "Atomic Radius": 154.0, 
                        "Oxidation Number(s)": [
                            2, 
@@ -1620,7 +1620,7 @@ periodic_table = {
                        "Element": "Bismuth", 
                        "Atomic Number": 83, 
                        "Boiling Point": 1837.0, 
-                       "Valence": None, 
+                       "Valence": 29, 
                        "Atomic Radius": 143.0, 
                        "Oxidation Number(s)": [
                            1, 
@@ -1639,7 +1639,7 @@ periodic_table = {
                        "Element": "Polonium", 
                        "Atomic Number": 84, 
                        "Boiling Point": 1235.0, 
-                       "Valence": None, 
+                       "Valence": 30, 
                        "Atomic Radius": 135.0, 
                        "Oxidation Number(s)": [
                            2, 
@@ -1659,7 +1659,7 @@ periodic_table = {
                        "Element": "Astatine", 
                        "Atomic Number": 85, 
                        "Boiling Point": 610.0, 
-                       "Valence": None, 
+                       "Valence": 31, 
                        "Atomic Radius": None, 
                        "Oxidation Number(s)": [
                            1, 
@@ -1679,7 +1679,7 @@ periodic_table = {
                        "Element": "Radon", 
                        "Atomic Number": 86, 
                        "Boiling Point": 211.3, 
-                       "Valence": None, 
+                       "Valence": 32, 
                        "Atomic Radius": 120.0, 
                        "Oxidation Number(s)": [
                            2, 
@@ -1696,7 +1696,7 @@ periodic_table = {
                        "Element": "Francium", 
                        "Atomic Number": 87, 
                        "Boiling Point": 950.0, 
-                       "Valence": None, 
+                       "Valence": 1, 
                        "Atomic Radius": None, 
                        "Oxidation Number(s)": [
                            1
@@ -1712,7 +1712,7 @@ periodic_table = {
                        "Element": "Radium", 
                        "Atomic Number": 88, 
                        "Boiling Point": 2010.0, 
-                       "Valence": None, 
+                       "Valence": 2, 
                        "Atomic Radius": None, 
                        "Oxidation Number(s)": [
                            2
@@ -1728,7 +1728,7 @@ periodic_table = {
                        "Element": "Actinium", 
                        "Atomic Number": 89, 
                        "Boiling Point": 3471.0, 
-                       "Valence": None, 
+                       "Valence": 3, 
                        "Atomic Radius": None, 
                        "Oxidation Number(s)": [
                            2, 
@@ -1745,7 +1745,7 @@ periodic_table = {
                        "Element": "Thorium", 
                        "Atomic Number": 90, 
                        "Boiling Point": 5061.0, 
-                       "Valence": None, 
+                       "Valence": 4, 
                        "Atomic Radius": None, 
                        "Oxidation Number(s)": [
                            2, 
@@ -1763,7 +1763,7 @@ periodic_table = {
                        "Element": "Protactinium", 
                        "Atomic Number": 91, 
                        "Boiling Point": 4300.0, 
-                       "Valence": None, 
+                       "Valence": 5, 
                        "Atomic Radius": None, 
                        "Oxidation Number(s)": [
                            2, 
@@ -1782,7 +1782,7 @@ periodic_table = {
                        "Element": "Uranium", 
                        "Atomic Number": 92, 
                        "Boiling Point": 4404.0, 
-                       "Valence": None, 
+                       "Valence": 6, 
                        "Atomic Radius": None, 
                        "Oxidation Number(s)": [
                            2, 
@@ -1802,7 +1802,7 @@ periodic_table = {
                        "Element": "Neptunium", 
                        "Atomic Number": 93, 
                        "Boiling Point": 4273.0, 
-                       "Valence": None, 
+                       "Valence": 7, 
                        "Atomic Radius": None, 
                        "Oxidation Number(s)": [
                            3, 
@@ -1822,7 +1822,7 @@ periodic_table = {
                        "Element": "Plutonium", 
                        "Atomic Number": 94, 
                        "Boiling Point": 3501.0, 
-                       "Valence": None, 
+                       "Valence": 8, 
                        "Atomic Radius": None, 
                        "Oxidation Number(s)": [
                            3, 
@@ -1843,7 +1843,7 @@ periodic_table = {
                        "Element": "Americium", 
                        "Atomic Number": 95, 
                        "Boiling Point": 2880.0, 
-                       "Valence": None, 
+                       "Valence": 9, 
                        "Atomic Radius": None, 
                        "Oxidation Number(s)": [
                            2, 
@@ -1864,7 +1864,7 @@ periodic_table = {
                        "Element": "Curium", 
                        "Atomic Number": 96, 
                        "Boiling Point": 3383.0, 
-                       "Valence": None, 
+                       "Valence": 10, 
                        "Atomic Radius": None, 
                        "Oxidation Number(s)": [
                            2, 
@@ -1884,7 +1884,7 @@ periodic_table = {
                        "Element": "Berkelium", 
                        "Atomic Number": 97, 
                        "Boiling Point": 2900.0, 
-                       "Valence": None, 
+                       "Valence": 11, 
                        "Atomic Radius": None, 
                        "Oxidation Number(s)": [
                            2, 
@@ -1902,7 +1902,7 @@ periodic_table = {
                        "Element": "Californium", 
                        "Atomic Number": 98, 
                        "Boiling Point": 1743.0, 
-                       "Valence": None, 
+                       "Valence": 12, 
                        "Atomic Radius": None, 
                        "Oxidation Number(s)": [
                            2, 
@@ -1920,7 +1920,7 @@ periodic_table = {
                        "Element": "Einsteinium", 
                        "Atomic Number": 99, 
                        "Boiling Point": 1269.0, 
-                       "Valence": None, 
+                       "Valence": 13, 
                        "Atomic Radius": None, 
                        "Oxidation Number(s)": [
                            2, 
@@ -1938,7 +1938,7 @@ periodic_table = {
                        "Element": "Fermium", 
                        "Atomic Number": 100, 
                        "Boiling Point": None, 
-                       "Valence": None, 
+                       "Valence": 14, 
                        "Atomic Radius": None, 
                        "Oxidation Number(s)": [
                            2, 
@@ -1955,7 +1955,7 @@ periodic_table = {
                        "Element": "Mendelevium", 
                        "Atomic Number": 101, 
                        "Boiling Point": None, 
-                       "Valence": None, 
+                       "Valence": 15, 
                        "Atomic Radius": None, 
                        "Oxidation Number(s)": [
                            2, 
@@ -1972,7 +1972,7 @@ periodic_table = {
                        "Element": "Nobelium", 
                        "Atomic Number": 102, 
                        "Boiling Point": None, 
-                       "Valence": None, 
+                       "Valence": 16, 
                        "Atomic Radius": None, 
                        "Oxidation Number(s)": [
                            2, 
@@ -1989,7 +1989,7 @@ periodic_table = {
                        "Element": "Lawrencium", 
                        "Atomic Number": 103, 
                        "Boiling Point": None, 
-                       "Valence": None, 
+                       "Valence": 17, 
                        "Atomic Radius": None, 
                        "Oxidation Number(s)": [
                            3
@@ -2005,7 +2005,7 @@ periodic_table = {
                        "Element": "Rutherfordium", 
                        "Atomic Number": 104, 
                        "Boiling Point": 5800.0, 
-                       "Valence": None, 
+                       "Valence": 18, 
                        "Atomic Radius": None, 
                        "Oxidation Number(s)": [
                            4
@@ -2021,7 +2021,7 @@ periodic_table = {
                        "Element": "Dubnium", 
                        "Atomic Number": 105, 
                        "Boiling Point": None, 
-                       "Valence": None, 
+                       "Valence": 19, 
                        "Atomic Radius": None, 
                        "Oxidation Number(s)": [
                            5
@@ -2037,7 +2037,7 @@ periodic_table = {
                        "Element": "Seaborgium", 
                        "Atomic Number": 106, 
                        "Boiling Point": None, 
-                       "Valence": None, 
+                       "Valence": 20, 
                        "Atomic Radius": None, 
                        "Oxidation Number(s)": [
                            6
@@ -2053,7 +2053,7 @@ periodic_table = {
                        "Element": "Bohrium", 
                        "Atomic Number": 107, 
                        "Boiling Point": None, 
-                       "Valence": None, 
+                       "Valence": 21, 
                        "Atomic Radius": None, 
                        "Oxidation Number(s)": [
                            7
@@ -2069,7 +2069,7 @@ periodic_table = {
                        "Element": "Hassium", 
                        "Atomic Number": 108, 
                        "Boiling Point": None, 
-                       "Valence": None, 
+                       "Valence": 22, 
                        "Atomic Radius": None, 
                        "Oxidation Number(s)": [
                            8
@@ -2085,7 +2085,7 @@ periodic_table = {
                        "Element": "Meitnerium", 
                        "Atomic Number": 109, 
                        "Boiling Point": None, 
-                       "Valence": None, 
+                       "Valence": 23, 
                        "Atomic Radius": None, 
                        "Oxidation Number(s)": [
                            8
@@ -2101,7 +2101,7 @@ periodic_table = {
                        "Element": "Darmstadtium", 
                        "Atomic Number": 110, 
                        "Boiling Point": None, 
-                       "Valence": None, 
+                       "Valence": 24, 
                        "Atomic Radius": None, 
                        "Oxidation Number(s)": None
                    }, 
@@ -2115,7 +2115,7 @@ periodic_table = {
                        "Element": "Roentgenium", 
                        "Atomic Number": 111, 
                        "Boiling Point": None, 
-                       "Valence": None, 
+                       "Valence": 25, 
                        "Atomic Radius": None, 
                        "Oxidation Number(s)": None
                    }, 
@@ -2129,7 +2129,7 @@ periodic_table = {
                        "Element": "Copernicium", 
                        "Atomic Number": 112, 
                        "Boiling Point": 357.0, 
-                       "Valence": None, 
+                       "Valence": 26, 
                        "Atomic Radius": None, 
                        "Oxidation Number(s)": None
                    }, 
@@ -2143,7 +2143,7 @@ periodic_table = {
                        "Element": "Ununtrium", 
                        "Atomic Number": 113, 
                        "Boiling Point": 1400.0, 
-                       "Valence": None, 
+                       "Valence": 27, 
                        "Atomic Radius": None, 
                        "Oxidation Number(s)": None
                    }, 
@@ -2157,7 +2157,7 @@ periodic_table = {
                        "Element": "Flerovium", 
                        "Atomic Number": 114, 
                        "Boiling Point": 420.0, 
-                       "Valence": None, 
+                       "Valence": 28, 
                        "Atomic Radius": None, 
                        "Oxidation Number(s)": None
                    }, 
@@ -2171,7 +2171,7 @@ periodic_table = {
                        "Element": "Ununpentium", 
                        "Atomic Number": 115, 
                        "Boiling Point": 1400.0, 
-                       "Valence": None, 
+                       "Valence": 29, 
                        "Atomic Radius": None, 
                        "Oxidation Number(s)": None
                    }, 
@@ -2185,7 +2185,7 @@ periodic_table = {
                        "Element": "Livermorium", 
                        "Atomic Number": 116, 
                        "Boiling Point": 1085.0, 
-                       "Valence": None, 
+                       "Valence": 30, 
                        "Atomic Radius": None, 
                        "Oxidation Number(s)": None
                    }, 
@@ -2199,7 +2199,7 @@ periodic_table = {
                        "Element": "Ununseptium", 
                        "Atomic Number": 117, 
                        "Boiling Point": 823.0, 
-                       "Valence": None, 
+                       "Valence": 31, 
                        "Atomic Radius": None, 
                        "Oxidation Number(s)": None
                    }, 
@@ -2213,7 +2213,7 @@ periodic_table = {
                        "Element": "Ununoctium", 
                        "Atomic Number": 118, 
                        "Boiling Point": 263.0, 
-                       "Valence": None, 
+                       "Valence": 32, 
                        "Atomic Radius": None, 
                        "Oxidation Number(s)": None
                    }

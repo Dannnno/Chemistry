@@ -186,10 +186,7 @@ class Compound(nx.Graph):
             The net charge on a molecule.
         """
 
-        charge = 0
-        for atom in self.atoms.itervalues():
-            charge += atom.charge
-
+        charge = sum(atom.charge for atom in self.atoms.itervalues())
         return charge
 
     def _add_edges_from(self, bonds):

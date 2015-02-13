@@ -19,22 +19,15 @@ class TestAtom(unittest.TestCase):
     def setUp(self):
         self.atom = Atom('H')
 
-    @unittest.expectedFailure
-    def test_hydrogen_ion_charge(self):
-        self.assertEqual(self.atom.charge, 1)
+    def test_fill_orbitals_hydrogen(self):
+        self.atom.fill_orbitals()
+        self.assertEqual(self.atom.lpe, 0)
 
     @unittest.expectedFailure
-    def test_hydrogen_metal_charge(self):
-        self.atom.add_lone_pair()
-        self.assertEqual(self.atom.charge, 0)
-
-    @unittest.expectedFailure
-    def test_hydrogen_bonded_charge(self):
+    def test_fill_orbitals_oxygen(self):
         oxygen = Atom('O')
-        oxygen.add_lone_pair(3)
-        Bond(oxygen, self.atom, order=1)
-        self.assertEqual(self.atom.charge, 0)
-        self.assertEqual(oxygen.charge, -1)
+        oxygen.fill_orbitals()
+        self.assertEqual(oxygen.lpe, 4)
 
     def test_add_bond(self):
         oxygen = Atom('O')
@@ -62,7 +55,7 @@ class TestAtom(unittest.TestCase):
         self.assertNotIn(bond, self.atom.bonds)
         self.assertNotIn(bond, oxygen.bonds)
 
-    @unittest.expectedFailure
+    # @unittest.expectedFailure
     def test_add_lone_pair(self):
         self.atom.add_lone_pair()
 
@@ -158,6 +151,28 @@ class TestHybridization(unittest.TestCase):
     @unittest.expectedFailure
     def test_water_oxygen(self):
         self.assertEqual(self.water.atoms['a3'].hybridization, 'sp3')
+
+
+class TestAtomicCharge(unittest.TestCase):
+
+    def setUp(self):
+        self.atom = Atom('H')
+
+    def test_hydrogen_ion_charge(self):
+        self.assertEqual(self.atom.charge, 1)
+
+    @unittest.expectedFailure
+    def test_hydrogen_metal_charge(self):
+        self.atom.add_lone_pair()
+        self.assertEqual(self.atom.charge, 0)
+
+    @unittest.expectedFailure
+    def test_hydrogen_bonded_charge(self):
+        oxygen = Atom('O')
+        oxygen.add_lone_pair(3)
+        Bond(oxygen, self.atom, order=1)
+        self.assertEqual(self.atom.charge, 0)
+        self.assertEqual(oxygen.charge, -1)
 
 
 class TestResonance(unittest.TestCase):

@@ -59,7 +59,7 @@ class test_helpers(unittest.TestCase):
                                      1,
                                      -1
                                  ],
-                                 "Valence": None
+                                 "Valence": 1
                              })
 
 
