@@ -63,6 +63,7 @@ class Compound(nx.Graph):
     _atoms = None
     _bonds = None
     _other = None
+    resonance_structures = None
 
     @staticmethod
     def _node_matcher(node1, node2):
@@ -107,6 +108,7 @@ class Compound(nx.Graph):
         self.molecule = {'other_info': self.other_info,
                          'atoms': self.atoms,
                          'bonds': self.bonds}
+        self.get_resonance_structures()
 
     @property
     def atoms(self):
@@ -240,6 +242,37 @@ class Compound(nx.Graph):
             bond = Bond(self.atoms[first], self.atoms[second], **rest)
             self.add_edge(first, second, key=key, bond_obj=bond)
             self.bonds[key] = bond
+
+    def get_resonance_structures(self):
+        """Builds a list of available resonance structures for this compound.
+
+        Notes
+        -----
+        This doesn't work at all right now, and is likely going to go through
+        quite a few rewrites.
+        """
+
+        if not self._can_resonate():
+            self.resonance_structures = []
+            return
+        else:
+            pass
+
+    def _can_resonate(self):
+        """Determines whether or not the molecule has the potential for any
+        resonance structures.
+
+        Returns
+        -------
+        bool
+            If the compound could have resonance structures.
+        """
+
+        if not any(atom.hybridization in ['sp2', 'sp1']
+                   for atom in self.atoms.itervalues()):
+            return False
+
+        return True
 
     def __str__(self):
         return json.dumps(

@@ -35,6 +35,7 @@ class Atom(object):
     num_bonds
     bonds
     hybridization
+    available_orbitals
     eneg : float
         The electronegativity of the atom.
     group : int
@@ -59,11 +60,22 @@ class Atom(object):
         A list of possible oxidation states of the atom.
     valence : int
         The valence number of the atom.
+
+    Notes
+    -----
+    The attributes of `charge`, `steric_num`, `num_bonds`, `hybridization` and
+    `available_orbitals` are all calculated values; meaning every time
+    AtomInstance.charge is called (for example) the charge will be recalculated.
+    Thus it is generally advised to call it once and store that result as
+    another variable (if it will be used more than once).
     """
 
     _lpe = 0
     _bonds = None
     _hybridization_states = {4: 'sp3', 3: 'sp2', 2: 'sp1'}
+    _orbitals = {'sp3': ['sp3', 'sp3', 'sp3', 'sp3'],
+                 'sp2': ['sp2', 'sp2', 'sp2', 'p'],
+                 'sp1': ['sp1', 'sp1', 'p', 'p']}
 
     def __init__(self, symbol, chirality=None, **kwargs):
         self._bonds = []
@@ -177,6 +189,25 @@ class Atom(object):
             return self._hybridization_states[self.steric_num]
         else:
             return "unhybridized"
+
+    @property
+    def available_orbitals(self):
+        """The available bonding orbitals of an atom.
+
+        Returns
+        -------
+        list
+            A list of available bonding orbitals.
+        """
+
+        hybrid = self.hybridization
+        if hybrid == "unhybridized":
+            # This depends on the atom in question.  I'll need to figure out a
+            # good way to determine this.  Maybe just more information in the
+            # periodic table?
+            raise NotImplementedError
+        else:
+            return self._orbitals[hybrid]
 
     def add_bond(self, bond, other=None):
         """Adds a bond to another atom.
