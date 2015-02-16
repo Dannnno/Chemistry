@@ -29,5 +29,5 @@ if args.gui:
     sys.argv = sys.argv[:1]   # kivy messes up if I don't do this
     from Chemistry import chemgui
     chemgui.main()
-else:   # Whatever I'm trying at the moment
+else:   
     pass
