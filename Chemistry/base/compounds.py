@@ -417,8 +417,7 @@ class _ChemicalSerializer(json.JSONEncoder):
         -----
         Any custom classes created for this project that are likely to be
         serialized should be added to this method.  Falls back to using the
-        object's dictionary, and then to the original `json.JSONEncoder`
-        behavior.
+        object's dictionary, then slots, and then to the original behavior.
         """
 
         if isinstance(o, Atom):
