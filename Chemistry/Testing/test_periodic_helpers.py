@@ -27,17 +27,8 @@ class test_helpers(unittest.TestCase):
     def test_convert_type3(self):
         self.assertEqual(tb.convert_type('Hello', str), 'Hello')
 
-    def test_convert_type4(self):
-        self.assertEqual(tb.convert_type('[1,2,3]', tb.str_to_list), [1, 2, 3])
-
     def test_convert_type_bad(self):
         self.assertIsNone(tb.convert_type('No Data', int))
-
-    def test_str_to_list1(self):
-        self.assertEqual(tb.str_to_list('[1,2,3]'), ['1', '2', '3'])
-
-    def test_str_to_list2(self):
-        self.assertEqual(tb.str_to_list('[1,2,3]', mapped=int), [1, 2, 3])
 
     def test_build_table(self):
         self.assertFalse(tb.build_table())

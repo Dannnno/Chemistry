@@ -13,6 +13,7 @@ data that is found to be incorrect.
 __author__ = "Dan Obermiller"
 
 
+import ast
 import csv
 import json
 import os
@@ -76,8 +77,6 @@ def convert_type(cell, typ):
     4
     >>> convert_type('4.0', float)
     4.0
-    >>> convert_type('[1,2,3]', str_to_list)
-    [1, 2, 3]
 
     If the function can't be applied to that string then it returns
     None
@@ -86,26 +85,9 @@ def convert_type(cell, typ):
     """
 
     try:
-        if typ is str_to_list:
-            return typ(cell, mapped=int)
         return typ(cell)
     except ValueError:
         return None
-
-
-def str_to_list(a_stringy_list, mapped=None):
-    """Takes a string that looks like a list and makes it a list
-
-    >>> str_to_list("[1,2,3]")
-    ['1', '2', '3']
-
-    If a function to be mapped is provided it will attempt to do so
-    >>> str_to_list("[1,2,3]", mapped=int)
-    [1, 2, 3]
-    """
-
-    the_list = a_stringy_list[1:-1].split(",")
-    return map(mapped, the_list)
 
 
 def build_table():
@@ -129,7 +111,7 @@ def build_table():
         for i in range(118):
             tl = element_reader.next()
             col_types = [int, str, str, int, float, float, float,
-                         float, float, float, str_to_list, int]
+                         float, float, float, ast.literal_eval, int]
             new_row = dict(zip(header, tuple(convert_type(cell, typ)
                             for cell, typ in zip(tl, col_types))))
             per_table[tl[1]] = new_row
