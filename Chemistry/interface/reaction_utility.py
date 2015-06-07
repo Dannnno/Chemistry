@@ -27,12 +27,10 @@ I would expect that the general process of a reaction should be as follows:
 __author__ = "Dan Obermiller"
 
 
-from collections import namedtuple
-
 import networkx as nx
 
 from Chemistry.reactions._reactions import Conditions
-from Chemistry.exceptions.ReactionErrors import ReactionError, NoReactionError
+from Chemistry.exceptions.ReactionErrors import ReactionError, NoReactionError  # noqa
 
 
 def separate_molecules(atoms, bonds):

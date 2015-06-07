@@ -10,4 +10,5 @@ reactions.  All reactions rely on the infrastructure provided within.
 __author__ = "Dan Obermiller"
 
 __all__ = ['compounds', 'periodic_table', 'reactants', 'products', 'resonance',
-           'components']
+           'components'
+]

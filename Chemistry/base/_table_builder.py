@@ -20,11 +20,12 @@ import os
 from collections import OrderedDict
 
 
-copyright = """# pyCAOS - An organic chemistry reaction simulator, written in Python
+copyright_ = """
+# pyCAOS - An organic chemistry reaction simulator, written in Python
 # Copyright (C) 2014, 2015 Dan Obermiller
 #
 # The full license is available in the root directory of the repository\n
-"""
+""".lstrip()
 
 mod_doc_string = """
 \"""This module stores all of the data about each element in the periodic table.
@@ -51,7 +52,7 @@ get_element_function = """def get_element(symbol):
 """
 
 
-def convert_type(cell, typ):
+def convert_type(cell, type_):
     """Converts a string to a given type, if possible.
 
     Parameters
@@ -85,7 +86,7 @@ def convert_type(cell, typ):
     """
 
     try:
-        return typ(cell)
+        return type_(cell)
     except ValueError:
         return None
 
@@ -103,20 +104,23 @@ def build_table():
     local_dir = os.path.dirname(os.path.abspath(__file__))
     os.chdir(local_dir)
     with open("element_list.csv", 'r') as element_data, \
-        open("periodic_table.py", 'w') as periodic_table:
+            open("periodic_table.py", 'w') as periodic_table:
 
         per_table = OrderedDict()
         element_reader = csv.reader(element_data)
         header = element_reader.next()
         for i in range(118):
             tl = element_reader.next()
-            col_types = [int, str, str, int, float, float, float,
-                         float, float, float, ast.literal_eval, int]
-            new_row = dict(zip(header, tuple(convert_type(cell, typ)
-                            for cell, typ in zip(tl, col_types))))
+            col_types = [
+                int, str, str, int, float, float, float,
+                float, float, float, ast.literal_eval, int
+            ]
+            new_row = dict(zip(header,
+                               tuple(convert_type(cell, typ)
+                                     for cell, typ in zip(tl, col_types))))
             per_table[tl[1]] = new_row
 
-        periodic_table.write(copyright)
+        periodic_table.write(copyright_)
         periodic_table.write(mod_doc_string)
         periodic_table.write(get_element_function)
         json_table = json.dumps(per_table, indent=4).split('\n')

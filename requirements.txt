@@ -1,6 +1,7 @@
 cython==0.20.2
 lxml
 networkx
+six
 coveralls
 coverage
 nose

@@ -36,5 +36,6 @@ class ValenceError(AtomicError):
 
     def __init__(self, atom):
         message = "A {} atom has a valence number of {}".format(
-            atom.name, atom.valence)
+            atom.name, atom.valence
+        )
         super(ValenceError, self).__init__(message)

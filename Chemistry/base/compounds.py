@@ -105,21 +105,17 @@ class Compound(nx.Graph):
         self.atoms = atoms
         self.bonds = bonds
         self.other_info = other_info
-        self.molecule = {'other_info': self.other_info,
-                         'atoms': self.atoms,
-                         'bonds': self.bonds}
+        self.molecule = {
+            'other_info': self.other_info,
+            'atoms': self.atoms,
+            'bonds': self.bonds
+        }
         self.auto_complete()
         self.get_resonance_structures()
 
     @property
     def atoms(self):
-        """The atoms of a molecule.
-
-        Returns
-        -------
-        self._atoms : dict
-            The dictionary that stores all of the atoms in a molecules.
-        """
+        """The atoms of a molecule."""
 
         return self._atoms
 
@@ -131,13 +127,7 @@ class Compound(nx.Graph):
 
     @property
     def bonds(self):
-        """The bonds of a molecule.
-
-        Returns
-        -------
-        self._bonds : dict
-            The dictionary that stores all of the bonds in a molecules.
-        """
+        """The bonds of a molecule."""
 
         return self._bonds
 
@@ -149,13 +139,7 @@ class Compound(nx.Graph):
 
     @property
     def other_info(self):
-        """Other information about a molecule.
-
-        Returns
-        -------
-        self._other : dict
-            The dictionary that stores all other information in a molecule.
-        """
+        """Other information about a molecule."""
 
         return self._other
 
@@ -178,13 +162,7 @@ class Compound(nx.Graph):
 
     @property
     def charge(self):
-        """The charge of a molecule.
-
-        Returns
-        -------
-        charge : int
-            The net charge on a molecule.
-        """
+        """The net charge of a molecule."""
 
         charge = sum(atom.charge for atom in self.atoms.itervalues())
         return charge
@@ -251,7 +229,7 @@ class Compound(nx.Graph):
         with lone pairs until the octet rule is satisfied.
         """
 
-        pass
+        return NotImplemented
 
     def get_resonance_structures(self):
         """Builds a list of available resonance structures for this compound.
@@ -284,19 +262,24 @@ class Compound(nx.Graph):
             can jump to the other side of one of its nodes.
         """
 
-        potential_atoms = [atom for atom in self.atoms.itervalues()
-                           if atom.could_resonate()]
-        potential_bonds = [bond
-                           for bond in self.bonds.itervalues()
-                           if bond.could_resonate()]
+        potential_atoms = [  # noqa
+            atom for atom in self.atoms.itervalues() if atom.could_resonate()
+        ]
+        potential_bonds = [  # noqa
+            bond for bond in self.bonds.itervalues() if bond.could_resonate()
+        ]
+
+        return NotImplemented
 
     def __str__(self):
         return json.dumps(
-            self.molecule, cls=_ChemicalSerializer, sort_keys=True)
+            self.molecule, cls=_ChemicalSerializer, sort_keys=True
+        )
 
     def __repr__(self):
         return json.dumps(
-            self.molecule, cls=_ChemicalSerializer, sort_keys=True, indent=4)
+            self.molecule, cls=_ChemicalSerializer, sort_keys=True, indent=4
+        )
 
     def is_isomorphic(self, other):
         """Determines whether or not a molecule is isomorphically equivalent
@@ -313,15 +296,17 @@ class Compound(nx.Graph):
             Whether or not the molecules are isomorphic.
         """
 
-        return nx.is_isomorphic(self, other,
-                                node_match=self._node_matcher,
-                                edge_match=self._edge_matcher)
+        return nx.is_isomorphic(
+            self, other,
+            node_match=self._node_matcher,
+            edge_match=self._edge_matcher
+        )
 
     def __eq__(self, other):
         return self.is_isomorphic(other)
 
     def __ne__(self, other):
-        return not self.is_isomorphic(other)
+        return not self == other
 
 
 class _CompoundWrapper(object):

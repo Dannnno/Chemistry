@@ -4,8 +4,8 @@
 # The full license is available in the root directory of the repository
 
 
-"""This module provides the classes used to form various reactants in a chemical
-reaction.
+"""This module provides the classes used to form various reactants in a
+chemical reaction.
 """
 
 __author__ = "Dan Obermiller"
@@ -13,8 +13,8 @@ __author__ = "Dan Obermiller"
 
 from copy import deepcopy
 
-from Chemistry.base.components import Atom
-from Chemistry.base.compounds import _CompoundWrapper
+from .components import Atom
+from .compounds import _CompoundWrapper
 
 
 class Reactant(_CompoundWrapper):
@@ -33,8 +33,8 @@ class Reactant(_CompoundWrapper):
 
     _pka = None
 
-    @classmethod
-    def _new_key(cls, compound, atom=True):
+    @staticmethod
+    def _new_key(compound, atom=True):
         """Generates a new atom/bond key for a compound.
 
         Parameters
@@ -57,7 +57,7 @@ class Reactant(_CompoundWrapper):
         else:
             max_key = max(compound.bonds)
             letter = 'b'
-        number = int(max_key[1:])+1
+        number = int(max_key[1:]) + 1
         return "{}{}".format(letter, number)
 
     def __init__(self, compound):
@@ -81,8 +81,9 @@ class Reactant(_CompoundWrapper):
         self._pka = pka_
 
     def __str__(self):
-        return "{} of {}".format(self.__class__.__name__,
-                                 self.compound.__class__.__name__)
+        return "{} of {}".format(
+            self.__class__.__name__, self.compound.__class__.__name__
+        )
 
     def __repr__(self):
         return str(self)
@@ -147,26 +148,33 @@ class Base(Reactant):
         conjugate._add_node(a_key, hydrogen)
         conjugate._add_edge(b_key, a_key, self.basic_point)
         try:
-            conjugate.other_info['id'] = \
-                "Conjugate acid of {}".format(self.other_info['id'])
+            conjugate.other_info['id'] = "Conjugate acid of {}".format(
+                self.other_info['id']
+            )
         except KeyError:
             conjugate.other_info['id'] = "Unknown acid"
         return Acid(conjugate, a_key, self.pka)
 
 
-class LewisAcid(Acid): pass
+class LewisAcid(Acid):
+    pass
 
 
-class LewisBase(Base): pass
+class LewisBase(Base):
+    pass
 
 
-class BronstedAcid(Acid): pass
+class BronstedAcid(Acid):
+    pass
 
 
-class BronstedBase(Base): pass
+class BronstedBase(Base):
+    pass
 
 
-class Electrophile(Reactant): pass
+class Electrophile(Reactant):
+    pass
 
 
-class Nucleophile(Reactant): pass
+class Nucleophile(Reactant):
+    pass

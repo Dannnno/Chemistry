@@ -141,7 +141,7 @@ class AcidBase(_Reaction):
         """
 
         pka1, pka2 = self.acid[0].pka, self.base[0].pka
-        diff = pka1-pka2
+        diff = pka1 - pka2
         if diff == 0:
             raise NoReactionError("These two molecules have identical pka")
         # TODO: This doesn't look right to me.  I think I need to fix this.

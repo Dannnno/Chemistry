@@ -61,6 +61,8 @@ class Products(object):
     def major(self):
         """The major products of a reaction.
 
+        Notes
+        -----
         Expected to be a collection of Product objects.  Raises a TypeError if
         given things that are not NoneType (those are skipped) or Product
         objects
@@ -70,6 +72,7 @@ class Products(object):
 
     @major.setter
     def major(self, products):
+        # Todo: Clean this up
         if not isinstance(products, types.NoneType):
             for prod in products:
                 if isinstance(prod, Product):
@@ -89,6 +92,8 @@ class Products(object):
     def minor(self):
         """The minor products of a reaction.
 
+        Notes
+        -----
         Expected to be a collection of Product objects.  Raises a TypeError if
         given things that are not NoneType (those are skipped) or Product
         objects
@@ -98,6 +103,7 @@ class Products(object):
 
     @minor.setter
     def minor(self, products):
+        # Todo: Clean this up
         if not isinstance(products, types.NoneType):
             for prod in products:
                 if isinstance(prod, Product):
@@ -119,7 +125,7 @@ class Products(object):
     __nonzero__ = __bool__
 
     def __eq__(self, other):
-        # Todo: I should probably come up with a real implementation here
+        # Todo: Come up with a real implementation
         return False
 
     def __ne__(self, other):

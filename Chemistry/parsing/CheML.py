@@ -19,7 +19,7 @@ class CMLParser(object):
 
     Parameters
     ----------
-    CML_file : file-like object
+    cml_file : file-like object
         The (open) file that contains the data.
 
     Notes
@@ -29,19 +29,22 @@ class CMLParser(object):
     this more generalizable.
     """
 
-    def __init__(self, CML_file):
-        self.CML_file = CML_file
+    def __init__(self, cml_file):
+        self.cml_file = cml_file
         self.bonds = {}
         self.atoms = {}
         self.other = {}
-        self.molecule = {'atoms': self.atoms,
-                         'bonds': self.bonds,
-                         'other_info': self.other}
+        self.molecule = {
+            'atoms': self.atoms,
+            'bonds': self.bonds,
+            'other_info': self.other
+        }
 
-        self.CML_tree = etree.iterparse(self.CML_file)
+        self.CML_tree = etree.iterparse(self.cml_file)
         atom, bond = True, False
         last = ''
 
+        # Todo: put this in a method or get rid of this module
         for _, element in self.CML_tree:
             if element.tag == 'molecule':
                 self.other.update(dict(element.items()))
@@ -82,10 +85,10 @@ class CMLParser(object):
                 else:
                     d = {'order': int(rest[0]),
                          'chirality': rest[1]}
-                    i=0
+                    i = 0
                     for value in rest[2:]:
                         d['unknown{}'.format(i)] = '{}'.format(value)
-                        i+=1
+                        i += 1
                     self.bonds[key] = (bond[0], bond[1], d)
             if self.bonds[key][2]['chirality'] == 'None':
                 self.bonds[key][2]['chirality'] = None
@@ -127,12 +130,13 @@ class CMLBuilder(object):
         for first, rest in comp.edge.iteritems():
             for second, data in rest.iteritems():
                 bond = data['bond_obj']
-                bonds.update({data['key']: (first, second,
-                                            {'order': bond.order,
-                                             'chirality': str(bond.chirality)
-                                            })})
+                bonds.update(
+                    {data['key']: (first, second,
+                                   {'order': bond.order,
+                                    'chirality': str(bond.chirality)})}
+                )
 
-        other = {key:str(value) for key, value in comp.other_info.iteritems()}
+        other = {key: str(value) for key, value in comp.other_info.iteritems()}
         m = {'atoms': atoms, 'bonds': bonds, 'other_info': other}
         return CMLBuilder(m)
 
@@ -142,26 +146,28 @@ class CMLBuilder(object):
         self.attribs = molecule_dict['other_info']
 
         for key, atom in self.atoms.items():
-            self.atoms[key] = lb.E.atom(lb.E.string(atom,
-                                                    builtin="elementType"),
-                                        id=key)
+            self.atoms[key] = lb.E.atom(
+                lb.E.string(atom, builtin="elementType"), id=key
+            )
 
         for key, bond in self.bonds.items():
             order = str(bond[2]['order'])
             chirality = str(bond[2]['chirality'])
             self.bonds[key] = lb.E.bond(
-                                lb.E.string(bond[0], builtin="atomRef"),
-                                lb.E.string(bond[1], builtin="atomRef"),
-                                lb.E.string(order, builtin="order"),
-                                lb.E.string(chirality, builtin="chirality"),
-                                id=key)
+                lb.E.string(bond[0], builtin="atomRef"),
+                lb.E.string(bond[1], builtin="atomRef"),
+                lb.E.string(order, builtin="order"),
+                lb.E.string(chirality, builtin="chirality"),
+                id=key
+            )
 
         self.CML = lb.E.molecule(
-                        lb.E.atomArray(*sorted(self.atoms.values(),
-                                               key=lambda x:x.get('id'))),
-                        lb.E.bondArray(*sorted(self.bonds.values(),
-                                               key=lambda x:x.get('id'))),
-                        **self.attribs)
+            lb.E.atomArray(*sorted(self.atoms.values(),
+                                   key=lambda x: x.get('id'))),
+            lb.E.bondArray(*sorted(self.bonds.values(),
+                                   key=lambda x: x.get('id'))),
+            **self.attribs
+        )
 
     def to_file(self, cml_file):
         """Writes the data in the builder object to file.

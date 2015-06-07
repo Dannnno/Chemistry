@@ -182,7 +182,7 @@ class _Reaction(object):
 
         for i, (first, second) in enumerate(compound.edges(), 1):
             endpoints = tuple(sorted((a_ref[first], a_ref[second])))
-            rest = ({k:v for k, v in compound.edge[first][second].iteritems()
+            rest = ({k: v for k, v in compound.edge[first][second].iteritems()
                      if k != 'key'},)
             new_bonds['b{}'.format(i)] = endpoints + rest
 
@@ -203,9 +203,5 @@ class _Reaction(object):
         {'a3': 'a2', 'a2': 'a1'}
         """
 
-        return {key:'{}{}'.format(letter, i)
-                 for i, key in enumerate(sorted(dict_), 1)}
-
-
-if __name__ == '__main__':
-    pass
+        return {key: '{}{}'.format(letter, i)
+                for i, key in enumerate(sorted(dict_), 1)}
