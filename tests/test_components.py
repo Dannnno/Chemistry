@@ -17,11 +17,11 @@ from Chemistry.exceptions.AtomicErrors import ValenceError
 class TestAtom(unittest.TestCase):
 
     def setUp(self):
-        self.atom = Atom('H')
+        self.hydrogen = Atom('H')
 
     def test_fill_orbitals_hydrogen(self):
-        self.atom.fill_orbitals()
-        self.assertEqual(self.atom.lpe, 0)
+        self.hydrogen.fill_orbitals()
+        self.assertEqual(self.hydrogen.lpe, 0)
 
     @unittest.expectedFailure
     def test_fill_orbitals_oxygen(self):
@@ -31,110 +31,109 @@ class TestAtom(unittest.TestCase):
 
     def test_add_bond(self):
         oxygen = Atom('O')
-        bond = Bond(oxygen, self.atom, order=1)
+        bond = Bond(oxygen, self.hydrogen, order=1)
         self.assertIs(bond, oxygen.bonds[0])
-        self.assertIs(bond, self.atom.bonds[0])
+        self.assertIs(bond, self.hydrogen.bonds[0])
 
     def test_hydrogen_ion_steric_num(self):
-        self.assertEqual(self.atom.steric_num, 0)
+        self.assertEqual(self.hydrogen.steric_num, 0)
 
     @unittest.expectedFailure
     def test_hydrogen_metal_steric_num(self):
-        self.atom.add_lone_pair()
-        self.assertEqual(self.atom.steric_num, 1)
+        self.hydrogen.add_lone_pair()
+        self.assertEqual(self.hydrogen.steric_num, 1)
 
     def test_bonded_hydrogen_steric_num(self):
         oxygen = Atom('O')
-        Bond(oxygen, self.atom, order=1)
-        self.assertEqual(self.atom.steric_num, 1)
+        Bond(oxygen, self.hydrogen, order=1)
+        self.assertEqual(self.hydrogen.steric_num, 1)
 
     def test_remove_bond(self):
         oxygen = Atom('O')
-        bond = Bond(oxygen, self.atom, order=1)
-        self.atom.remove_bond(bond, other=oxygen)
-        self.assertNotIn(bond, self.atom.bonds)
+        bond = Bond(oxygen, self.hydrogen, order=1)
+        self.hydrogen.remove_bond(bond, other=oxygen)
+        self.assertNotIn(bond, self.hydrogen.bonds)
         self.assertNotIn(bond, oxygen.bonds)
 
-    # @unittest.expectedFailure
     def test_add_lone_pair(self):
-        self.atom.add_lone_pair()
+        self.hydrogen.add_lone_pair()
 
     @unittest.expectedFailure
     def test_add_lone_pair_raises_VE(self):
         with self.assertRaises(ValenceError):
-            self.atom.add_lone_pair(2)
+            self.hydrogen.add_lone_pair(2)
 
     @unittest.expectedFailure
     def test_add_lone_pair_raises_VE_if_bonded(self):
         oxygen = Atom('O')
-        Bond(oxygen, self.atom, order=1)
+        Bond(oxygen, self.hydrogen, order=1)
         with self.assertRaises(ValenceError):
-            self.atom.add_lone_pair()
+            self.hydrogen.add_lone_pair()
 
     @unittest.expectedFailure
     def test_remove_lone_pair(self):
-        self.atom.add_lone_pair()
-        self.atom.remove_lone_pair()
+        self.hydrogen.add_lone_pair()
+        self.hydrogen.remove_lone_pair()
 
     @unittest.expectedFailure
     def test_remove_lone_pair_raises_VE(self):
         with self.assertRaises(ValenceError):
-            self.atom.remove_lone_pair()
+            self.hydrogen.remove_lone_pair()
 
 
 class TestGetAttr(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.atom = Atom('H')
+        cls.hydrogen = Atom('H')
 
     def test_eneg(self):
-        self.assertEqual(self.atom.eneg, periodic_table['H']['Electronegativity'])
-        self.assertIs(self.atom.eneg, periodic_table['H']['Electronegativity'])
+        self.assertEqual(self.hydrogen.eneg, periodic_table['H']['Electronegativity'])
+        self.assertIs(self.hydrogen.eneg, periodic_table['H']['Electronegativity'])
 
     def test_group(self):
-        self.assertEqual(self.atom.group, periodic_table['H']['Group'])
-        self.assertIs(self.atom.group, periodic_table['H']['Group'])
+        self.assertEqual(self.hydrogen.group, periodic_table['H']['Group'])
+        self.assertIs(self.hydrogen.group, periodic_table['H']['Group'])
 
     def test_melt(self):
-        self.assertEqual(self.atom.melt, periodic_table['H']['Melting Point'])
-        self.assertIs(self.atom.melt, periodic_table['H']['Melting Point'])
+        self.assertEqual(self.hydrogen.melt, periodic_table['H']['Melting Point'])
+        self.assertIs(self.hydrogen.melt, periodic_table['H']['Melting Point'])
 
     def test_mass(self):
-        self.assertEqual(self.atom.mass, periodic_table['H']['Weight'])
-        self.assertIs(self.atom.mass, periodic_table['H']['Weight'])
+        self.assertEqual(self.hydrogen.mass, periodic_table['H']['Weight'])
+        self.assertIs(self.hydrogen.mass, periodic_table['H']['Weight'])
 
     def test_density(self):
-        self.assertEqual(self.atom.density, periodic_table['H']['Density'])
-        self.assertIs(self.atom.density, periodic_table['H']['Density'])
+        self.assertEqual(self.hydrogen.density, periodic_table['H']['Density'])
+        self.assertIs(self.hydrogen.density, periodic_table['H']['Density'])
 
     def test_symbol(self):
-        self.assertEqual(self.atom.symbol, periodic_table['H']['Symbol'])
-        self.assertIs(self.atom.symbol, periodic_table['H']['Symbol'])
+        self.assertEqual(self.hydrogen.symbol, periodic_table['H']['Symbol'])
+        self.assertIs(self.hydrogen.symbol, periodic_table['H']['Symbol'])
 
     def test_name(self):
-        self.assertEqual(self.atom.name, periodic_table['H']['Element'])
-        self.assertIs(self.atom.name, periodic_table['H']['Element'])
+        self.assertEqual(self.hydrogen.name, periodic_table['H']['Element'])
+        self.assertIs(self.hydrogen.name, periodic_table['H']['Element'])
 
     def test_number(self):
-        self.assertEqual(self.atom.number, periodic_table['H']['Atomic Number'])
-        self.assertIs(self.atom.number, periodic_table['H']['Atomic Number'])
+        self.assertEqual(self.hydrogen.number, periodic_table['H']['Atomic Number'])
+        self.assertIs(self.hydrogen.number, periodic_table['H']['Atomic Number'])
 
     def test_boil(self):
-        self.assertEqual(self.atom.boil, periodic_table['H']['Boiling Point'])
-        self.assertIs(self.atom.boil, periodic_table['H']['Boiling Point'])
+        self.assertEqual(self.hydrogen.boil, periodic_table['H']['Boiling Point'])
+        self.assertIs(self.hydrogen.boil, periodic_table['H']['Boiling Point'])
 
     def test_valence(self):
-        self.assertEqual(self.atom.valence, periodic_table['H']['Valence'])
-        self.assertIs(self.atom.valence, periodic_table['H']['Valence'])
+        self.assertEqual(self.hydrogen.valence, periodic_table['H']['Valence'])
+        self.assertIs(self.hydrogen.valence, periodic_table['H']['Valence'])
 
     def test_radius(self):
-        self.assertEqual(self.atom.radius, periodic_table['H']['Atomic Radius'])
-        self.assertIs(self.atom.radius, periodic_table['H']['Atomic Radius'])
+        self.assertEqual(self.hydrogen.radius, periodic_table['H']['Atomic Radius'])
+        self.assertIs(self.hydrogen.radius, periodic_table['H']['Atomic Radius'])
 
     def test_oxidation(self):
-        self.assertEqual(self.atom.oxidation, periodic_table['H']['Oxidation Number(s)'])
-        self.assertIs(self.atom.oxidation, periodic_table['H']['Oxidation Number(s)'])
+        self.assertEqual(self.hydrogen.oxidation, periodic_table['H']['Oxidation Number(s)'])
+        self.assertIs(self.hydrogen.oxidation, periodic_table['H']['Oxidation Number(s)'])
 
 
 class TestHybridization(unittest.TestCase):
@@ -156,22 +155,22 @@ class TestHybridization(unittest.TestCase):
 class TestAtomicCharge(unittest.TestCase):
 
     def setUp(self):
-        self.atom = Atom('H')
+        self.hydrogen = Atom('H')
 
     def test_hydrogen_ion_charge(self):
-        self.assertEqual(self.atom.charge, 1)
+        self.assertEqual(self.hydrogen.charge, 1)
 
     @unittest.expectedFailure
     def test_hydrogen_metal_charge(self):
-        self.atom.add_lone_pair()
-        self.assertEqual(self.atom.charge, 0)
+        self.hydrogen.add_lone_pair()
+        self.assertEqual(self.hydrogen.charge, 0)
 
     @unittest.expectedFailure
     def test_hydrogen_bonded_charge(self):
         oxygen = Atom('O')
         oxygen.add_lone_pair(3)
-        Bond(oxygen, self.atom, order=1)
-        self.assertEqual(self.atom.charge, 0)
+        Bond(oxygen, self.hydrogen, order=1)
+        self.assertEqual(self.hydrogen.charge, 0)
         self.assertEqual(oxygen.charge, -1)
 
 
