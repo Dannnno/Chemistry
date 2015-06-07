@@ -66,8 +66,3 @@ class TestProducts(unittest.TestCase):
 
     def test_minor_property_skips_NoneTypes(self):
         self.assertFalse(Products({}, {None: 1}))
-
-
-if __name__ == '__main__':
-    from . import helper
-    helper(globals())

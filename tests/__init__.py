@@ -9,6 +9,7 @@ __all__ = ['test_acid_base_reactions', 'test_CML', 'test_compounds',
            'test_isomorphism', 'test_periodic_helpers', 'test_components']
 
 
+# Utility methods for running tests
 def helper(globs, verbosity=1):
     import sys
     import types
@@ -45,3 +46,16 @@ def stdout_capture():
             out[0] = out[0].getvalue()
             out[1] = out[1].getvalue()
     return capture
+
+
+def raises(f, args=None, kwargs=None, exc_type=Exception):
+    if args is None:
+        args = []
+    if kwargs is None:
+        kwargs = {}
+    try:
+        f(*args, **kwargs)
+    except exc_type:
+        return True
+    else:
+        return False

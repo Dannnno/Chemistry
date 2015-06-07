@@ -12,7 +12,7 @@ from Chemistry.base import _table_builder as tb
 from Chemistry.base.periodic_table import get_element
 
 
-class test_helpers(unittest.TestCase):
+class TestPeriodicHelperFunction(unittest.TestCase):
 
     def setUp(self): pass
 
@@ -34,26 +34,23 @@ class test_helpers(unittest.TestCase):
         self.assertFalse(tb.build_table())
 
     def test_get_element(self):
-        self.assertDictEqual(get_element('H'),
-                             {
-                                 "Electronegativity": 2.2,
-                                 "Group": 1,
-                                 "Melting Point": 14.01,
-                                 "Weight": 1.008,
-                                 "Density": 8.988e-05,
-                                 "Symbol": "H",
-                                 "Element": "Hydrogen",
-                                 "Atomic Number": 1,
-                                 "Boiling Point": 20.28,
-                                 "Atomic Radius": 53.0,
-                                 "Oxidation Number(s)": [
-                                     1,
-                                     -1
-                                 ],
-                                 "Valence": 1
-                             })
-
-
-if __name__ == '__main__':
-    from . import helper
-    helper(globals())
+        self.assertDictEqual(
+            get_element('H'),
+            {
+                "Electronegativity": 2.2,
+                "Group": 1,
+                "Melting Point": 14.01,
+                "Weight": 1.008,
+                "Density": 8.988e-05,
+                "Symbol": "H",
+                "Element": "Hydrogen",
+                "Atomic Number": 1,
+                "Boiling Point": 20.28,
+                "Atomic Radius": 53.0,
+                "Oxidation Number(s)": [
+                    1,
+                    -1
+                ],
+                "Valence": 1
+            }
+        )

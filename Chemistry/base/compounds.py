@@ -360,11 +360,25 @@ class _CompoundWrapper(object):
         else:
             return self.compound == other
 
+    def __ne__(self, other):
+        return not self == other
+
+    @abc.abstractmethod
+    def equals(self, other):
+        return self == other and type(self) == type(other)
+
+    @abc.abstractmethod
+    def not_equals(self, other):
+        return not self.equals(other)
+
     def __str__(self):
         return str(self.compound)
 
     def __repr__(self):
         return repr(self.compound)
+
+    def __unicode__(self):
+        return unicode(self.compound)
 
     def __len__(self):
         return len(self.compound)

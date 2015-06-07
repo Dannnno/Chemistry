@@ -34,6 +34,13 @@ class Product(_CompoundWrapper):
         super(Product, self).__init__(comp)
         self.percentage = percentage
 
+    # Todo: Work on this
+    def equals(self, other):
+        return super(Product, self).equals(other)
+
+    def not_equals(self, other):
+        return not self.equals(other)
+
 
 class Products(object):
     """A Products object - represents a collection of Product objects because a

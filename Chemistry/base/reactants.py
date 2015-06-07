@@ -112,6 +112,17 @@ class Acid(Reactant):
 
         raise NotImplementedError
 
+    def equals(self, other):
+        super_equals = super(Acid, self).equals(other)
+        if super_equals:
+            acidic_points = self.acidic_point == other.acidic_point
+            pkas = self.pka == other.pka
+            return acidic_points and pkas
+        return False
+
+    def not_equals(self, other):
+        return not self.equals(other)
+
 
 class Base(Reactant):
     """A subclass of Reactant, represents basic compounds in a reaction.
@@ -154,6 +165,17 @@ class Base(Reactant):
         except KeyError:
             conjugate.other_info['id'] = "Unknown acid"
         return Acid(conjugate, a_key, self.pka)
+
+    def equals(self, other):
+        super_equals = super(Base, self).equals(other)
+        if super_equals:
+            basic_points = self.basic_point == other.basic_point
+            pkas = self.pka == other.pka
+            return basic_points and pkas
+        return False
+
+    def not_equals(self, other):
+        return not self.equals(other)
 
 
 class LewisAcid(Acid):

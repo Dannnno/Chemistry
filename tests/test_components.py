@@ -88,15 +88,21 @@ class TestGetAttr(unittest.TestCase):
         cls.hydrogen = Atom('H')
 
     def test_eneg(self):
-        self.assertEqual(self.hydrogen.eneg, periodic_table['H']['Electronegativity'])
-        self.assertIs(self.hydrogen.eneg, periodic_table['H']['Electronegativity'])
+        self.assertEqual(
+            self.hydrogen.eneg, periodic_table['H']['Electronegativity']
+        )
+        self.assertIs(
+            self.hydrogen.eneg, periodic_table['H']['Electronegativity']
+        )
 
     def test_group(self):
         self.assertEqual(self.hydrogen.group, periodic_table['H']['Group'])
         self.assertIs(self.hydrogen.group, periodic_table['H']['Group'])
 
     def test_melt(self):
-        self.assertEqual(self.hydrogen.melt, periodic_table['H']['Melting Point'])
+        self.assertEqual(
+            self.hydrogen.melt, periodic_table['H']['Melting Point']
+        )
         self.assertIs(self.hydrogen.melt, periodic_table['H']['Melting Point'])
 
     def test_mass(self):
@@ -116,11 +122,17 @@ class TestGetAttr(unittest.TestCase):
         self.assertIs(self.hydrogen.name, periodic_table['H']['Element'])
 
     def test_number(self):
-        self.assertEqual(self.hydrogen.number, periodic_table['H']['Atomic Number'])
-        self.assertIs(self.hydrogen.number, periodic_table['H']['Atomic Number'])
+        self.assertEqual(
+            self.hydrogen.number, periodic_table['H']['Atomic Number']
+        )
+        self.assertIs(
+            self.hydrogen.number, periodic_table['H']['Atomic Number']
+        )
 
     def test_boil(self):
-        self.assertEqual(self.hydrogen.boil, periodic_table['H']['Boiling Point'])
+        self.assertEqual(
+            self.hydrogen.boil, periodic_table['H']['Boiling Point']
+        )
         self.assertIs(self.hydrogen.boil, periodic_table['H']['Boiling Point'])
 
     def test_valence(self):
@@ -128,12 +140,20 @@ class TestGetAttr(unittest.TestCase):
         self.assertIs(self.hydrogen.valence, periodic_table['H']['Valence'])
 
     def test_radius(self):
-        self.assertEqual(self.hydrogen.radius, periodic_table['H']['Atomic Radius'])
-        self.assertIs(self.hydrogen.radius, periodic_table['H']['Atomic Radius'])
+        self.assertEqual(
+            self.hydrogen.radius, periodic_table['H']['Atomic Radius']
+        )
+        self.assertIs(
+            self.hydrogen.radius, periodic_table['H']['Atomic Radius']
+        )
 
     def test_oxidation(self):
-        self.assertEqual(self.hydrogen.oxidation, periodic_table['H']['Oxidation Number(s)'])
-        self.assertIs(self.hydrogen.oxidation, periodic_table['H']['Oxidation Number(s)'])
+        self.assertEqual(
+            self.hydrogen.oxidation, periodic_table['H']['Oxidation Number(s)']
+        )
+        self.assertIs(
+            self.hydrogen.oxidation, periodic_table['H']['Oxidation Number(s)']
+        )
 
 
 class TestHybridization(unittest.TestCase):
@@ -178,10 +198,12 @@ class TestResonance(unittest.TestCase):
 
     @unittest.expectedFailure
     def test_water(self):
-        water = Compound({'a1': 'H', 'a2': 'H', 'a3': 'O'},
+        water = Compound(
+            {'a1': 'H', 'a2': 'H', 'a3': 'O'},
             {'b1': ('a1', 'a3', {'order': 1}),
              'b2': ('a2', 'a3', {'order': 1})},
-            {})
+            {}
+        )
 
         self.assertFalse(water.resonance_structures)
         for atom in water.atoms.itervalues():
