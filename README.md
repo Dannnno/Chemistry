@@ -2,6 +2,16 @@
 [![Build passed](https://travis-ci.org/Dannnno/Chemistry.svg?branch=master)](https://travis-ci.org/Dannnno/Chemistry)
 [![Coverage Status](https://coveralls.io/repos/Dannnno/Chemistry/badge.png)](https://coveralls.io/r/Dannnno/Chemistry)
 [![Join the chat at https://gitter.im/Dannnno/Chemistry](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Dannnno/Chemistry?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
+
+# This project is being restarted [here](https://github.com/PyCAOS/CAOS) 
+
+I'm working on an adaptation of this project for a class, and I've decided to
+take a fundamentally different approach to the design of the system, with a
+focus on adaptability and extensibility.  Many of the features from this repository
+will eventually make their way to that repository, and future development work will
+happen there.
+
 ##pyCAOS - An Organic Chemistry Reaction Simulator
 
 This repository is designed to use Python in the simulation of organic chemistry reactions.  The program has several specific goals in particular:
@@ -46,14 +56,3 @@ GNU General Public License for more details.
 
 > You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-
-### Contact Us
-
-####Lead Developer
-Dan Obermiller  
-dannnno16@gmail.com
-
-####Contributor
-Andrew Meehan  
-andrewmeehan17@gmail.com  
