@@ -14,7 +14,7 @@ broken up.
 __author__ = "Dan Obermiller"
 
 from Chemistry.base.periodic_table import periodic_table as pt
-from Chemistry.exceptions.AtomicErrors import ValenceError
+from Chemistry.exceptions.AtomicErrors import ValenceError  # noqa
 
 
 class Atom(object):
@@ -73,22 +73,25 @@ class Atom(object):
     _lpe = 0
     _bonds = None
     _hybridization_states = {4: 'sp3', 3: 'sp2', 2: 'sp1'}
-    _orbitals = {'sp3': ['sp3', 'sp3', 'sp3', 'sp3'],
-                 'sp2': ['sp2', 'sp2', 'sp2', 'p'],
-                 'sp1': ['sp1', 'sp1', 'p', 'p']}
-    _attr_to_keys = {"eneg": "Electronegativity",
-                     "group": "Group",
-                     "melt": "Melting Point",
-                     "mass": "Weight",
-                     "density": "Density",
-                     "symbol": "Symbol",
-                     "name": "Element",
-                     "number": "Atomic Number",
-                     "boil": "Boiling Point",
-                     "valence": "Valence",
-                     "radius": "Atomic Radius",
-                     "oxidation": "Oxidation Number(s)"
-                    }
+    _orbitals = {
+        'sp3': ['sp3', 'sp3', 'sp3', 'sp3'],
+        'sp2': ['sp2', 'sp2', 'sp2', 'p'],
+        'sp1': ['sp1', 'sp1', 'p', 'p']
+    }
+    _attr_to_keys = {
+        "eneg": "Electronegativity",
+        "group": "Group",
+        "melt": "Melting Point",
+        "mass": "Weight",
+        "density": "Density",
+        "symbol": "Symbol",
+        "name": "Element",
+        "number": "Atomic Number",
+        "boil": "Boiling Point",
+        "valence": "Valence",
+        "radius": "Atomic Radius",
+        "oxidation": "Oxidation Number(s)"
+    }
 
     def __init__(self, symbol, chirality=None, **kwargs):
         self._bonds = []
@@ -101,12 +104,15 @@ class Atom(object):
     def __getattr__(self, attr):
         if attr == '__deepcopy__':
             return super(Atom, self).__deepcopy__
-        # This actually doesn't work right now.  The attributes detailed above
-        # are not properly retrieved, see open issue #30
         try:
             return pt[self.symbol][self._attr_to_keys[attr]]
         except KeyError:
-            raise AttributeError("Atom object has no attribute {}".format(attr))
+            try:
+                return super(Atom, self).__getattr__(attr)
+            except AttributeError:
+                raise AttributeError(
+                    "Atom object has no attribute {}".format(attr)
+                )
 
     @property
     def charge(self):
@@ -150,48 +156,25 @@ class Atom(object):
 
     @property
     def lpe(self):
-        """The number of lone pair electrons on an atom.
-
-        Returns
-        -------
-        self._lpe : int
-            The number of lone pair electrons.
-        """
+        """The number of lone pair electrons on an atom."""
 
         return self._lpe
 
     @property
     def num_bonds(self):
-        """The number of bonds this atom has.
-
-        Returns
-        -------
-        int
-            The number of bonds.
-        """
+        """The number of bonds this atom has."""
 
         return len(self.bonds)
 
     @property
     def bonds(self):
-        """The bonds this atom has.
-
-        Returns
-        -------
-        self._bonds : list
-            This atom's bonds.
-        """
+        """The bonds this atom has."""
 
         return self._bonds
 
     @property
     def hybridization(self):
         """The hybridization of the atom.
-
-        Returns
-        -------
-        hybrid : string
-            The hybridization of the atom.
 
         References
         ----------
@@ -205,13 +188,7 @@ class Atom(object):
 
     @property
     def available_orbitals(self):
-        """The available bonding orbitals of an atom.
-
-        Returns
-        -------
-        list
-            A list of available bonding orbitals.
-        """
+        """The available bonding orbitals of an atom."""
 
         hybrid = self.hybridization
         if hybrid == "unhybridized":
@@ -265,6 +242,12 @@ class Atom(object):
         bonding_electrons = sum(bond.order for bond in self.bonds)
         lone_pairs = self.lpe
         total_electrons = bonding_electrons + lone_pairs
+
+        # Todo: Store which elements should behave in what way in a config file
+        # Todo: Have the Atom instance's init/new method set self.fill_orbitals
+        # Todo: to some function based on that config file
+        # Todo: Load that config file into a module like I do with
+        # Todo: periodic_table.py
 
         if self.symbol == 'H':
             difference = 0
@@ -321,6 +304,8 @@ class Atom(object):
             Whether the atom has the appropriate hybridization.
         """
 
+        # Todo: This is a little simplistic.  Think about whether or not this is
+        # Todo: all that is necessary
         return self.hybridization != 'sp3'
 
     def __eq__(self, other):
@@ -361,13 +346,7 @@ class Bond(object):
 
     @property
     def atoms(self):
-        """The atoms in a bond.
-
-        Returns
-        -------
-        self._atoms : set
-            A set (unordered, collection) of the atoms in the bond.
-        """
+        """The atoms in a bond."""
 
         return self._atoms
 
@@ -379,27 +358,21 @@ class Bond(object):
     def order(self):
         """The order of the bond.
 
-        Returns
-        -------
-        self._order : int
-            The order of the bond (1, 2, or 3)
-
         Raises
         ------
         ValueError
             Thrown whenever an invalid order is assigned (ie values greater than
-            3 or values less than 1).  Non-integer values should be avoided but
-            they will be rounded using the `int()` function.
+            3 or values less than 1).
         """
 
         return self._order
 
     @order.setter
     def order(self, ord_):
-        ord_ = int(ord_)
         if ord_ not in {1, 2, 3}:
             raise ValueError(
-                "A bond can only have order 1, 2, or 3, not {}".format(ord_))
+                "A bond can only have order 1, 2, or 3, not {}".format(ord_)
+            )
         else:
             self._order = ord_
 

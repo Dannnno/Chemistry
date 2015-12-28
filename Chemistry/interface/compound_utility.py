@@ -86,6 +86,7 @@ def _parser_to_compound(parsed_file):
 
     return Compound(parsed_file.atoms, parsed_file.bonds, parsed_file.other)
 
+
 def compound_from_file(file_, filetype):
     """Builds a compound object from file.
 

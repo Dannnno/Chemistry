@@ -23,15 +23,16 @@ class ReactionError(Exception):
         if message:
             self.err_message = message
         elif 'pka' in kwargs:
-            self.err_message = ReactionError.pka.format(*kwargs['reactants']
-                                                        *kwargs['pka'])
+            self.err_message = ReactionError.pka.format(
+                *kwargs['reactants'] *kwargs['pka']
+            )
 
     def __str__(self):
         return self.err_message
 
     def __repr__(self):
         return str(self)
-        
+
 
 class NoReactionError(ReactionError):
     """A specific reaction error that should be thrown if the given scenario
@@ -44,6 +45,6 @@ class NoReactionError(ReactionError):
     """
 
     err_message = "No reaction occurred"
-    
+
     def __init__(self, msg=err_message):
         super(NoReactionError, self).__init__(msg)

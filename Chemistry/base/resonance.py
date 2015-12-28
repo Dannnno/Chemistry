@@ -7,8 +7,8 @@
 
 Resonance is when a molecule has multiple electron configurations that each
 contribute to the "actual" electron distribution of the molecule.  This is seen
-most strongly in aromatic compounds.  Consider the following group of atoms in a
-compound.
+most strongly in aromatic compounds.  Consider the following group of atoms in
+a compound.
 
     'a1': 'H', 'a2': 'H', 'a3': 'H',
     'a4': 'C', 'a5': 'C',
@@ -120,16 +120,17 @@ def _can_resonate(compound):
     return True
 
 
-# The following functions make several as of yet incorrect assumptions about the
-# information stored within a compound molecule, and indeed within an atom or a
-# bond.  I'm going to need to update or change that information before I can
-# really start using and testing all of this.  I'm also realizing that my
+# The following functions make several as of yet incorrect assumptions about
+# the information stored within a compound molecule, and indeed within an atom
+# or a bond.  I'm going to need to update or change that information before I
+# can really start using and testing all of this.  I'm also realizing that my
 # current strategy of individual wrappers for each aspect of a compound may be
-# rather implausible, but I'm going to have to better clarify my reaction schema
-# before I can make that determination.  There are a bunch of things up in the
-# air right now and I have to catch them all at the same time... I'm gonna have
-# to make sure Andrew knows what he should be doing and hope that he can get it
-# done relatively quickly.  Otherwise I'm just going to have to handle it.
+# rather implausible, but I'm going to have to better clarify my reaction
+# schema before I can make that determination.  There are a bunch of things up
+# in the air right now and I have to catch them all at the same time... I'm
+# gonna have to make sure Andrew knows what he should be doing and hope that he
+# can get it done relatively quickly.  Otherwise I'm just going to have to
+# handle it.
 
 
 def _find_available_electrons(compound):
